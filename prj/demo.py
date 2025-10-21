@@ -5,7 +5,9 @@ from datetime import datetime
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
 from PIL import Image
-
+from openai import OpenAI
+import base64
+import io
 st.set_page_config(page_title="Du lịch demo ", page_icon="🧭", layout="wide")
 
 # Khởi tạo state
@@ -79,6 +81,28 @@ def screen_home():
     st.divider()
     st.info("Dùng menu trái để chuyển nhanh giữa các tính năng.")
 
+#client = OpenAI(api_key = "key")
+def get_landmark_from_image(image):
+    
+    buf = io.BytesIO()
+    image.save(buf, format="JPEG")
+    img_str = base64.b64encode(buf.getvalue()).decode()
+
+    prompt = "What is the landmark in this photo? Give a short answer."
+
+    resp = client.responses.create(
+        model="gpt-5-mini",
+        input=[{
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": prompt},
+                {"type": "input_image", "image_url": f"data:image/jpeg;base64,{img_str}"}
+            ]
+        }],
+        max_output_tokens=256
+    )
+    return resp.output_text.strip()
+
 def screen_upload():
     st.title("Tải ảnh để nhận dạng (UI)")
     st.subheader("Tải ảnh lên")
@@ -89,17 +113,20 @@ def screen_upload():
     with col1:
         if up:
             img = Image.open(up)
-            st.image(img, caption=f"Xem nhanh: {up.name}", use_column_width=True)
+            st.image(img, caption=f"Xem nhanh: {up.name}", use_container_width=True)
         else:
             st.info("Chưa có ảnh. Hãy chọn file ở trên.")
 
     with col2:
         st.markdown("**Kết quả nhận dạng:**")
-        st.caption("Chưa cài API thị giác máy tính.")
         if st.button("Nhận dạng ảnh"):
             if up:
-                # 
-                st.info("API chưa có")
+                 with st.spinner("Đang nhận dạng..."):
+                    try:
+                        result = get_landmark_from_image(img)
+                        st.success(result)
+                    except Exception as e:
+                        st.error(f"Lỗi API: {e}")
             else:
                 st.warning("Hãy tải một ảnh trước.")
 
@@ -144,6 +171,8 @@ def screen_suggest():
                 with st.expander("Xem đánh giá mẫu"):
                     for r in item.get("reviews", []):
                         st.write(f"• {r}")
+
+
 def screen_album():
     st.title(" Album ảnh sau chuyến đi")
     left, right = st.columns([2,1])
