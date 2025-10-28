@@ -58,7 +58,7 @@ def screen_home():
     st.markdown("#### Trang chủ")
     st.caption("Chọn một tính năng bên dưới để bắt đầu.")
 
-    c1, c2, c3 = st.columns(3)
+    c1, c2, c3, c4 = st.columns(4)
 
     with c1:
         st.markdown("###  Nhận dạng ảnh (UI)")
@@ -77,6 +77,12 @@ def screen_home():
         st.write("- Tạo album\n- Thêm nhiều ảnh\n- Tải toàn bộ dưới dạng .zip")
         if st.button("Vào tính năng này", key="go_album"):
             st.session_state.nav = "Album ảnh"
+
+    with c4:
+        st.markdown("###  Gợi ý theo sở thích")
+        st.write("- Chat về sở thích du lịch\n- Nhận gợi ý cá nhân hoá")
+        if st.button("Vào tính năng này", key="go_interest"):
+            st.session_state.nav = "Gợi ý địa điểm theo sở thích"
 
     st.divider()
     st.info("Dùng menu trái để chuyển nhanh giữa các tính năng.")
@@ -252,12 +258,31 @@ def screen_album():
                         except Exception:
                             st.caption("Không tạo được thumbnail.")
 
+def screen_interest():
+    st.title("Gợi ý địa điểm theo sở thích")
+
+    st.markdown("Nhập sở thích của bạn để nhận gợi ý phù hợp (ví dụ: biển, lịch sử, ẩm thực, thiên nhiên...)")
+
+    user_input = st.text_input("Nhập tin nhắn:", key="chat_input")
+
+    if st.button("Gửi"):
+        if user_input.strip():
+            st.success(f"Bạn vừa nhập: {user_input}")
+        else:
+            st.warning("Hãy nhập nội dung trước khi gửi.")
+
+    # Hàm trả về chuỗi người dùng vừa nhập
+    def get_user_message():
+        return user_input.strip()
+
+    return get_user_message()
 
 PAGES = {
     "Trang chủ": screen_home,
     "Nhận dạng ảnh": screen_upload,
     "Gợi ý điểm tham quan": screen_suggest,
     "Album ảnh": screen_album,
+    "Gợi ý địa điểm theo sở thích": screen_interest,
 }
 
 if "nav" not in st.session_state:
