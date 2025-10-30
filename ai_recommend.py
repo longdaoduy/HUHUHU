@@ -1,10 +1,11 @@
 import csv
+import unidecode
 from openai import OpenAI
 #Đọc file Destination
 client = OpenAI(api_key = " ")
 def loadDestination():
     destinations = []
-    with open("destination.csv", "r", encoding = "utf-8") as f:
+    with open("Data.csv", "r", encoding = "utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             #Chia tags bằng dấu phẩy
@@ -19,11 +20,18 @@ def loadDestination():
 #Tính độ tương thích địa điểm
 def compatibality_rate(preference, destination):
     score = 0
+    pref = unidecode.unidecode(preference.lower())
     tags = " ".join(destination.get("tags", [])).lower()
-    for word in preference.split():
-        if word in tags:
-            score += 1
+    tags = unidecode.unidecode(tags)
 
+    for word in pref.split():
+        if word in tags:
+            score += 2
+            
+    #Nếu cụm từ có trong tags
+    if pref in tags:
+        score += 5
+        
     return score
 
 #Recommend theo tags
@@ -54,7 +62,7 @@ def ai_recommend(user_input, places_data):
     """
     try:
         response = client.chat.completions.create(
-        model = "gpt-4o-mini",
+        model = "gpt-5-mini",
         messages=[
                 {"role": "system", "content": "Bạn là AI chuyên gia tư vấn du lịch thông minh."},
                 {"role": "user", "content": prompt}
