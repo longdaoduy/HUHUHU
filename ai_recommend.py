@@ -1,32 +1,33 @@
-import csv
+import json
 import unidecode
 from openai import OpenAI
-
-#client = OpenAI(api_key="")
-
+#Đọc file Destination
+client = OpenAI(api_key = " ")
 def loadDestination():
+    
+    with open("database.json", "r", encoding = "utf-8") as f:
+        data = json.load(f)
     destinations = []
-<<<<<<< HEAD
-    with open("Data.csv", "r", encoding = "utf-8") as f:
-=======
-    with open("Data.csv", "r", encoding="utf-8") as f:
->>>>>>> 133891d (update ai_recommend.py)
-        reader = csv.DictReader(f)
-        for row in reader:
-            tags = [tag.strip().lower() for tag in row["tags"].split(',')]
-            destinations.append({
-                "name": row["name"],
-                "location": row["location"],
-                "tags": tags
-            })
+    for destination in data:
+
+        tags = [tag.strip().lower for tag in destination["tags"].split(',')]
+        destinations.append({
+            "name" : destination.get("name"),
+            "location" : destination.get("location"),
+            "tags" : tags,
+            "price" : destination.get("price (VNĐ)"),
+            "rating" : destination.get("rating"),
+            "lat" : destinations.get("lat"),
+            "lon" : destinations.get("lon")
+        })
+
     return destinations
 
-
+#Tính độ tương thích địa điểm
 def compatibality_rate(preference, destination):
     score = 0
     pref = unidecode.unidecode(preference.lower())
     tags = " ".join(destination.get("tags", [])).lower()
-<<<<<<< HEAD
     tags = unidecode.unidecode(tags)
 
     for word in pref.split():
@@ -37,54 +38,46 @@ def compatibality_rate(preference, destination):
     if pref in tags:
         score += 5
         
-=======
-    for word in preference.split():
-        if word in tags:
-            score += 1
->>>>>>> 133891d (update ai_recommend.py)
     return score
 
-
+#Recommend theo tags
 def recommend(preference, destination):
     preference = preference.lower()
+
     results = []
     for dest in destination:
         score = compatibality_rate(preference, dest)
         if score > 0:
             results.append((dest, score))
-    results.sort(key=lambda x: x[1], reverse=True)
+    #Sắp xếp giảm dần theo điểm số tương thích
+    results.sort(key = lambda x : x[1], reverse = True)
+
     return [d[0] for d in results[:5]]
 
-
+#Recommend bằng AI
 def ai_recommend(user_input, places_data):
     if not user_input.strip():
-        return "Vui lòng nhập sở thích của bạn."
-
+        return "Vui long nhập sở thích của bạn."
+    
     prompt = f"""
-    Bạn là AI gợi ý du lịch.
+    Bạn là AI gợi ý du lịch. 
     Người dùng nói: "{user_input}".
     Dưới đây là danh sách địa điểm:
     {places_data}
     Hãy chọn ra 3 địa điểm phù hợp nhất và giải thích ngắn gọn lý do.
     """
-
     try:
         response = client.chat.completions.create(
-<<<<<<< HEAD
         model = "gpt-5-mini",
         messages=[
-=======
-            model="gpt-5-mini",
-            messages=[
->>>>>>> 133891d (update ai_recommend.py)
                 {"role": "system", "content": "Bạn là AI chuyên gia tư vấn du lịch thông minh."},
                 {"role": "user", "content": prompt}
             ]
         )
-        return response.choices[0].message.content
-
     except Exception as e:
         return f"Lỗi khi gọi API: {str(e)}"
+
+    return response.choices[0].message.content
 
 
     
