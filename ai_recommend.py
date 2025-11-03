@@ -4,21 +4,21 @@ from openai import OpenAI
 #Đọc file Destination
 client = OpenAI(api_key = " ")
 def loadDestination():
-    
+    destinations = []
     with open("database.json", "r", encoding = "utf-8") as f:
         data = json.load(f)
-    destinations = []
+    
     for destination in data:
-
-        tags = [tag.strip().lower for tag in destination["tags"].split(',')]
+        raw_tags = destination.get("tags", [])
+        tags = [tag.strip().lower() for tag in raw_tags]
         destinations.append({
             "name" : destination.get("name"),
             "location" : destination.get("location"),
             "tags" : tags,
             "price" : destination.get("price (VNĐ)"),
             "rating" : destination.get("rating"),
-            "lat" : destinations.get("lat"),
-            "lon" : destinations.get("lon")
+            "lat" : destination.get("lat"),
+            "lon" : destination.get("lon")
         })
 
     return destinations
