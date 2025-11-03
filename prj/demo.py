@@ -1,40 +1,38 @@
-
+import ai_recommend
 import streamlit as st
+import pandas as pd
 from math import radians, sin, cos, asin, sqrt
 from datetime import datetime
 from io import BytesIO
 from zipfile import ZipFile, ZIP_DEFLATED
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 from openai import OpenAI
 import base64
 import io
+import exifread
+from geopy.geocoders import Nominatim
+import textwrap 
+
 st.set_page_config(page_title="Du lịch demo ", page_icon="🧭", layout="wide")
 
 # Khởi tạo state
 if "albums" not in st.session_state:
-    # {album_name: [{"filename": str, "bytes": b, "uploaded_at": str}]}
+    # Cấu trúc mới cho album items (sẽ được thêm trong screen_album)
+    # {
+    #   "filename": str,
+    #   "bytes": b,
+    #   "uploaded_at": str (ISO format),
+    #   "album_name": str,
+    #   "landmark": str,
+    #   "description": str
+    # }
     st.session_state.albums = {}
 
-PROVINCE_COORDS = {
-    "TP.HCM": (10.776889, 106.700806),
-    "Hà Nội": (21.027763, 105.834160),
-    "Quảng Nam": (15.573606, 108.474044),  # Tam Kỳ
-}
+# Thêm state cho album đang hoạt động
+if "active_album" not in st.session_state:
+    st.session_state.active_album = None
 
-ATTRACTIONS = [
-    {"name": "Hồ Gươm (Hoàn Kiếm)", "city": "Hà Nội", "lat": 21.028511, "lon": 105.848097,
-     "rating": 4.6, "reviews": ["Không khí dễ chịu, đi dạo tối rất thích.", "Gần phố cổ, nhiều quán ăn ngon."]},
-    {"name": "Văn Miếu - Quốc Tử Giám", "city": "Hà Nội", "lat": 21.0278, "lon": 105.8354,
-     "rating": 4.5, "reviews": ["Kiến trúc đẹp, nhiều góc chụp ảnh.", "Nên đi buổi sáng để vắng người."]},
-    {"name": "Nhà thờ Đức Bà", "city": "TP.HCM", "lat": 10.7797838, "lon": 106.6990184,
-     "rating": 4.4, "reviews": ["Địa điểm mang tính biểu tượng.", "Khu vực xung quanh nhiều quán cà phê."]},
-    {"name": "Bưu điện Trung tâm Sài Gòn", "city": "TP.HCM", "lat": 10.7802, "lon": 106.6997,
-     "rating": 4.6, "reviews": ["Kiến trúc Pháp cổ rất ấn tượng.", "Gần nhà thờ Đức Bà, đi bộ qua là tới."]},
-    {"name": "Chợ Bến Thành", "city": "TP.HCM", "lat": 10.772, "lon": 106.698,
-     "rating": 4.1, "reviews": ["Đông vui, nhiều đặc sản.", "Mặc cả trước khi mua sẽ tốt hơn."]},
-    {"name": "Phố cổ Hội An", "city": "Quảng Nam", "lat": 15.880058, "lon": 108.338047,
-     "rating": 4.8, "reviews": ["Đèn lồng buổi tối rất đẹp.", "Ẩm thực phong phú, dễ đi bộ."]},
-]
+
 
 def haversine_km(lat1, lon1, lat2, lon2):
     R = 6371.0
@@ -51,7 +49,6 @@ def zip_album(album_name, items):
             zf.writestr(item["filename"], item["bytes"])
     buf.seek(0)
     return buf
-
 
 def screen_home():
     st.title("🧭 Demo UI du lịch")
@@ -73,41 +70,113 @@ def screen_home():
             st.session_state.nav = "Gợi ý điểm tham quan"
 
     with c3:
+        st.markdown("###  Gợi ý địa điểm theo sở thích")
+        st.write("- Nhập sở thích\n- Hiển thị kết quả theo sở thích")
+        if st.button("Vào tính năng này", key="go_suggest_interest"):
+            st.session_state.nav = "Gợi ý theo sở thích"
+            
+    with c4:
         st.markdown("###  Album sau chuyến đi")
         st.write("- Tạo album\n- Thêm nhiều ảnh\n- Tải toàn bộ dưới dạng .zip")
         if st.button("Vào tính năng này", key="go_album"):
             st.session_state.nav = "Album ảnh"
 
-    with c4:
-        st.markdown("###  Gợi ý theo sở thích")
-        st.write("- Chat về sở thích du lịch\n- Nhận gợi ý cá nhân hoá")
-        if st.button("Vào tính năng này", key="go_interest"):
-            st.session_state.nav = "Gợi ý địa điểm theo sở thích"
-
     st.divider()
     st.info("Dùng menu trái để chuyển nhanh giữa các tính năng.")
 
-#client = OpenAI(api_key = "key")
-def get_landmark_from_image(image):
+# --- PHẦN AI (CẬP NHẬT) ---
+
+#client = OpenAI(api_key="")
+OPENAI_ENABLED = True
+
+def get_image_analysis(image_pil, prompt):
+    """Hàm chung để gọi OpenAI Vision API."""
+    if not OPENAI_ENABLED:
+        return "N/A (Chưa cấu hình API)"
     
-    buf = io.BytesIO()
-    image.save(buf, format="JPEG")
-    img_str = base64.b64encode(buf.getvalue()).decode()
+    try:
+        buf = io.BytesIO()
+        image_pil.save(buf, format="JPEG")
+        img_str = base64.b64encode(buf.getvalue()).decode()
 
-    prompt = "What is the landmark in this photo? Give a short answer."
+        response = client.responses.create(
 
-    resp = client.responses.create(
-        model="gpt-5-mini",
-        input=[{
-            "role": "user",
-            "content": [
-                {"type": "input_text", "text": prompt},
-                {"type": "input_image", "image_url": f"data:image/jpeg;base64,{img_str}"}
-            ]
-        }],
-        max_output_tokens=256
-    )
-    return resp.output_text.strip()
+            model="gpt-5-mini", 
+            input=[{
+        "role": "user",
+        "content": [
+            {"type": "input_text", "text": prompt},
+            {"type": "input_image", "image_url": f"data:image/jpeg;base64,{img_str}"}
+        ]
+    }],
+    max_output_tokens=300
+)
+        return response.output_text.strip()
+    except Exception as e:
+        st.error(f"Lỗi gọi OpenAI API: {e}")
+        return f"Lỗi: {e}"
+
+
+def get_landmark_from_image(image_pil):
+    """Yêu cầu: Nhận dạng địa danh."""
+    prompt = "What is the landmark in this photo? If no specific landmark, say 'Không có'. Answer in Vietnamese. Keep it short (e.g., 'Nhà thờ Đức Bà, TP.HCM' or 'Bãi biển Mỹ Khê')."
+    return get_image_analysis(image_pil, prompt)
+
+def get_description_from_image(image_pil):
+    """Yêu cầu: Tạo mô tả tự động."""
+    prompt = "Describe this photo for a travel album in 1-2 sentences. Answer in Vietnamese."
+    return get_image_analysis(image_pil, prompt)
+
+
+
+def get_gps_from_image(image_file):
+    try:
+        image_file.seek(0)
+        tags = exifread.process_file(image_file, details=False)
+        lat_ref = tags.get("GPS GPSLatitudeRef")
+        lon_ref = tags.get("GPS GPSLongitudeRef")
+        lat = tags.get("GPS GPSLatitude")
+        lon = tags.get("GPS GPSLongitude")
+        if not (lat and lon and lat_ref and lon_ref):
+            return None
+
+        def convert_to_degrees(value):
+            d, m, s = [float(x.num) / float(x.den) for x in value.values]
+            return d + (m / 60.0) + (s / 3600.0)
+
+        lat_val = convert_to_degrees(lat)
+        lon_val = convert_to_degrees(lon)
+        if lat_ref.values[0] != "N":
+            lat_val = -lat_val
+        if lon_ref.values[0] != "E":
+            lon_val = -lon_val
+        return (lat_val, lon_val)
+    except Exception:
+        return None
+
+
+def reverse_geocode(lat, lon):
+    try:
+        geolocator = Nominatim(user_agent="album_locator")
+        location = geolocator.reverse((lat, lon), language="vi")
+        return location.address if location else None
+    except Exception:
+        return None
+
+
+def detect_location(image_file, image_pil):
+    gps = get_gps_from_image(image_file)
+    if gps:
+        lat, lon = gps
+        place = reverse_geocode(lat, lon)
+        if place:
+            return place
+   
+    try:
+        place = get_landmark_from_image(image_pil)
+        return place
+    except Exception:
+        return None
 
 def screen_upload():
     st.title("Tải ảnh để nhận dạng (UI)")
@@ -127,17 +196,62 @@ def screen_upload():
         st.markdown("**Kết quả nhận dạng:**")
         if st.button("Nhận dạng ảnh"):
             if up:
-                 with st.spinner("Đang nhận dạng..."):
-                    try:
-                        result = get_landmark_from_image(img)
-                        st.success(result)
-                    except Exception as e:
-                        st.error(f"Lỗi API: {e}")
+                 if OPENAI_ENABLED:
+                    with st.spinner("Đang nhận dạng..."):
+                        try:
+                            # img đã được định nghĩa ở 'with col1'
+                            result = get_landmark_from_image(img)
+                            st.success(result)
+                        except Exception as e:
+                            st.error(f"Lỗi API: {e}")
+                 else:
+                    st.error("Tính năng AI chưa được bật. Vui lòng thêm OPENAI_API_KEY.")
             else:
                 st.warning("Hãy tải một ảnh trước.")
 
+# screen_suggest_interest (Giữ nguyên)
+def screen_suggest_interest():
+    st.title(" Gợi ý địa điểm theo sở thích")
+    st.markdown("Nhập sở thích hoặc địa điểm bạn muốn tham quan")
+    interest = st.text_input("Nhập sở thích tham quan của bạn(ví dụ: đồi núi, biển cả, ...)")
+
+    if st.button("Gợi ý ngay"):
+        if interest.strip() == "":
+            st.warning(" Vui lòng nhập sở thích ")
+        else:
+            try:
+                destination_list = ai_recommend.loadDestination()
+                results = ai_recommend.recommend(interest, destination_list)
+                if not results:
+                    st.error(" Không tìm thấy địa điểm phù hợp")
+                else:
+                    st.success(f"Tìm thấy {len(results)} địa điểm phù hợp")
+                    for dest in results:
+                        with st.container(border=True): # Cập nhật container cho đẹp hơn
+                            st.markdown(f"### {dest['name']}")
+                            st.write(f"  **Địa điểm:** {dest['location']}")
+                            st.write(f"  **Thẻ:** {', '.join(dest['tags'])}") # Dùng join cho đẹp
+
+            except Exception as e:
+                st.error(f" Lỗi khi gợi ý {e}")
+
+def load_province_coords(csv_path: str) -> dict:
+    try:
+        df = pd.read_csv(csv_path)
+    except FileNotFoundError:
+        st.error(f"Lỗi: Không tìm thấy file '{csv_path}'. Tính năng gợi ý theo vị trí sẽ không hoạt động.")
+        return {}, pd.DataFrame()
+        
+    df["display"] = df["province"].fillna(df["capital"])
+    # dict: display -> (lat, lon)
+    return dict(zip(df["display"], zip(df["lat"], df["lon"]))), df
+
 def screen_suggest():
     st.title("Gợi ý điểm tham quan trong bán kính")
+
+    PROVINCE_COORDS, df = load_province_coords("vn_provinces_coords.csv")
+    if not PROVINCE_COORDS:
+        return
 
     colA, colB = st.columns([2, 1])
     with colA:
@@ -151,13 +265,15 @@ def screen_suggest():
 
     lat, lon = PROVINCE_COORDS[province]
 
-    st.caption("Gợi ý dựa trên dữ liệu mẫu nội bộ. Không gọi mạng.")
+    st.caption("Dữ liệu lấy từ database nội bộ. Không gọi mạng.")
     if st.button("Tìm điểm tham quan gần tôi"):
+        destinations = ai_recommend.loadDestination()  # dùng hàm có sẵn
+
         results = []
-        for a in ATTRACTIONS:
-            d = haversine_km(lat, lon, a["lat"], a["lon"])
-            if d <= radius:
-                results.append({**a, "distance_km": d})
+        for d in destinations:
+            dist = haversine_km(lat, lon, d["lat"], d["lon"])
+            if dist <= radius:
+                results.append({**d, "distance_km": dist})
 
         if not results:
             st.warning("Không tìm thấy điểm nào trong bán kính đã chọn.")
@@ -165,124 +281,330 @@ def screen_suggest():
 
         results.sort(key=lambda x: (x["distance_km"], -x["rating"]))
         st.success(f"Tìm thấy {len(results)} điểm phù hợp.")
+
         for item in results:
             with st.container(border=True):
                 left, right = st.columns([3, 1])
                 with left:
-                    st.markdown(f"**{item['name']}** · {item['city']}")
+                    st.markdown(f"**{item['name']}** · {item['location']}")
                     st.markdown(f"Khoảng cách: **{item['distance_km']:.2f} km**")
+                    if item.get("tags"):
+                        st.caption("Tags: " + ", ".join(item["tags"]))
+                    if item.get("price") is not None:
+                        st.caption(f"Giá tham khảo: {item['price']:,} VNĐ")
                 with right:
                     st.metric("Đánh giá", f"{item['rating']:.1f} ⭐")
 
-                with st.expander("Xem đánh giá mẫu"):
-                    for r in item.get("reviews", []):
-                        st.write(f"• {r}")
 
+
+def create_pdf_album(album_items):
+    """Yêu cầu 4: Xuất album ra PDF."""
+    if not album_items:
+        return None
+
+    try:
+        # Thử tải font hỗ trợ Unicode.
+        font = ImageFont.truetype("DejaVuSans.ttf", 15)
+        font_bold = ImageFont.truetype("DejaVuSans-Bold.ttf", 18)
+    except IOError:
+        # Fallback nếu không tìm thấy font
+        st.warning("Không tìm thấy font 'DejaVuSans', sử dụng font mặc định (có thể lỗi tiếng Việt).")
+        font = ImageFont.load_default()
+        font_bold = ImageFont.load_default()
+
+    pages = []
+    A4_SIZE = (595, 842) # Kích thước A4 theo pixel (72 dpi)
+    MARGIN = 40
+
+    for item in album_items:
+        # Tạo trang A4 trắng
+        page = Image.new('RGB', A4_SIZE, 'white')
+        draw = ImageDraw.Draw(page)
+
+        # Tải ảnh
+        img = Image.open(BytesIO(item["bytes"]))
+        
+        # Resize ảnh để vừa trang, giữ tỷ lệ
+        img_width, img_height = img.size
+        max_width = A4_SIZE[0] - 2 * MARGIN
+        max_height = A4_SIZE[1] // 2 # Dành nửa trên cho ảnh
+        
+        ratio = min(max_width / img_width, max_height / img_height)
+        new_size = (int(img_width * ratio), int(img_height * ratio))
+        img = img.resize(new_size, Image.Resampling.LANCZOS)
+
+        # Canh giữa ảnh
+        img_x = (A4_SIZE[0] - new_size[0]) // 2
+        img_y = MARGIN
+        page.paste(img, (img_x, img_y))
+
+        # Thêm metadata
+        current_y = img_y + new_size[1] + 30 # Vị trí bắt đầu viết text
+
+        # Địa danh
+        draw.text((MARGIN, current_y), "Địa danh:", font=font_bold, fill="black")
+        current_y += 30
+        landmark_lines = textwrap.wrap(item.get('landmark', 'N/A'), width=80)
+        for line in landmark_lines:
+            draw.text((MARGIN, current_y), line, font=font, fill="black")
+            current_y += 20
+        
+        current_y += 20 # Khoảng cách
+
+        # Mô tả
+        draw.text((MARGIN, current_y), "Mô tả:", font=font_bold, fill="black")
+        current_y += 30
+        desc_lines = textwrap.wrap(item.get('description', 'N/A'), width=80)
+        for line in desc_lines:
+            draw.text((MARGIN, current_y), line, font=font, fill="black")
+            current_y += 20
+        
+        # Tên file và ngày
+        footer_text = f"{item['filename']} | {datetime.fromisoformat(item['uploaded_at']).strftime('%Y-%m-%d %H:%M')}"
+        draw.text((MARGIN, A4_SIZE[1] - MARGIN), footer_text, font=font, fill="gray")
+
+        pages.append(page)
+
+    if not pages:
+        return None
+
+    # Lưu PDF vào bộ nhớ
+    pdf_buf = BytesIO()
+    pages[0].save(pdf_buf, "PDF", resolution=100.0, save_all=True, append_images=pages[1:])
+    pdf_buf.seek(0)
+    return pdf_buf
+
+def render_thumbnail(item):
+    """Yêu cầu 2: Hàm con để hiển thị 1 ảnh thumbnail và popover chi tiết."""
+    img = Image.open(BytesIO(item["bytes"]))
+    st.image(img, use_container_width=True, caption=item['filename'][:20] + "...")
+    
+    with st.popover("Xem chi tiết"):
+        st.image(img, use_container_width=True)
+        st.markdown(f"**Tên file:** {item['filename']}")
+        dt = datetime.fromisoformat(item['uploaded_at'])
+        st.markdown(f"**Tải lên:** {dt.strftime('%Y-%m-%d %H:%M:%S')}")
+        st.markdown(f"**Album:** {item.get('album_name', 'N/A')}")
+        st.divider()
+        st.markdown(f"**Địa danh (AI):**")
+        st.info(item.get('landmark', 'N/A'))
+        st.markdown(f"**Mô tả (AI):**")
+        st.info(item.get('description', 'N/A'))
+        
+
+# --- PHẦN ALBUM (NÂNG CẤP HOÀN TOÀN) ---
 
 def screen_album():
-    st.title(" Album ảnh sau chuyến đi")
+    st.title("🖼️ Album ảnh sau chuyến đi (Nâng cấp)")
+    
+    # Sử dụng layout cột của file gốc
     left, right = st.columns([2,1])
 
+    # --- Cột phải: Quản lý Album (Cải tiến từ file gốc) ---
+    with right:
+        st.markdown("### Quản lý Album")
+        
+        # Chọn album đang hoạt động
+        album_names = list(st.session_state.albums.keys())
+        
+        # Nếu album đang active bị xóa, reset nó
+        if st.session_state.active_album not in album_names:
+            st.session_state.active_album = None
+
+        # Chọn album để xem (thay cho text input của file gốc)
+        default_index = 0
+        if st.session_state.active_album in album_names:
+            default_index = album_names.index(st.session_state.active_album)
+        
+        selected_album = st.radio(
+            "Chọn album để xem/thêm ảnh:",
+            album_names,
+            index=default_index if album_names else 0,
+            key="album_selector",
+            label_visibility="collapsed"
+        )
+        if album_names:
+            st.session_state.active_album = selected_album
+        
+        st.divider()
+        new_album_name = st.text_input("Tên album mới")
+        if st.button("Tạo album mới"):
+            if new_album_name.strip():
+                if new_album_name not in st.session_state.albums:
+                    st.session_state.albums[new_album_name] = []
+                    st.session_state.active_album = new_album_name
+                    st.rerun()
+                else:
+                    st.warning("Album đã tồn tại.")
+            else:
+                st.warning("Tên album không được để trống.")
+        
+        if st.session_state.active_album and st.button(f"Xóa album '{st.session_state.active_album}'", type="primary"):
+            del st.session_state.albums[st.session_state.active_album]
+            st.session_state.active_album = None
+            st.rerun()
+
+    # --- Cột trái: Hiển thị Album chi tiết ---
     with left:
-        album_name = st.text_input("Tên album", value="Chuyến đi của tôi")
-        files = st.file_uploader("Tải nhiều ảnh", type=["png", "jpg", "jpeg"], accept_multiple_files=True, key="album_uploader")
+        if not st.session_state.active_album:
+            st.info("Hãy tạo hoặc chọn một album từ cột bên phải để bắt đầu.")
+            return
 
-        add_col1, add_col2 = st.columns(2)
-        with add_col1:
-            if st.button("Thêm vào album"):
-                if album_name.strip() == "":
-                    st.warning("Nhập tên album.")
-                elif not files:
+        # Lấy thông tin album hiện tại
+        album_name = st.session_state.active_album
+        items = st.session_state.albums.get(album_name, [])
+        st.header(f"Album: {album_name} ({len(items)} ảnh)")
+
+        # --- Yêu cầu 1: Khu vực tải ảnh VÀ xử lý metadata ---
+        with st.expander("Thêm ảnh vào album (Tự động nhận dạng)"):
+            files = st.file_uploader("Tải nhiều ảnh", type=["png", "jpg", "jpeg"], accept_multiple_files=True, key=f"uploader_{album_name}")
+
+            if st.button(f"Thêm {len(files)} ảnh vào '{album_name}'"):
+                if not files:
                     st.warning("Chọn ít nhất một ảnh.")
+                elif not OPENAI_ENABLED:
+                    st.error("Không thể thêm ảnh. Tính năng AI (OpenAI Key) chưa được cấu hình.")
                 else:
+                    progress_bar = st.progress(0, text="Đang xử lý ảnh...")
                     bucket = st.session_state.albums.get(album_name, [])
-                    for f in files:
+                    
+                    for i, f in enumerate(files):
                         try:
-                            img = Image.open(f)
-                            img.verify()
+                            progress_text = f"Đang xử lý ảnh: {f.name} ({i+1}/{len(files)})..."
+                            progress_bar.progress((i+1) / len(files), text=progress_text)
+
+                            img_pil = Image.open(f)
+                            img_pil.verify() # Kiểm tra file ảnh
+                            
                             f.seek(0)
-                        except Exception:
-                            st.error(f"File không phải ảnh hợp lệ: {f.name}")
+                            file_bytes = f.read()
+                            
+                            # Yêu cầu 1: Gọi AI để lấy metadata
+                            img_for_ai = Image.open(BytesIO(file_bytes))
+                            landmark = get_landmark_from_image(img_for_ai)
+                            description = get_description_from_image(img_for_ai)
+
+                            # Lưu trữ metadata mới
+                            bucket.append({
+                                "filename": f.name,
+                                "bytes": file_bytes,
+                                "uploaded_at": datetime.now().isoformat(),
+                                "album_name": album_name, # Yêu cầu 1
+                                "landmark": landmark,     # Yêu cầu 1
+                                "description": description  # Yêu cầu 1
+                            })
+                        except Exception as e:
+                            st.error(f"File không hợp lệ hoặc lỗi AI: {f.name} ({e})")
                             continue
-                        bucket.append({
-                            "filename": f.name,
-                            "bytes": f.read(),
-                            "uploaded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                        })
+                    
                     st.session_state.albums[album_name] = bucket
+                    progress_bar.empty()
                     st.success(f"Đã thêm {len(files)} ảnh vào album '{album_name}'.")
-        with add_col2:
-            if st.button("Xóa album hiện tại"):
-                if album_name in st.session_state.albums:
-                    del st.session_state.albums[album_name]
-                    st.warning(f"Đã xóa album '{album_name}'.")
-                else:
-                    st.info("Album chưa tồn tại.")
+                    st.rerun() # Tải lại để hiển thị ảnh mới
 
-        if album_name in st.session_state.albums and st.session_state.albums[album_name]:
-            st.markdown(f"### Ảnh trong album: {album_name}")
-            items = st.session_state.albums[album_name]
-            cols = st.columns(4)
-            for idx, item in enumerate(items):
+        if not items:
+            st.info("Album này chưa có ảnh. Hãy thêm ảnh ở trên.")
+            return
+
+        # --- Yêu cầu 3: Tìm kiếm và Lọc ---
+        st.subheader("Tìm kiếm và Lọc")
+        c_filter1, c_filter2, c_filter3 = st.columns(3)
+        with c_filter1:
+            search_landmark = st.text_input("Tìm theo địa danh")
+        with c_filter2:
+            search_desc = st.text_input("Tìm theo mô tả")
+        with c_filter3:
+            search_date = st.date_input("Tìm theo ngày tải lên", None)
+
+        # Áp dụng bộ lọc
+        filtered_items = items
+        if search_landmark:
+            filtered_items = [i for i in filtered_items if search_landmark.lower() in i.get('landmark', '').lower()]
+        if search_desc:
+            filtered_items = [i for i in filtered_items if search_desc.lower() in i.get('description', '').lower()]
+        if search_date:
+            filtered_items = [i for i in filtered_items if datetime.fromisoformat(i['uploaded_at']).date() == search_date]
+
+        st.caption(f"Hiển thị {len(filtered_items)} / {len(items)} ảnh.")
+        st.divider()
+
+        # --- Yêu cầu 2 & 5: Hiển thị Gallery & Nhóm ---
+        st.subheader("Bộ sưu tập")
+        group_by = st.radio("Sắp xếp/Nhóm theo:", ("Không nhóm (mới nhất trước)", "Địa danh"), horizontal=True)
+
+        if group_by == "Địa danh":
+            groups = {}
+            for item in filtered_items:
+                landmark = item.get('landmark', 'Chưa nhận dạng')
+                if landmark not in groups:
+                    groups[landmark] = []
+                groups[landmark].append(item)
+            
+            for landmark, group_items in sorted(groups.items()):
+                st.markdown(f"#### {landmark} ({len(group_items)} ảnh)")
+                cols = st.columns(4) # Giữ layout 4 cột như file gốc
+                for idx, item in enumerate(group_items):
+                    with cols[idx % 4]:
+                        render_thumbnail(item) # Yêu cầu 2
+                st.divider()
+        
+        else: # "Không nhóm"
+            # Sắp xếp mới nhất trước
+            sorted_items = sorted(filtered_items, key=lambda x: x['uploaded_at'], reverse=True)
+            cols = st.columns(4) # Giữ layout 4 cột như file gốc
+            for idx, item in enumerate(sorted_items):
                 with cols[idx % 4]:
-                    try:
-                        img = Image.open(BytesIO(item["bytes"]))
-                        st.image(img, use_container_width=True)
-                        st.caption(f"{item['filename']} · {item['uploaded_at']}")
-                    except Exception:
-                        st.error(f"Lỗi hiển thị: {item['filename']}")
+                    render_thumbnail(item) # Yêu cầu 2
 
-            zip_buf = zip_album(album_name, items)
+        # --- Nút tải xuống (Giữ Zip, Thêm PDF) ---
+        st.divider()
+        st.subheader("Tải xuống Album (đã lọc)")
+        
+        if not filtered_items:
+            st.warning("Không có ảnh nào trong bộ lọc để tải xuống.")
+            return
+
+        dl_c1, dl_c2 = st.columns(2)
+        with dl_c1:
+            # Giữ nút Zip gốc
+            zip_buf = zip_album(album_name, filtered_items)
             st.download_button(
-                "Tải toàn bộ album (.zip)",
+                f"Tải {len(filtered_items)} ảnh (.zip)",
                 data=zip_buf,
                 file_name=f"{album_name}.zip",
-                mime="application/zip"
+                mime="application/zip",
+                use_container_width=True
             )
-        else:
-            st.info("Album trống hoặc chưa tồn tại. Hãy thêm ảnh.")
+        with dl_c2:
+            # Yêu cầu 4: Nút tải PDF
+            if st.button(f"Chuẩn bị file PDF ({len(filtered_items)} ảnh)", use_container_width=True):
+                with st.spinner("Đang tạo file PDF..."):
+                    pdf_buf = create_pdf_album(filtered_items)
+                    if pdf_buf:
+                        # Lưu vào session state để download button bên dưới có thể truy cập
+                        st.session_state.pdf_buffer = pdf_buf
+                    else:
+                        st.error("Không có ảnh để tạo PDF.")
+            
+            if "pdf_buffer" in st.session_state:
+                st.download_button(
+                    "Tải file PDF",
+                    data=st.session_state.pdf_buffer,
+                    file_name=f"{album_name}.pdf",
+                    mime="application/pdf",
+                    use_container_width=True,
+                    on_click=lambda: st.session_state.pop("pdf_buffer", None) # Xóa buffer sau khi click
+                )
 
-    with right:
-        st.markdown("### Danh sách album")
-        if not st.session_state.albums:
-            st.caption("Chưa có album nào.")
-        else:
-            for name, items in st.session_state.albums.items():
-                with st.container(border=True):
-                    st.markdown(f"**{name}**")
-                    st.caption(f"{len(items)} ảnh")
-                    if items:
-                        try:
-                            thumb = Image.open(BytesIO(items[-1]["bytes"]))
-                            st.image(thumb, caption="Ảnh gần nhất", use_container_width=True)
-                        except Exception:
-                            st.caption("Không tạo được thumbnail.")
 
-def screen_interest():
-    st.title("Gợi ý địa điểm theo sở thích")
-
-    st.markdown("Nhập sở thích của bạn để nhận gợi ý phù hợp (ví dụ: biển, lịch sử, ẩm thực, thiên nhiên...)")
-
-    user_input = st.text_input("Nhập tin nhắn:", key="chat_input")
-
-    if st.button("Gửi"):
-        if user_input.strip():
-            st.success(f"Bạn vừa nhập: {user_input}")
-        else:
-            st.warning("Hãy nhập nội dung trước khi gửi.")
-
-    # Hàm trả về chuỗi người dùng vừa nhập
-    def get_user_message():
-        return user_input.strip()
-
-    return get_user_message()
+# --- PHẦN ĐIỀU HƯỚNG GỐC (GIỮ NGUYÊN) ---
 
 PAGES = {
     "Trang chủ": screen_home,
     "Nhận dạng ảnh": screen_upload,
     "Gợi ý điểm tham quan": screen_suggest,
+    "Gợi ý theo sở thích": screen_suggest_interest,
     "Album ảnh": screen_album,
-    "Gợi ý địa điểm theo sở thích": screen_interest,
 }
 
 if "nav" not in st.session_state:
@@ -290,13 +612,16 @@ if "nav" not in st.session_state:
 
 with st.sidebar:
     st.header("Điều hướng")
-    st.session_state.nav = st.selectbox(
+    nav_selection = st.selectbox(
         "Chọn màn hình",
         list(PAGES.keys()),
         index=list(PAGES.keys()).index(st.session_state.nav),
         label_visibility="collapsed"
     )
+    # Cập nhật state nếu lựa chọn thay đổi (tránh lỗi st.rerun)
+    if nav_selection != st.session_state.nav:
+        st.session_state.nav = nav_selection
+        st.rerun()
 
 
 PAGES[st.session_state.nav]()
-
