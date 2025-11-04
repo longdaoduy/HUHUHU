@@ -17,7 +17,8 @@
     "lat": 10.794,
     "lon": 106.7218,
     "price (VNĐ)": 300000,
-    "rating": 4.8
+    "rating": 4.8,
+    "review": "View từ đài quan sát Skydeck tuyệt đỉnh, đặc biệt là lúc hoàng hôn hoặc đêm. Khu vực trung tâm thương mại Vincom rất sang trọng, nhiều thương hiệu cao cấp. Phù hợp cho những ai muốn trải nghiệm sự hiện đại và check-in sang chảnh."
   },
   {
     "name": "Nhà thờ Đức Bà",
@@ -36,7 +37,8 @@
     "lat": 10.7798,
     "lon": 106.699,
     "price (VNĐ)": 0,
-    "rating": 4.7
+    "rating": 4.7,
+    "review": "Một công trình kiến trúc tuyệt đẹp mang đậm dấu ấn Pháp. Tuyệt vời để chụp ảnh cưới hoặc ảnh check-in cổ điển. Lưu ý hiện đang được trùng tu nên một số góc chụp sẽ bị che chắn."
   },
   {
     "name": "Bưu điện Trung tâm Sài Gòn",
@@ -55,7 +57,8 @@
     "lat": 10.7796,
     "lon": 106.6983,
     "price (VNĐ)": 0,
-    "rating": 4.7
+    "rating": 4.7,
+    "review": "Kiến trúc bên trong và bên ngoài đều rất ấn tượng, mang tính lịch sử. Vẫn hoạt động như một bưu điện thông thường, có thể mua quà lưu niệm và gửi thư. Nên ghé thăm khi kết hợp với Nhà thờ Đức Bà vì nằm gần nhau."
   },
   {
     "name": "Phố đi bộ Nguyễn Huệ",
@@ -75,7 +78,8 @@
     "lat": 10.773,
     "lon": 106.7046,
     "price (VNĐ)": 0,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "Rất nhộn nhịp vào cuối tuần và buổi tối. Xung quanh có nhiều quán cà phê, trà sữa, và tòa nhà chung cư 42 Nguyễn Huệ với nhiều shop độc đáo. Là nơi lý tưởng để dạo mát, ngắm cảnh và cảm nhận nhịp sống Sài Gòn."
   },
   {
     "name": "Chợ Bến Thành",
@@ -98,7 +102,8 @@
     "lat": 10.7726,
     "lon": 106.6983,
     "price (VNĐ)": 0,
-    "rating": 4.5
+    "rating": 4.5,
+    "review": "Nơi có thể tìm thấy mọi thứ từ quần áo, vải vóc đến đồ lưu niệm và đặc sản địa phương. Khu ẩm thực đa dạng, giá cả hơi cao hơn bên ngoài nhưng rất đáng thử. Nên trả giá khi mua sắm."
   },
   {
     "name": "Bảo tàng Chứng tích Chiến tranh",
@@ -119,7 +124,8 @@
     "lat": 10.7791,
     "lon": 106.6925,
     "price (VNĐ)": 40000,
-    "rating": 4.7
+    "rating": 4.7,
+    "review": "Trải nghiệm sâu sắc và xúc động. Các tư liệu và hiện vật được trưng bày rất chân thực và có giá trị lịch sử cao. Một điểm đến quan trọng để tìm hiểu về lịch sử Việt Nam, đặc biệt dành cho du khách quốc tế."
   },
   {
     "name": "Công viên Tao Đàn",
@@ -141,7 +147,8 @@
     "lat": 10.7761,
     "lon": 106.6883,
     "price (VNĐ)": 0,
-    "rating": 4.5
+    "rating": 4.5,
+    "review": "Không gian xanh mát, yên tĩnh hiếm có giữa lòng thành phố ồn ào. Rất thích hợp để đi dạo, tập thể dục buổi sáng sớm hoặc chiều mát. Có khu vui chơi nhỏ cho trẻ em."
   },
   {
     "name": "Thảo Cầm Viên Sài Gòn",
@@ -163,7 +170,8 @@
     "lat": 10.788,
     "lon": 106.7056,
     "price (VNĐ)": 60000,
-    "rating": 4.4
+    "rating": 4.4,
+    "review": "Tuyệt vời cho gia đình có trẻ nhỏ. Khuôn viên rộng lớn, nhiều cây xanh, vừa có thể xem thú, vừa có khu vui chơi. Nên đi vào buổi sáng sớm hoặc chiều mát để tránh nóng."
   },
   {
     "name": "Bitexco Tower",
@@ -186,7 +194,8 @@
     "lat": 10.7716,
     "lon": 106.7043,
     "price (VNĐ)": 200000,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "View 360 độ từ Skydeck rất đáng tiền, nhìn thấy rõ các khu vực trung tâm. Thiết kế tòa nhà độc đáo hình búp sen. Có thể chọn uống cà phê hoặc ăn tối tại các nhà hàng cao tầng thay vì mua vé lên đài quan sát."
   },
   {
     "name": "Bến Nhà Rồng",
@@ -206,7 +215,8 @@
     "lat": 10.7676,
     "lon": 106.708,
     "price (VNĐ)": 40000,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "Địa điểm lịch sử quan trọng, trưng bày nhiều hình ảnh và hiện vật về cuộc đời Bác Hồ. Kiến trúc cổ kính, nằm ngay cạnh sông Sài Gòn. Phù hợp cho những ai muốn tìm hiểu về lịch sử hiện đại của Việt Nam."
   },
   {
     "name": "Khu phố Tây Bùi Viện",
@@ -229,7 +239,8 @@
     "lat": 10.767,
     "lon": 106.692,
     "price (VNĐ)": 0,
-    "rating": 4.4
+    "rating": 4.4,
+    "review": "Cực kỳ sôi động và ồn ào vào buổi tối, thích hợp cho những người thích tiệc tùng và trải nghiệm nightlife. Đồ ăn, thức uống phong phú, giá cả phải chăng. Nên cẩn thận với tư trang cá nhân."
   },
   {
     "name": "Khu ChinaTown (Chợ Lớn)",
@@ -252,7 +263,8 @@
     "lat": 10.755,
     "lon": 106.663,
     "price (VNĐ)": 0,
-    "rating": 4.5
+    "rating": 4.5,
+    "review": "Nơi tuyệt vời để khám phá văn hóa, kiến trúc và ẩm thực người Hoa. Rất nhiều chùa miếu cổ kính để tham quan và check-in. Đừng quên thử các món ăn đặc trưng như hủ tiếu, dimsum, và các loại chè."
   },
   {
     "name": "Khu du lịch Văn Thánh",
@@ -273,7 +285,8 @@
     "lat": 10.8023,
     "lon": 106.7187,
     "price (VNĐ)": 100000,
-    "rating": 4.3
+    "rating": 4.3,
+    "review": "Không gian rộng rãi, thoáng mát, thích hợp cho buổi dã ngoại cuối tuần. Có khu hồ bơi lớn và khu nhà hàng ẩm thực Việt Nam, thường được chọn để tổ chức tiệc, họp mặt. Giá vé hợp lý."
   },
   {
     "name": "Công viên nước Đầm Sen",
@@ -294,7 +307,8 @@
     "lat": 10.771,
     "lon": 106.638,
     "price (VNĐ)": 140000,
-    "rating": 4.5
+    "rating": 4.5,
+    "review": "Nhiều trò chơi dưới nước hấp dẫn, phù hợp cho cả người lớn và trẻ em. Là lựa chọn giải nhiệt lý tưởng vào mùa hè. Luôn đông đúc, nên đi sớm để tránh phải xếp hàng lâu."
   },
   {
     "name": "Công viên Suối Tiên",
@@ -315,7 +329,8 @@
     "lat": 10.8695,
     "lon": 106.8028,
     "price (VNĐ)": 180000,
-    "rating": 4.4
+    "rating": 4.4,
+    "review": "Công viên rộng lớn với nhiều trò chơi đa dạng và các công trình mang ý nghĩa tâm linh, truyền thuyết. Đặc biệt hấp dẫn vào các dịp lễ hội lớn. Hơi xa trung tâm nhưng đáng để đi cùng gia đình."
   },
   {
     "name": "AEON Mall Tân Phú",
@@ -336,7 +351,8 @@
     "lat": 10.801,
     "lon": 106.6257,
     "price (VNĐ)": 0,
-    "rating": 4.7
+    "rating": 4.7,
+    "review": "Đa dạng về ẩm thực và mua sắm, đặc biệt có siêu thị lớn của Nhật Bản. Không gian rộng rãi, sạch đẹp, phù hợp cho mọi lứa tuổi. Là điểm đến quen thuộc của người dân khu vực ngoại thành."
   },
   {
     "name": "Vincom Center Đồng Khởi",
@@ -356,7 +372,8 @@
     "lat": 10.7768,
     "lon": 106.7023,
     "price (VNĐ)": 0,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "Tập trung các thương hiệu quốc tế và cao cấp. Vị trí đắc địa, ngay trung tâm Quận 1. Thích hợp cho việc shopping, ăn uống và trải nghiệm không gian sang trọng."
   },
   {
     "name": "Bảo tàng Mỹ thuật TP.HCM",
@@ -377,7 +394,8 @@
     "lat": 10.7721,
     "lon": 106.6975,
     "price (VNĐ)": 30000,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "Kiến trúc cổ kính đẹp mắt, là nơi 'sống ảo' lý tưởng cho giới trẻ. Trưng bày nhiều tác phẩm nghệ thuật có giá trị. Một không gian yên tĩnh, thư thái để chiêm ngưỡng nghệ thuật."
   },
   {
     "name": "Cầu Ánh Sao",
@@ -398,7 +416,8 @@
     "lat": 10.7303,
     "lon": 106.7197,
     "price (VNĐ)": 0,
-    "rating": 4.7
+    "rating": 4.7,
+    "review": "Rất lãng mạn vào buổi tối với hiệu ứng ánh sáng như sao trời. Thích hợp để đi dạo cùng người yêu hoặc gia đình. Xung quanh có Hồ Bán Nguyệt và Crescent Mall, tạo thành một khu vực vui chơi giải trí hoàn chỉnh."
   },
   {
     "name": "Crescent Mall",
@@ -419,7 +438,8 @@
     "lat": 10.7294,
     "lon": 106.7182,
     "price (VNĐ)": 0,
-    "rating": 4.6
+    "rating": 4.6,
+    "review": "Trung tâm thương mại lớn, hiện đại, có nhiều khu vực chụp ảnh đẹp. Đặc biệt là khu vực ngoài trời hướng ra Hồ Bán Nguyệt và Cầu Ánh Sao. Rất tiện nghi và nhiều lựa chọn ẩm thực."
   },
   {
     "name": "Bảo tàng Áo dài",
@@ -451,6 +471,7 @@
     "lat": 10.8005,
     "lon": 106.8109,
     "price (VNĐ)": 100000,
-    "rating": 4.8
+    "rating": 4.8,
+    "review": "Kiến trúc độc đáo, không gian xanh mát và yên tĩnh, rất khác biệt so với trung tâm thành phố. Bộ sưu tập áo dài ấn tượng, giúp hiểu thêm về lịch sử và văn hóa. Lý tưởng để chụp ảnh với áo dài."
   }
 ]
