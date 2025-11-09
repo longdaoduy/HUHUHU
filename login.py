@@ -58,8 +58,7 @@ def screen_login_page(data):
     )
 
     result = authenticator.login(fields="Đăng nhập", location = "main")
-    
-    # 2. KIỂM TRA KẾT QUẢ TRẢ VỀ (result có phải là None không?)
+
     if result is not None:
         name, auth_status, username = result
         if auth_status is True:
