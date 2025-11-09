@@ -11,7 +11,7 @@ def loadUser():
         except json.JSONDecodeError:
             return {"users" : []}
     
-#Lưu thông tin ngwoif dùng
+#Lưu thông tin người dùng
 def saveUser(data):
     with open("Users.json", "w", encoding = "utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
