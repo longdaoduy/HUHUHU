@@ -12,7 +12,12 @@ import io
 import exifread
 from geopy.geocoders import Nominatim
 import textwrap 
-
+try:
+    from streamlit_geolocation import streamlit_geolocation as geoloc
+    _GEO_OK = True
+except Exception as e:
+    _GEO_OK = False
+    _GEO_ERR = repr(e)
 st.set_page_config(page_title="Du lịch demo ", page_icon="🧭", layout="wide")
 
 # Khởi tạo state
@@ -84,9 +89,7 @@ def screen_home():
     st.divider()
     st.info("Dùng menu trái để chuyển nhanh giữa các tính năng.")
 
-# --- PHẦN AI (CẬP NHẬT) ---
-
-#client = OpenAI(api_key="")
+#client = OpenAI(api_key="...")
 OPENAI_ENABLED = True
 
 def get_image_analysis(image_pil, prompt):
@@ -225,7 +228,6 @@ def screen_upload():
             else:
                 st.warning("Hãy tải một ảnh trước.")
 
-# screen_suggest_interest (Giữ nguyên)
 def screen_suggest_interest():
     st.title("Gợi ý địa điểm theo sở thích")
     st.markdown("Nhập sở thích hoặc địa điểm bạn muốn tham quan")
@@ -291,8 +293,7 @@ def load_province_coords(csv_path: str) -> dict:
         df = pd.read_csv(csv_path)
     except FileNotFoundError:
         st.error(f"Lỗi: Không tìm thấy file '{csv_path}'. Tính năng gợi ý theo vị trí sẽ không hoạt động.")
-        return {}, pd.DataFrame()
-        
+        return {}, pd.DataFrame()     
     df["display"] = df["province"].fillna(df["capital"])
     # dict: display -> (lat, lon)
     return dict(zip(df["display"], zip(df["lat"], df["lon"]))), df
@@ -304,21 +305,64 @@ def screen_suggest():
     if not PROVINCE_COORDS:
         return
 
-    colA, colB = st.columns([2, 1])
-    with colA:
-        province = st.selectbox(
-            "Chọn tỉnh/thành",
-            options=list(PROVINCE_COORDS.keys()),
-            index=0,
-        )
-    with colB:
+    # Hiển thị toạ độ đã lưu gần nhất 
+    if "last_coords" in st.session_state:
+        lc = st.session_state["last_coords"]
+        st.caption(f"Toạ độ đã lưu: lat={lc['lat']:.6f}, lon={lc['lon']:.6f} · nguồn: {lc['source']}")
+
+    mode = st.radio(
+        "Chọn cách lấy vị trí",
+        ("Chọn tỉnh/thành (thủ công)", "Dùng GPS từ trình duyệt"),
+        horizontal=True,
+    )
+
+    col_left, col_right = st.columns([2, 1])
+
+    # Thiết lập bán kính chung
+    with col_right:
         radius = st.slider("Bán kính (km)", min_value=1, max_value=100, value=5)
 
-    lat, lon = PROVINCE_COORDS[province]
+    # Xác định lat/lon theo mode
+    lat = lon = None
+    with col_left:
+        if mode.startswith("Chọn tỉnh/thành"):
+            province = st.selectbox(
+                "Chọn tỉnh/thành",
+                options=list(PROVINCE_COORDS.keys()),
+                index=0,
+            )
+            lat, lon = PROVINCE_COORDS[province]
+            src = "manual"
+        else:
+            if not _GEO_OK:
+                st.error("Thiếu component GPS. Cài: pip install streamlit-geolocation")
+                st.info("Tạm thời nhập tay nếu cần:")
+                lat = st.number_input("Lat", value=float(st.session_state.get("last_coords", {}).get("lat", 10.762622)))
+                lon = st.number_input("Lon", value=float(st.session_state.get("last_coords", {}).get("lon", 106.660172)))
+                src = "manual-fallback"
+            else:
+                st.caption("Bấm 'Cho phép' khi trình duyệt hỏi quyền vị trí.")
+                loc = geoloc()
+                if loc and loc.get("latitude") and loc.get("longitude"):
+                    lat = float(loc["latitude"])
+                    lon = float(loc["longitude"])
+                    src = "gps"
+                    st.success(f"Đã lấy GPS: lat={lat:.6f}, lon={lon:.6f}")
+                else:
+                    st.warning("Chưa nhận được toạ độ từ GPS. Bạn có thể thử lại hoặc chuyển sang chọn thủ công.")
 
     st.caption("Dữ liệu lấy từ database nội bộ. Không gọi mạng.")
+
+    # Nút tìm kiếm
     if st.button("Tìm điểm tham quan gần tôi"):
-        destinations = ai_recommend.loadDestination()  # dùng hàm đã sửa
+        if lat is None or lon is None:
+            st.error("Chưa có toạ độ hợp lệ.")
+            return
+
+        # Lưu tĩnh toạ độ đã dùng
+        st.session_state["last_coords"] = {"lat": lat, "lon": lon, "source": src}
+
+        destinations = ai_recommend.loadDestination()
 
         results = []
         for d in destinations:
@@ -339,22 +383,18 @@ def screen_suggest():
             with st.container(border=True):
                 left, right = st.columns([3, 1])
                 with left:
-                    # Tên
-                    st.markdown(f"**{item.get('name','(Không tên)')}**"
-                                + (f" · {item.get('location')}" if item.get('location') else ""))
-                    # Khoảng cách
+                    st.markdown(
+                        f"**{item.get('name','(Không tên)')}**"
+                        + (f" · {item.get('location')}" if item.get('location') else "")
+                    )
                     st.markdown(f"Khoảng cách: **{item['distance_km']:.2f} km**")
-                    # Giới thiệu ngắn
                     if item.get("introduction"):
                         st.write(item["introduction"])
-                    # Tags (nếu có)
-                    # Giá
                     if item.get("price") is not None:
                         try:
                             st.caption(f"Giá tham khảo: {int(item['price']):,} VNĐ")
                         except Exception:
                             st.caption(f"Giá tham khảo: {item['price']} VNĐ")
-                    # Review trong expander
                 if item.get("review"):
                     with st.expander("Xem review chi tiết"):
                         sentences = [s.strip() for s in item["review"].split(".") if s.strip()]
@@ -366,7 +406,6 @@ def screen_suggest():
                         st.metric("Đánh giá", f"{float(rating):.1f} ⭐")
                     else:
                         st.metric("Đánh giá", "N/A")
-
 
 
 def create_pdf_album(album_items):
@@ -454,8 +493,6 @@ def render_thumbnail(item):
         st.info(item.get('landmark', 'N/A'))
         
 
-# --- PHẦN ALBUM (NÂNG CẤP HOÀN TOÀN) ---
-
 def screen_album():
     st.title("🖼️ Album ảnh sau chuyến đi")
     
@@ -517,7 +554,6 @@ def screen_album():
         items = st.session_state.albums.get(album_name, [])
         st.header(f"Album: {album_name} ({len(items)} ảnh)")
 
-        # --- Yêu cầu 1: Khu vực tải ảnh VÀ xử lý metadata ---
         with st.expander("Thêm ảnh vào album (Tự động nhận dạng)"):
             files = st.file_uploader("Tải nhiều ảnh", type=["png", "jpg", "jpeg"], accept_multiple_files=True, key=f"uploader_{album_name}")
 
@@ -574,7 +610,6 @@ def screen_album():
             st.info("Album này chưa có ảnh. Hãy thêm ảnh ở trên.")
             return
 
-        # --- Yêu cầu 3: Tìm kiếm và Lọc ---
         st.subheader("Tìm kiếm và Lọc")
         c_filter1, c_filter2 = st.columns(2)
         with c_filter1:
@@ -592,7 +627,6 @@ def screen_album():
         st.caption(f"Hiển thị {len(filtered_items)} / {len(items)} ảnh.")
         st.divider()
 
-        # --- Yêu cầu 2 & 5: Hiển thị Gallery & Nhóm ---
         st.subheader("Bộ sưu tập")
         group_by = st.radio("Sắp xếp/Nhóm theo:", ("Không nhóm (mới nhất trước)", "Địa danh"), horizontal=True)
 
@@ -640,7 +674,6 @@ def screen_album():
                 use_container_width=True
             )
         with dl_c2:
-            # Yêu cầu 4: Nút tải PDF
             if st.button(f"Chuẩn bị file PDF ({len(filtered_items)} ảnh)", use_container_width=True):
                 with st.spinner("Đang tạo file PDF..."):
                     pdf_buf = create_pdf_album(filtered_items)
@@ -661,7 +694,6 @@ def screen_album():
                 )
 
 
-# --- PHẦN ĐIỀU HƯỚNG GỐC (GIỮ NGUYÊN) ---
 
 PAGES = {
     "Trang chủ": screen_home,
