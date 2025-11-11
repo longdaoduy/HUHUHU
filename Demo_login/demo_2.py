@@ -52,6 +52,9 @@ def zip_album(album_name, items):
     buf = BytesIO()
     with ZipFile(buf, "w", ZIP_DEFLATED) as zf:
         for item in items:
+            if 'bytes' not in item or not item.get('bytes') or 'filename' not in item:
+                st.warning(f"Bỏ qua ảnh lỗi: {item.get('filename', 'Không tên')}")
+                continue
             zf.writestr(item["filename"], item["bytes"])
     buf.seek(0)
     return buf
@@ -443,6 +446,9 @@ def create_pdf_album(album_items):
 
 def render_thumbnail(item):
     """Yêu cầu 2: Hàm con để hiển thị 1 ảnh thumbnail và popover chi tiết."""
+    if 'bytes' not in item or not item.get('bytes'):
+        st.warning(f"Ảnh '{item.get('filename', 'Không tên')}' bị lỗi dữ liệu.")
+        return
     img = Image.open(BytesIO(item["bytes"]))
     st.image(img, use_container_width=True, caption=item['filename'][:20] + "...")
     
@@ -462,6 +468,31 @@ def render_thumbnail(item):
 # --- PHẦN ALBUM (NÂNG CẤP HOÀN TOÀN) ---
 
 def screen_album():
+    st.markdown("---")
+    st.subheader("🗑️ Xóa Album")
+    
+    if st.session_state.albums:
+        album_names = list(st.session_state.albums.keys())
+        album_to_delete = st.selectbox("Chọn Album để xóa", album_names, key="delete_album_select")
+        
+        if st.button(f"Xác nhận xóa album '{album_to_delete}'", type="primary"):
+            if album_to_delete in st.session_state.albums:
+                
+                # 1. Xóa khỏi Session State
+                del st.session_state.albums[album_to_delete]
+                
+                # 2. Reset active album nếu nó bị xóa
+                if st.session_state.active_album == album_to_delete:
+                    st.session_state.active_album = None
+                
+                # 3. LƯU DỮ LIỆU ĐÃ XÓA VÀO FILE
+                login.saveUserAlbums(st.session_state.username, st.session_state.albums) 
+                
+                st.success(f"Đã xóa album '{album_to_delete}' thành công.")
+                st.rerun()
+    else:
+        st.info("Hiện tại chưa có album nào để xóa.")
+
     st.title("🖼️ Album ảnh sau chuyến đi (Nâng cấp)")
     
     # Sử dụng layout cột của file gốc
@@ -500,6 +531,7 @@ def screen_album():
                 if new_album_name not in st.session_state.albums:
                     st.session_state.albums[new_album_name] = []
                     st.session_state.active_album = new_album_name
+                    login.saveUserAlbums(st.session_state.username, st.session_state.albums)
                     st.rerun()
                 else:
                     st.warning("Album đã tồn tại.")
@@ -567,6 +599,7 @@ def screen_album():
                     st.session_state.albums[album_name] = bucket
                     progress_bar.empty()
                     st.success(f"Đã thêm {len(files)} ảnh vào album '{album_name}'.")
+                    login.saveUserAlbums(st.session_state.username, st.session_state.albums)
                     st.rerun() # Tải lại để hiển thị ảnh mới
 
         if not items:
@@ -613,6 +646,23 @@ def screen_album():
                 for idx, item in enumerate(group_items):
                     with cols[idx % 4]:
                         render_thumbnail(item) # Yêu cầu 2
+                        delete_key = f"delete_photo_{item['filename']}_{idx}_g" 
+                        if st.button("Xóa ảnh", key=delete_key, type="secondary", use_container_width=True):
+            
+                            album_name = st.session_state.active_album
+                            current_album_list = st.session_state.albums[album_name]
+                    
+                            new_album_list = [
+                                i for i in current_album_list 
+                                if not (i['filename'] == item['filename'] and i['uploaded_at'] == item['uploaded_at'])
+                            ]
+                    
+                            st.session_state.albums[album_name] = new_album_list
+    
+                            login.save_user_albums(st.session_state.username, st.session_state.albums)
+                    
+                            st.toast(f"Đã xóa ảnh '{item['filename']}'.", icon="🗑️")
+                            st.rerun()
                 st.divider()
         
         else: # "Không nhóm"
@@ -622,6 +672,27 @@ def screen_album():
             for idx, item in enumerate(sorted_items):
                 with cols[idx % 4]:
                     render_thumbnail(item) # Yêu cầu 2
+                    delete_key = f"delete_photo_{item['filename']}_{idx}" 
+            
+                    if st.button("Xóa ảnh", key=delete_key, type="secondary", use_container_width=True):
+                
+                        album_name = st.session_state.active_album
+                        current_album_list = st.session_state.albums[album_name]
+                
+                
+                        new_album_list = [
+                            i for i in current_album_list 
+                            if not (i['filename'] == item['filename'] and i['uploaded_at'] == item['uploaded_at'])
+                        ]
+                
+                
+                        st.session_state.albums[album_name] = new_album_list
+                
+                
+                        login.saveUserAlbums(st.session_state.username, st.session_state.albums)
+                
+                        st.toast(f"Đã xóa ảnh '{item['filename']}'.", icon="🗑️")
+                        st.rerun()
 
         # --- Nút tải xuống (Giữ Zip, Thêm PDF) ---
         st.divider()
@@ -686,6 +757,13 @@ if 'authentication_status' not in st.session_state:
 data = login.loadUser()
 authenticator = login.screen_login_page(data)
 if st.session_state.get('authentication_status') is True:
+
+    if 'albums_loaded' not in st.session_state or st.session_state.albums_loaded is False:
+        username = st.session_state.username
+        # Tải album cá nhân của username này
+        st.session_state.albums = login.loadUserAlbum(username) 
+        st.session_state.albums_loaded = True
+        st.rerun()
     
     # ----------------------------------------------------
     # PHẦN ỨNG DỤNG CHÍNH VÀ THANH ĐIỀU HƯỚNG (SIDEBAR)
