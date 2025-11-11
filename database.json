@@ -18,7 +18,8 @@
     "lon": 106.7218,
     "price (VNĐ)": 300000,
     "rating": 4.8,
-    "review": "View từ đài quan sát Skydeck tuyệt đỉnh, đặc biệt là lúc hoàng hôn hoặc đêm. Khu vực trung tâm thương mại Vincom rất sang trọng, nhiều thương hiệu cao cấp. Phù hợp cho những ai muốn trải nghiệm sự hiện đại và check-in sang chảnh."
+    "review": "View từ đài quan sát Skydeck tuyệt đỉnh, đặc biệt là lúc hoàng hôn hoặc đêm. Khu vực trung tâm thương mại Vincom rất sang trọng, nhiều thương hiệu cao cấp. Phù hợp cho những ai muốn trải nghiệm sự hiện đại và check-in sang chảnh.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Nhà thờ Đức Bà",
@@ -38,7 +39,8 @@
     "lon": 106.699,
     "price (VNĐ)": 0,
     "rating": 4.7,
-    "review": "Một công trình kiến trúc tuyệt đẹp mang đậm dấu ấn Pháp. Tuyệt vời để chụp ảnh cưới hoặc ảnh check-in cổ điển. Lưu ý hiện đang được trùng tu nên một số góc chụp sẽ bị che chắn."
+    "review": "Một công trình kiến trúc tuyệt đẹp mang đậm dấu ấn Pháp. Tuyệt vời để chụp ảnh cưới hoặc ảnh check-in cổ điển. Lưu ý hiện đang được trùng tu nên một số góc chụp sẽ bị che chắn.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bưu điện Trung tâm Sài Gòn",
@@ -58,7 +60,8 @@
     "lon": 106.6983,
     "price (VNĐ)": 0,
     "rating": 4.7,
-    "review": "Kiến trúc bên trong và bên ngoài đều rất ấn tượng, mang tính lịch sử. Vẫn hoạt động như một bưu điện thông thường, có thể mua quà lưu niệm và gửi thư. Nên ghé thăm khi kết hợp với Nhà thờ Đức Bà vì nằm gần nhau."
+    "review": "Kiến trúc bên trong và bên ngoài đều rất ấn tượng, mang tính lịch sử. Vẫn hoạt động như một bưu điện thông thường, có thể mua quà lưu niệm và gửi thư. Nên ghé thăm khi kết hợp với Nhà thờ Đức Bà vì nằm gần nhau.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Phố đi bộ Nguyễn Huệ",
@@ -79,7 +82,8 @@
     "lon": 106.7046,
     "price (VNĐ)": 0,
     "rating": 4.6,
-    "review": "Rất nhộn nhịp vào cuối tuần và buổi tối. Xung quanh có nhiều quán cà phê, trà sữa, và tòa nhà chung cư 42 Nguyễn Huệ với nhiều shop độc đáo. Là nơi lý tưởng để dạo mát, ngắm cảnh và cảm nhận nhịp sống Sài Gòn."
+    "review": "Rất nhộn nhịp vào cuối tuần và buổi tối. Xung quanh có nhiều quán cà phê, trà sữa, và tòa nhà chung cư 42 Nguyễn Huệ với nhiều shop độc đáo. Là nơi lý tưởng để dạo mát, ngắm cảnh và cảm nhận nhịp sống Sài Gòn.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Chợ Bến Thành",
@@ -103,7 +107,8 @@
     "lon": 106.6983,
     "price (VNĐ)": 0,
     "rating": 4.5,
-    "review": "Nơi có thể tìm thấy mọi thứ từ quần áo, vải vóc đến đồ lưu niệm và đặc sản địa phương. Khu ẩm thực đa dạng, giá cả hơi cao hơn bên ngoài nhưng rất đáng thử. Nên trả giá khi mua sắm."
+    "review": "Nơi có thể tìm thấy mọi thứ từ quần áo, vải vóc đến đồ lưu niệm và đặc sản địa phương. Khu ẩm thực đa dạng, giá cả hơi cao hơn bên ngoài nhưng rất đáng thử. Nên trả giá khi mua sắm.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bảo tàng Chứng tích Chiến tranh",
@@ -125,7 +130,8 @@
     "lon": 106.6925,
     "price (VNĐ)": 40000,
     "rating": 4.7,
-    "review": "Trải nghiệm sâu sắc và xúc động. Các tư liệu và hiện vật được trưng bày rất chân thực và có giá trị lịch sử cao. Một điểm đến quan trọng để tìm hiểu về lịch sử Việt Nam, đặc biệt dành cho du khách quốc tế."
+    "review": "Trải nghiệm sâu sắc và xúc động. Các tư liệu và hiện vật được trưng bày rất chân thực và có giá trị lịch sử cao. Một điểm đến quan trọng để tìm hiểu về lịch sử Việt Nam, đặc biệt dành cho du khách quốc tế.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Công viên Tao Đàn",
@@ -148,7 +154,8 @@
     "lon": 106.6883,
     "price (VNĐ)": 0,
     "rating": 4.5,
-    "review": "Không gian xanh mát, yên tĩnh hiếm có giữa lòng thành phố ồn ào. Rất thích hợp để đi dạo, tập thể dục buổi sáng sớm hoặc chiều mát. Có khu vui chơi nhỏ cho trẻ em."
+    "review": "Không gian xanh mát, yên tĩnh hiếm có giữa lòng thành phố ồn ào. Rất thích hợp để đi dạo, tập thể dục buổi sáng sớm hoặc chiều mát. Có khu vui chơi nhỏ cho trẻ em.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Thảo Cầm Viên Sài Gòn",
@@ -171,7 +178,8 @@
     "lon": 106.7056,
     "price (VNĐ)": 60000,
     "rating": 4.4,
-    "review": "Tuyệt vời cho gia đình có trẻ nhỏ. Khuôn viên rộng lớn, nhiều cây xanh, vừa có thể xem thú, vừa có khu vui chơi. Nên đi vào buổi sáng sớm hoặc chiều mát để tránh nóng."
+    "review": "Tuyệt vời cho gia đình có trẻ nhỏ. Khuôn viên rộng lớn, nhiều cây xanh, vừa có thể xem thú, vừa có khu vui chơi. Nên đi vào buổi sáng sớm hoặc chiều mát để tránh nóng.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bitexco Tower",
@@ -195,7 +203,8 @@
     "lon": 106.7043,
     "price (VNĐ)": 200000,
     "rating": 4.6,
-    "review": "View 360 độ từ Skydeck rất đáng tiền, nhìn thấy rõ các khu vực trung tâm. Thiết kế tòa nhà độc đáo hình búp sen. Có thể chọn uống cà phê hoặc ăn tối tại các nhà hàng cao tầng thay vì mua vé lên đài quan sát."
+    "review": "View 360 độ từ Skydeck rất đáng tiền, nhìn thấy rõ các khu vực trung tâm. Thiết kế tòa nhà độc đáo hình búp sen. Có thể chọn uống cà phê hoặc ăn tối tại các nhà hàng cao tầng thay vì mua vé lên đài quan sát.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bến Nhà Rồng",
@@ -216,7 +225,8 @@
     "lon": 106.708,
     "price (VNĐ)": 40000,
     "rating": 4.6,
-    "review": "Địa điểm lịch sử quan trọng, trưng bày nhiều hình ảnh và hiện vật về cuộc đời Bác Hồ. Kiến trúc cổ kính, nằm ngay cạnh sông Sài Gòn. Phù hợp cho những ai muốn tìm hiểu về lịch sử hiện đại của Việt Nam."
+    "review": "Địa điểm lịch sử quan trọng, trưng bày nhiều hình ảnh và hiện vật về cuộc đời Bác Hồ. Kiến trúc cổ kính, nằm ngay cạnh sông Sài Gòn. Phù hợp cho những ai muốn tìm hiểu về lịch sử hiện đại của Việt Nam.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Khu phố Tây Bùi Viện",
@@ -240,7 +250,8 @@
     "lon": 106.692,
     "price (VNĐ)": 0,
     "rating": 4.4,
-    "review": "Cực kỳ sôi động và ồn ào vào buổi tối, thích hợp cho những người thích tiệc tùng và trải nghiệm nightlife. Đồ ăn, thức uống phong phú, giá cả phải chăng. Nên cẩn thận với tư trang cá nhân."
+    "review": "Cực kỳ sôi động và ồn ào vào buổi tối, thích hợp cho những người thích tiệc tùng và trải nghiệm nightlife. Đồ ăn, thức uống phong phú, giá cả phải chăng. Nên cẩn thận với tư trang cá nhân.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Khu ChinaTown (Chợ Lớn)",
@@ -264,7 +275,8 @@
     "lon": 106.663,
     "price (VNĐ)": 0,
     "rating": 4.5,
-    "review": "Nơi tuyệt vời để khám phá văn hóa, kiến trúc và ẩm thực người Hoa. Rất nhiều chùa miếu cổ kính để tham quan và check-in. Đừng quên thử các món ăn đặc trưng như hủ tiếu, dimsum, và các loại chè."
+    "review": "Nơi tuyệt vời để khám phá văn hóa, kiến trúc và ẩm thực người Hoa. Rất nhiều chùa miếu cổ kính để tham quan và check-in. Đừng quên thử các món ăn đặc trưng như hủ tiếu, dimsum, và các loại chè.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Khu du lịch Văn Thánh",
@@ -286,7 +298,8 @@
     "lon": 106.7187,
     "price (VNĐ)": 100000,
     "rating": 4.3,
-    "review": "Không gian rộng rãi, thoáng mát, thích hợp cho buổi dã ngoại cuối tuần. Có khu hồ bơi lớn và khu nhà hàng ẩm thực Việt Nam, thường được chọn để tổ chức tiệc, họp mặt. Giá vé hợp lý."
+    "review": "Không gian rộng rãi, thoáng mát, thích hợp cho buổi dã ngoại cuối tuần. Có khu hồ bơi lớn và khu nhà hàng ẩm thực Việt Nam, thường được chọn để tổ chức tiệc, họp mặt. Giá vé hợp lý.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Công viên nước Đầm Sen",
@@ -308,7 +321,8 @@
     "lon": 106.638,
     "price (VNĐ)": 140000,
     "rating": 4.5,
-    "review": "Nhiều trò chơi dưới nước hấp dẫn, phù hợp cho cả người lớn và trẻ em. Là lựa chọn giải nhiệt lý tưởng vào mùa hè. Luôn đông đúc, nên đi sớm để tránh phải xếp hàng lâu."
+    "review": "Nhiều trò chơi dưới nước hấp dẫn, phù hợp cho cả người lớn và trẻ em. Là lựa chọn giải nhiệt lý tưởng vào mùa hè. Luôn đông đúc, nên đi sớm để tránh phải xếp hàng lâu.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Công viên Suối Tiên",
@@ -330,7 +344,8 @@
     "lon": 106.8028,
     "price (VNĐ)": 180000,
     "rating": 4.4,
-    "review": "Công viên rộng lớn với nhiều trò chơi đa dạng và các công trình mang ý nghĩa tâm linh, truyền thuyết. Đặc biệt hấp dẫn vào các dịp lễ hội lớn. Hơi xa trung tâm nhưng đáng để đi cùng gia đình."
+    "review": "Công viên rộng lớn với nhiều trò chơi đa dạng và các công trình mang ý nghĩa tâm linh, truyền thuyết. Đặc biệt hấp dẫn vào các dịp lễ hội lớn. Hơi xa trung tâm nhưng đáng để đi cùng gia đình.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "AEON Mall Tân Phú",
@@ -352,7 +367,8 @@
     "lon": 106.6257,
     "price (VNĐ)": 0,
     "rating": 4.7,
-    "review": "Đa dạng về ẩm thực và mua sắm, đặc biệt có siêu thị lớn của Nhật Bản. Không gian rộng rãi, sạch đẹp, phù hợp cho mọi lứa tuổi. Là điểm đến quen thuộc của người dân khu vực ngoại thành."
+    "review": "Đa dạng về ẩm thực và mua sắm, đặc biệt có siêu thị lớn của Nhật Bản. Không gian rộng rãi, sạch đẹp, phù hợp cho mọi lứa tuổi. Là điểm đến quen thuộc của người dân khu vực ngoại thành.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Vincom Center Đồng Khởi",
@@ -373,7 +389,8 @@
     "lon": 106.7023,
     "price (VNĐ)": 0,
     "rating": 4.6,
-    "review": "Tập trung các thương hiệu quốc tế và cao cấp. Vị trí đắc địa, ngay trung tâm Quận 1. Thích hợp cho việc shopping, ăn uống và trải nghiệm không gian sang trọng."
+    "review": "Tập trung các thương hiệu quốc tế và cao cấp. Vị trí đắc địa, ngay trung tâm Quận 1. Thích hợp cho việc shopping, ăn uống và trải nghiệm không gian sang trọng.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bảo tàng Mỹ thuật TP.HCM",
@@ -395,7 +412,8 @@
     "lon": 106.6975,
     "price (VNĐ)": 30000,
     "rating": 4.6,
-    "review": "Kiến trúc cổ kính đẹp mắt, là nơi 'sống ảo' lý tưởng cho giới trẻ. Trưng bày nhiều tác phẩm nghệ thuật có giá trị. Một không gian yên tĩnh, thư thái để chiêm ngưỡng nghệ thuật."
+    "review": "Kiến trúc cổ kính đẹp mắt, là nơi 'sống ảo' lý tưởng cho giới trẻ. Trưng bày nhiều tác phẩm nghệ thuật có giá trị. Một không gian yên tĩnh, thư thái để chiêm ngưỡng nghệ thuật.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Cầu Ánh Sao",
@@ -417,7 +435,8 @@
     "lon": 106.7197,
     "price (VNĐ)": 0,
     "rating": 4.7,
-    "review": "Rất lãng mạn vào buổi tối với hiệu ứng ánh sáng như sao trời. Thích hợp để đi dạo cùng người yêu hoặc gia đình. Xung quanh có Hồ Bán Nguyệt và Crescent Mall, tạo thành một khu vực vui chơi giải trí hoàn chỉnh."
+    "review": "Rất lãng mạn vào buổi tối với hiệu ứng ánh sáng như sao trời. Thích hợp để đi dạo cùng người yêu hoặc gia đình. Xung quanh có Hồ Bán Nguyệt và Crescent Mall, tạo thành một khu vực vui chơi giải trí hoàn chỉnh.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Crescent Mall",
@@ -439,7 +458,8 @@
     "lon": 106.7182,
     "price (VNĐ)": 0,
     "rating": 4.6,
-    "review": "Trung tâm thương mại lớn, hiện đại, có nhiều khu vực chụp ảnh đẹp. Đặc biệt là khu vực ngoài trời hướng ra Hồ Bán Nguyệt và Cầu Ánh Sao. Rất tiện nghi và nhiều lựa chọn ẩm thực."
+    "review": "Trung tâm thương mại lớn, hiện đại, có nhiều khu vực chụp ảnh đẹp. Đặc biệt là khu vực ngoài trời hướng ra Hồ Bán Nguyệt và Cầu Ánh Sao. Rất tiện nghi và nhiều lựa chọn ẩm thực.",
+    "province": "TP. Hồ Chí Minh"
   },
   {
     "name": "Bảo tàng Áo dài",
@@ -472,6 +492,7 @@
     "lon": 106.8109,
     "price (VNĐ)": 100000,
     "rating": 4.8,
-    "review": "Kiến trúc độc đáo, không gian xanh mát và yên tĩnh, rất khác biệt so với trung tâm thành phố. Bộ sưu tập áo dài ấn tượng, giúp hiểu thêm về lịch sử và văn hóa. Lý tưởng để chụp ảnh với áo dài."
+    "review": "Kiến trúc độc đáo, không gian xanh mát và yên tĩnh, rất khác biệt so với trung tâm thành phố. Bộ sưu tập áo dài ấn tượng, giúp hiểu thêm về lịch sử và văn hóa. Lý tưởng để chụp ảnh với áo dài.",
+    "province": "TP. Hồ Chí Minh"
   }
 ]
