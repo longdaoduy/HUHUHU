@@ -1,7 +1,7 @@
 [
   {
     "name": "Landmark 81",
-    "location": "202 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh",
+    "location": "720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh",
     "tags": [
       "cao tầng",
       "mua sắm",
@@ -22,7 +22,7 @@
   },
   {
     "name": "Nhà thờ Đức Bà",
-    "location": "01 Công trường Công Xã Paris, Phường Bến Nghé, Quận 1",
+    "location": "Công xã Paris, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
     "tags": [
       "kiến trúc",
       "tôn giáo",
@@ -42,7 +42,7 @@
   },
   {
     "name": "Bưu điện Trung tâm Sài Gòn",
-    "location": "02 Công Xã Paris, Phường Bến Nghé, Quận 1",
+    "location": "2 Công xã Paris, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
     "tags": [
       "lịch sử",
       "kiến trúc",
@@ -62,7 +62,7 @@
   },
   {
     "name": "Phố đi bộ Nguyễn Huệ",
-    "location": "Đường Nguyễn Huệ, Phường Bến Nghé, Quận 1",
+    "location": "Đường Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "giải trí",
       "ăn uống",
@@ -83,7 +83,7 @@
   },
   {
     "name": "Chợ Bến Thành",
-    "location": "Đường Lê Lợi, Phường Bến Thành, Quận 1",
+    "location": "Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "ẩm thực",
       "mua sắm",
@@ -107,7 +107,7 @@
   },
   {
     "name": "Bảo tàng Chứng tích Chiến tranh",
-    "location": "28 Võ Văn Tần, Phường Võ Thị Sáu, Quận 3",
+    "location": "28 Võ Văn Tần, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh.",
     "tags": [
       "lịch sử",
       "giáo dục",
@@ -129,7 +129,7 @@
   },
   {
     "name": "Công viên Tao Đàn",
-    "location": "Đường Trương Định, Phường Bến Thành, Quận 1",
+    "location": "Trương Định, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "công viên",
       "thư giãn",
@@ -152,7 +152,7 @@
   },
   {
     "name": "Thảo Cầm Viên Sài Gòn",
-    "location": "02 Nguyễn Bỉnh Khiêm, Phường Bến Nghé, Quận 1",
+    "location": "2 Nguyễn Bỉnh Khiêm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "động vật",
       "thiên nhiên",
@@ -175,7 +175,7 @@
   },
   {
     "name": "Bitexco Tower",
-    "location": "02 Hải Triều, Phường Bến Nghé, Quận 1",
+    "location": "2 Hải Triều, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "cao tầng",
       "ngắm cảnh",
@@ -199,7 +199,7 @@
   },
   {
     "name": "Bến Nhà Rồng",
-    "location": "01 Nguyễn Tất Thành, Phường 12, Quận 4",
+    "location": "1 Nguyễn Tất Thành, Phường 12, Quận 4, TP. Hồ Chí Minh.",
     "tags": [
       "lịch sử",
       "bảo tàng",
@@ -220,7 +220,7 @@
   },
   {
     "name": "Khu phố Tây Bùi Viện",
-    "location": "Đường Bùi Viện, Phường Phạm Ngũ Lão, Quận 1",
+    "location": "Đường Bùi Viện, Phường Phạm Ngũ Lão, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "giải trí",
       "bar",
@@ -244,7 +244,7 @@
   },
   {
     "name": "Khu ChinaTown (Chợ Lớn)",
-    "location": "57A Tháp Mười, Phường 2, Quận 6",
+    "location": "Khu vực Chợ Bình Tây và các tuyến đường xung quanh như Hải Thượng Lãn Ông, Châu Văn Liêm, Quận 5, TP. Hồ Chí Minh.",
     "tags": [
       "văn hóa",
       "ẩm thực",
@@ -268,7 +268,7 @@
   },
   {
     "name": "Khu du lịch Văn Thánh",
-    "location": "48/10 Điện Biên Phủ, Phường 22, Quận Bình Thạnh",
+    "location": "48/10 Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh",
     "tags": [
       "ăn uống",
       "hồ bơi",
@@ -290,7 +290,7 @@
   },
   {
     "name": "Công viên nước Đầm Sen",
-    "location": "03 Hòa Bình, Phường 3, Quận 11",
+    "location": "3 Hòa Bình, Phường 3, Quận 11, TP. Hồ Chí Minh",
     "tags": [
       "vui chơi",
       "nước",
@@ -312,7 +312,7 @@
   },
   {
     "name": "Công viên Suối Tiên",
-    "location": "120 Xa lộ Hà Nội, Phường Tân Phú, TP Thủ Đức",
+    "location": "120 Xa lộ Hà Nội, Phường Tân Phú, TP Thủ Đức, TP. Hồ Chí Minh",
     "tags": [
       "vui chơi",
       "giải trí",
@@ -325,7 +325,7 @@
       "khu du lịch",
       "truyền thống"
     ],
-    "introduction": "Khu du lịch văn hóa – giải trí nổi tiếng với chủ đề lịch sử và truyền thuyết Việt Nam.",
+    "introduction": "Khu du lịch văn hóa - giải trí nổi tiếng với chủ đề lịch sử và truyền thuyết Việt Nam.",
     "lat": 10.8695,
     "lon": 106.8028,
     "price (VNĐ)": 180000,
@@ -334,7 +334,7 @@
   },
   {
     "name": "AEON Mall Tân Phú",
-    "location": "30 Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú",
+    "location": "30 Bờ Bao Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú, TP. Hồ Chí Minh.",
     "tags": [
       "mua sắm",
       "ẩm thực",
@@ -356,7 +356,7 @@
   },
   {
     "name": "Vincom Center Đồng Khởi",
-    "location": "72A Lê Thánh Tôn, Phường Bến Nghé, Quận 1",
+    "location": "72 Lê Thánh Tôn và 45A Lý Tự Trọng, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "mua sắm",
       "thương hiệu",
@@ -377,7 +377,7 @@
   },
   {
     "name": "Bảo tàng Mỹ thuật TP.HCM",
-    "location": "97A Phó Đức Chính, Phường Nguyễn Thái Bình, Quận 1",
+    "location": "97 Phó Đức Chính, Phường Nguyễn Thái Bình, Quận 1, TP. Hồ Chí Minh.",
     "tags": [
       "nghệ thuật",
       "kiến trúc",
@@ -399,7 +399,7 @@
   },
   {
     "name": "Cầu Ánh Sao",
-    "location": "111 Tôn Dật Tiên, Phường Tân Phú, Quận 7",
+    "location": "Khu đô thị Phú Mỹ Hưng, Đường Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP. Hồ Chí Minh",
     "tags": [
       "ngắm cảnh",
       "chụp ảnh",
@@ -421,7 +421,7 @@
   },
   {
     "name": "Crescent Mall",
-    "location": "101 Tôn Dật Tiên, Phường Tân Phú, Quận 7",
+    "location": "101 Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP. Hồ Chí Minh.",
     "tags": [
       "mua sắm",
       "ăn uống",
@@ -443,7 +443,7 @@
   },
   {
     "name": "Bảo tàng Áo dài",
-    "location": "206/19/30 Long Thuận, Phường Long Phước, TP Thủ Đức",
+    "location": "206/19, Long Thuận, Phường Long Phước, Quận 9 (nay là TP Thủ Đức), TP. Hồ Chí Minh",
     "tags": [
       "văn hóa",
       "truyền thống",
