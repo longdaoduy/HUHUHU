@@ -1,0 +1,458 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - Vietnam UrbanQuest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .form-input {
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="hero-bg text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Top Bar -->
+            <div class="flex justify-between items-center py-4 border-b border-blue-700">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-home text-xl"></i>
+                    <h1 class="text-xl font-bold">Vietnam UrbanQuest</h1>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <div class="flex items-center space-x-2">
+                        <select class="bg-transparent border-none text-white">
+                            <option class="text-gray-800">Language</option>
+                            <option class="text-gray-800">English</option>
+                            <option class="text-gray-800">Tiếng Việt</option>
+                        </select>
+                    </div>
+                    <a href="about-us.html" class="hover:text-blue-200 transition">About us</a>
+                    <a href="information.html" class="hover:text-blue-200 transition">Information</a>
+                    <a href="#contact" class="hover:text-blue-200 transition">Contact us</a>
+                </div>
+            </div>
+
+            <!-- Menu Bar -->
+            <div class="flex justify-between items-center py-3">
+                <div class="flex items-center space-x-2">
+                    <img src="logo.png" width="40" height="40" alt="Logo" class="rounded-full">
+                    <span class="font-semibold">ECOUTURE</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="index.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Home</a>
+                    <a href="recommendation.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Recommendation</a>
+                    <a href="scan.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Scan image</a>
+                    <a href="album.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Album</a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 hover:text-blue-200 cursor-pointer py-2" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="userDisplayName" class="hidden md:inline text-sm"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 group-hover:block hover:block z-50">
+                            <div id="loggedInMenu" class="hidden">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-semibold">Xin chào!</p>
+                                    <p id="userEmail" class="text-xs text-gray-600"></p>
+                                </div>
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Hồ sơ
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>Cài đặt
+                                </a>
+                                <a href="favorites.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-heart mr-2"></i>Yêu thích
+                                </a>
+                                <div class="border-t">
+                                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loggedOutMenu">
+                                <button onclick="openLoginModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                                </button>
+                                <button onclick="openSignupModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100 border-t">
+                                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Signup Section -->
+    <div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Header -->
+                <div class="hero-bg text-white px-8 py-12 text-center">
+                    <i class="fas fa-user-plus text-5xl mb-4"></i>
+                    <h1 class="text-3xl font-bold">Đăng Ký</h1>
+                    <p class="text-blue-100 mt-2">Tạo tài khoản mới của bạn</p>
+                </div>
+
+                <!-- Form -->
+                <div class="px-8 py-8">
+                    <form id="signupForm">
+                        <!-- Full Name Input -->
+                        <div class="mb-4">
+                            <label for="fullname" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-user mr-2"></i>Họ và Tên
+                            </label>
+                            <input
+                                type="text"
+                                id="fullname"
+                                name="fullname"
+                                class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                                placeholder="Nguyễn Văn A"
+                                required
+                            />
+                        </div>
+
+                        <!-- Email Input -->
+                        <div class="mb-4">
+                            <label for="email" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-envelope mr-2"></i>Email
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                                placeholder="your@email.com"
+                                required
+                            />
+                        </div>
+
+                        <!-- Phone Input -->
+                        <div class="mb-4">
+                            <label for="phone" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-phone mr-2"></i>Số điện thoại
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                                placeholder="0123456789"
+                            />
+                        </div>
+
+                        <!-- Password Input -->
+                        <div class="mb-4">
+                            <label for="password" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock mr-2"></i>Mật khẩu
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                                    placeholder="••••••••"
+                                    required
+                                    oninput="checkPasswordStrength()"
+                                />
+                                <button
+                                    type="button"
+                                    class="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                                    onclick="togglePasswordVisibility('password')"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <!-- Password Strength Indicator -->
+                            <div class="password-strength bg-gray-300" id="passwordStrength"></div>
+                            <p class="text-xs text-gray-600 mt-2" id="strengthText"></p>
+                        </div>
+
+                        <!-- Confirm Password Input -->
+                        <div class="mb-4">
+                            <label for="confirmPassword" class="block text-gray-700 font-semibold mb-2">
+                                <i class="fas fa-lock mr-2"></i>Xác nhận mật khẩu
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    class="form-input w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none"
+                                    placeholder="••••••••"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    class="absolute right-3 top-2 text-gray-500 hover:text-gray-700"
+                                    onclick="togglePasswordVisibility('confirmPassword')"
+                                >
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Terms Agreement -->
+                        <div class="mb-6 flex items-start">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                name="terms"
+                                class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500 mt-1"
+                                required
+                            />
+                            <label for="terms" class="ml-2 text-gray-700 text-sm">
+                                Tôi đồng ý với
+                                <a href="#" class="text-blue-600 hover:text-blue-800">Điều khoản dịch vụ</a>
+                                và
+                                <a href="#" class="text-blue-600 hover:text-blue-800">Chính sách bảo mật</a>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button
+                            type="submit"
+                            class="w-full hero-bg text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity mb-4"
+                        >
+                            <i class="fas fa-user-plus mr-2"></i>Đăng Ký
+                        </button>
+
+                        <!-- Error Message -->
+                        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            <span id="errorText"></span>
+                        </div>
+
+                        <!-- Success Message -->
+                        <div id="successMessage" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span id="successText"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-gray-50 px-8 py-6 text-center border-t">
+                    <p class="text-gray-600">
+                        Đã có tài khoản?
+                        <a href="login.html" class="text-blue-600 hover:text-blue-800 font-bold">
+                            Đăng nhập tại đây
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center mt-6">
+                <a href="index.html" class="text-gray-600 hover:text-gray-800 font-semibold">
+                    <i class="fas fa-arrow-left mr-2"></i>Quay lại trang chủ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User Authentication Management
+        function checkUserLoggedIn() {
+            const token = localStorage.getItem('authToken');
+            const email = localStorage.getItem('userEmail');
+            
+            if (token && email) {
+                // User is logged in - redirect to home
+                window.location.href = 'index.html';
+            }
+        }
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userEmail');
+                alert('Đã đăng xuất thành công!');
+                window.location.reload();
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const userBtn = event.target.closest('[onclick="toggleUserMenu()"]');
+            const dropdown = document.getElementById('userDropdown');
+            
+            if (!userBtn && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        // Toggle password visibility
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = event.target;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Check password strength
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthBar = document.getElementById('passwordStrength');
+            const strengthText = document.getElementById('strengthText');
+
+            let strength = 0;
+            let text = 'Yếu';
+            let color = 'bg-red-500';
+
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+            if (password.match(/[@$!%*?&]+/)) strength++;
+
+            if (strength <= 1) {
+                text = 'Yếu';
+                color = 'bg-red-500';
+            } else if (strength <= 2) {
+                text = 'Trung bình';
+                color = 'bg-yellow-500';
+            } else if (strength <= 3) {
+                text = 'Tốt';
+                color = 'bg-blue-500';
+            } else if (strength <= 4) {
+                text = 'Rất tốt';
+                color = 'bg-green-500';
+            } else {
+                text = 'Tuyệt vời';
+                color = 'bg-green-600';
+            }
+
+            strengthBar.className = `password-strength ${color}`;
+            strengthBar.style.width = `${(strength / 5) * 100}%`;
+            strengthText.textContent = `Độ mạnh: ${text}`;
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.classList.remove('hidden');
+            document.getElementById('successMessage').classList.add('hidden');
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successDiv.classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        // Handle form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullname = document.getElementById('fullname').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const terms = document.getElementById('terms').checked;
+
+            // Validation
+            if (!fullname || !email || !password || !confirmPassword) {
+                showError('Vui lòng điền đầy đủ thông tin bắt buộc');
+                return;
+            }
+
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                showError('Email không hợp lệ');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Mật khẩu phải có ít nhất 6 ký tự');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Mật khẩu xác nhận không khớp');
+                return;
+            }
+
+            if (!terms) {
+                showError('Bạn phải đồng ý với Điều khoản dịch vụ');
+                return;
+            }
+
+            try {
+                // API call to backend
+                const response = await fetch('http://localhost:8000/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        fullname, 
+                        email, 
+                        phone, 
+                        password 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showError(data.message || 'Email đã tồn tại hoặc có lỗi xảy ra');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Lỗi kết nối máy chủ. Vui lòng thử lại sau.');
+            }
+        });
+
+        // Check if already logged in on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            checkUserLoggedIn();
+        });
+    </script>
+    <script src="auth-modal.js"></script>
+</body>
+</html>

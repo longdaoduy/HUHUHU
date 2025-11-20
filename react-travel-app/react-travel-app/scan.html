@@ -1,0 +1,569 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vietnam UrbanQuest - Scan Image</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+            min-height: 300px;
+        }
+        .upload-area:hover {
+            border-color: #4299e1;
+            background-color: #f7fafc;
+        }
+        .upload-area.dragover {
+            border-color: #4299e1;
+            background-color: #ebf8ff;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="hero-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-home text-xl"></i>
+                    <h1 class="text-xl font-bold">Vietnam UrbanQuest</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <select class="bg-transparent border-none text-white">
+                            <option>Language</option>
+                            <option>English</option>
+                            <option>Tiếng Việt</option>
+                        </select>
+                    </div>
+                    <a href="about-us.html" class="hover:text-blue-200">About us</a>
+                    <a href="information.html" class="hover:text-blue-200">Information</a>
+                    <a href="#" class="hover:text-blue-200">Contact us</a>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+                <div class="flex items-center space-x-2">
+                    <img src="logo.png" width="40" height="40" alt="Logo" class="rounded-full">
+                    <span class="font-semibold">VietNam UrbanQuest</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="index.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Home</a>
+                    <a href="recommendation.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Recommendation</a>
+                    <a href="scan.html" class="text-blue-200 py-2 border-b-2 border-white">Scan image</a>
+                    <a href="album.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Album</a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 hover:text-blue-200 cursor-pointer py-2" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="userDisplayName" class="hidden md:inline text-sm"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 group-hover:block hover:block z-50">
+                            <div id="loggedInMenu" class="hidden">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-semibold">Xin chào!</p>
+                                    <p id="userEmail" class="text-xs text-gray-600"></p>
+                                </div>
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Hồ sơ
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>Cài đặt
+                                </a>
+                                <a href="favorites.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-heart mr-2"></i>Yêu thích
+                                </a>
+                                <div class="border-t">
+                                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loggedOutMenu">
+                                <button onclick="openLoginModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                                </button>
+                                <button onclick="openSignupModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100 border-t">
+                                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="hero-bg text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold mb-4">Image Recognition</h1>
+            <p class="text-xl">Upload photos to identify landmarks and discover information</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Upload Section -->
+        <div class="bg-white rounded-lg card-shadow p-8 mb-8">
+            <h2 class="text-3xl font-bold text-center mb-8">Upload Pictures</h2>
+            
+            <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-12 text-center" id="upload-area">
+                <div id="upload-prompt">
+                    <i class="fas fa-cloud-upload-alt text-6xl text-gray-400 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Drag and drop files here</h3>
+                    <p class="text-gray-500 mb-4">Limit 10MB per file • Supports JPG, PNG, GIF, WebP</p>
+                    <button onclick="triggerFileUpload()" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-folder-open mr-2"></i>Browse files
+                    </button>
+                </div>
+                
+                <div id="image-preview" class="hidden">
+                    <img id="preview-img" src="" alt="Preview" class="preview-image mx-auto mb-4 rounded-lg shadow-lg">
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="clearImage()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-times mr-2"></i>Clear
+                        </button>
+                        <button onclick="analyzeImage()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-search mr-2"></i>Analyze Image
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="loading-state" class="hidden">
+                    <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Analyzing your image...</h3>
+                    <p class="text-gray-500">This may take a few moments</p>
+                </div>
+            </div>
+            
+            <input type="file" id="file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="hidden bg-white rounded-lg card-shadow p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">
+                <i class="fas fa-eye mr-2 text-green-600"></i>Recognition Results
+            </h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>Location Information
+                    </h4>
+                    <div id="location-info">
+                        <p class="text-gray-600 mb-2">
+                            <strong>Detected Location:</strong> 
+                            <span id="detected-location" class="text-gray-800">-</span>
+                        </p>
+                        <p class="text-gray-600 mb-2">
+                            <strong>Coordinates:</strong> 
+                            <span id="coordinates" class="text-gray-800">-</span>
+                        </p>
+                        <p class="text-gray-600">
+                            <strong>Address:</strong> 
+                            <span id="address" class="text-gray-800">-</span>
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-landmark mr-2 text-blue-500"></i>Landmarks
+                    </h4>
+                    <div id="landmarks-info">
+                        <div id="landmarks-list" class="space-y-2">
+                            <!-- Landmarks will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
+                <h4 class="text-lg font-semibold mb-4 flex items-center">
+                    <i class="fas fa-robot mr-2 text-purple-600"></i>AI Description
+                </h4>
+                <p id="ai-description" class="text-gray-700 leading-relaxed">
+                    <!-- AI description will be populated here -->
+                </p>
+            </div>
+            
+            <div class="mt-6 flex space-x-4">
+                <button onclick="getLocationRecommendations()" 
+                        class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-map-signs mr-2"></i>Get Nearby Recommendations
+                </button>
+                <button onclick="addToAlbum()" 
+                        class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add to Album
+                </button>
+                <button onclick="shareResults()" 
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-share mr-2"></i>Share Results
+                </button>
+            </div>
+        </div>
+
+        <!-- Error Section -->
+        <div id="error-section" class="hidden bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                <div>
+                    <h3 class="text-lg font-semibold text-red-800">Recognition Failed</h3>
+                    <p id="error-message" class="text-red-600 mt-1"></p>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button onclick="retryAnalysis()" 
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-redo mr-2"></i>Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg p-8">
+            <h3 class="text-2xl font-bold mb-4">
+                <i class="fas fa-lightbulb mr-2 text-yellow-600"></i>Tips for Better Recognition
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold mb-3 text-gray-800">Photo Quality</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Use high-resolution images</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Ensure good lighting</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Avoid blurry or dark photos</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i>Include clear view of landmarks</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-3 text-gray-800">Best Results</h4>
+                    <ul class="space-y-2 text-gray-600">
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i>Photos with GPS metadata</li>
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i>Famous landmarks and monuments</li>
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i>Tourist attractions</li>
+                        <li><i class="fas fa-star text-yellow-500 mr-2"></i>Cultural and historical sites</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="hero-bg text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Vietnam UrbanQuest. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        let currentImageFile = null;
+        let currentResults = null;
+
+        // File upload handling
+        function triggerFileUpload() {
+            document.getElementById('file-input').click();
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    alert('File size must be less than 10MB');
+                    return;
+                }
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                currentImageFile = file;
+                previewImage(file);
+            }
+        }
+
+        function previewImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.getElementById('preview-img');
+                img.src = e.target.result;
+                
+                // Show preview, hide prompt
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('image-preview').classList.remove('hidden');
+                document.getElementById('results-section').classList.add('hidden');
+                document.getElementById('error-section').classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function clearImage() {
+            currentImageFile = null;
+            currentResults = null;
+            document.getElementById('upload-prompt').classList.remove('hidden');
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('results-section').classList.add('hidden');
+            document.getElementById('error-section').classList.add('hidden');
+            document.getElementById('file-input').value = '';
+        }
+
+        async function analyzeImage() {
+            if (!currentImageFile) {
+                alert('Please select an image first');
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
+            document.getElementById('error-section').classList.add('hidden');
+
+            try {
+                const formData = new FormData();
+                formData.append('file', currentImageFile);
+
+                // Gọi cả 2 API và xử lý lỗi riêng
+                let landmarkData = { landmark: 'Không rõ địa điểm', description: 'Không thể nhận dạng', confidence: 'low' };
+                let locationData = { location: 'Không rõ', description: '' };
+                
+                try {
+                    const landmarkResponse = await fetch('http://localhost:8000/api/recognize/landmark', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (landmarkResponse.ok) {
+                        const result = await landmarkResponse.json();
+                        if (result.success) {
+                            landmarkData = result;
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Landmark recognition failed:', err);
+                }
+
+                try {
+                    const locationResponse = await fetch('http://localhost:8000/api/recognize/location', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (locationResponse.ok) {
+                        const result = await locationResponse.json();
+                        if (result.success) {
+                            locationData = result;
+                        }
+                    }
+                } catch (err) {
+                    console.warn('Location recognition failed:', err);
+                }
+
+                // Luôn hiển thị kết quả, dù có lỗi hay không
+                currentResults = {
+                    success: true,
+                    landmark: landmarkData.landmark || 'Không rõ địa điểm',
+                    location: locationData.location || 'Không rõ',
+                    description: landmarkData.description || 'Ảnh đã được tải lên nhưng không nhận dạng được địa điểm cụ thể. Hãy thử với ảnh rõ hơn.',
+                    confidence: landmarkData.confidence || 'low'
+                };
+
+                displayResults(currentResults);
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                // Vẫn hiển thị kết quả
+                currentResults = {
+                    success: true,
+                    landmark: 'Không rõ địa điểm',
+                    location: 'Không rõ',
+                    description: 'Đã xảy ra lỗi khi phân tích ảnh.',
+                    confidence: 'low'
+                };
+                displayResults(currentResults);
+            } finally {
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('image-preview').classList.remove('hidden');
+            }
+        }
+
+        function displayResults(data) {
+            // Populate location information
+            document.getElementById('detected-location').textContent = data.landmark || 'Unknown location';
+            document.getElementById('coordinates').textContent = 
+                data.coordinates ? `${data.coordinates.latitude}, ${data.coordinates.longitude}` : 'Not available';
+            document.getElementById('address').textContent = data.address || 'Not available';
+
+            // Populate landmarks
+            const landmarksList = document.getElementById('landmarks-list');
+            if (data.landmarks && data.landmarks.length > 0) {
+                landmarksList.innerHTML = data.landmarks.map(landmark => `
+                    <div class="flex items-center justify-between bg-white rounded-lg p-3">
+                        <span class="text-gray-800">${landmark}</span>
+                        <i class="fas fa-map-marker-alt text-blue-500"></i>
+                    </div>
+                `).join('');
+            } else {
+                landmarksList.innerHTML = `
+                    <div class="text-gray-500 text-center py-4">
+                        <i class="fas fa-search text-2xl mb-2"></i>
+                        <p>No landmarks detected</p>
+                    </div>
+                `;
+            }
+
+            // Populate AI description
+            document.getElementById('ai-description').textContent = 
+                data.description || 'Unable to generate description for this image.';
+
+            // Show results section
+            document.getElementById('results-section').classList.remove('hidden');
+        }
+
+        function showError(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-section').classList.remove('hidden');
+            document.getElementById('image-preview').classList.remove('hidden');
+        }
+
+        function retryAnalysis() {
+            document.getElementById('error-section').classList.add('hidden');
+            analyzeImage();
+        }
+
+        async function getLocationRecommendations() {
+            if (!currentResults || !currentResults.landmark) {
+                alert('No location information available for recommendations');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/api/recommend/interest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        interest: `${currentResults.landmark} sightseeing culture` 
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Store recommendations and navigate to recommendations page
+                    sessionStorage.setItem('scanRecommendations', JSON.stringify(data.recommendations));
+                    sessionStorage.setItem('scanLocation', currentResults.landmark);
+                    window.location.href = 'recommendation.html';
+                } else {
+                    throw new Error('Failed to get recommendations');
+                }
+            } catch (error) {
+                alert('Failed to get recommendations: ' + error.message);
+            }
+        }
+
+        function addToAlbum() {
+            if (!currentImageFile) {
+                alert('No image to add to album');
+                return;
+            }
+
+            // Store image data and navigate to album page
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const albumData = {
+                    image: e.target.result,
+                    filename: currentImageFile.name,
+                    landmark: currentResults?.landmark || 'Unknown',
+                    description: currentResults?.description || ''
+                };
+                sessionStorage.setItem('pendingAlbumImage', JSON.stringify(albumData));
+                window.location.href = 'album.html';
+            };
+            reader.readAsDataURL(currentImageFile);
+        }
+
+        function shareResults() {
+            if (!currentResults) {
+                alert('No results to share');
+                return;
+            }
+
+            const shareText = `Check out this location I discovered: ${currentResults.landmark || 'Unknown location'}
+${currentResults.description || 'Interesting place in Vietnam'}
+
+Discovered using Vietnam UrbanQuest - AI-powered travel companion!`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Vietnam UrbanQuest Discovery',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('Results copied to clipboard!');
+                }).catch(() => {
+                    alert('Unable to share. Please copy the results manually.');
+                });
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('upload-area');
+
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    currentImageFile = file;
+                    previewImage(file);
+                } else {
+                    alert('Please drop an image file');
+                }
+            }
+        });
+
+        // Check for pending scan results from other pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const pendingResults = sessionStorage.getItem('pendingScanResults');
+            if (pendingResults) {
+                const results = JSON.parse(pendingResults);
+                currentResults = results;
+                displayResults(results);
+                sessionStorage.removeItem('pendingScanResults');
+            }
+        });
+    </script>
+    <script src="auth-modal.js"></script>
+</body>
+</html>

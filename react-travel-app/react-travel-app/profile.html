@@ -1,0 +1,337 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ - Vietnam UrbanQuest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="hero-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-home text-xl"></i>
+                    <h1 class="text-xl font-bold">Vietnam UrbanQuest</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <select class="bg-transparent border-none text-white">
+                            <option>Language</option>
+                            <option>English</option>
+                            <option>Tiếng Việt</option>
+                        </select>
+                    </div>
+                    <a href="about-us.html" class="hover:text-blue-200">About us</a>
+                    <a href="information.html" class="hover:text-blue-200">Information</a>
+                    <a href="#" class="hover:text-blue-200">Contact us</a>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+                <div class="flex items-center space-x-2">
+                    <img src="logo.png" width="40" height="40" alt="Logo" class="rounded-full">
+                    <span class="font-semibold">Vietnam UrbanQuest</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="index.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Home</a>
+                    <a href="recommendation.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Recommendation</a>
+                    <a href="scan.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Scan image</a>
+                    <a href="album.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">Album</a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 hover:text-blue-200 cursor-pointer py-2" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="userDisplayName" class="hidden md:inline text-sm"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 group-hover:block hover:block z-50">
+                            <div id="loggedInMenu" class="hidden">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-semibold">Xin chào!</p>
+                                    <p id="userEmail" class="text-xs text-gray-600"></p>
+                                </div>
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100 bg-gray-50">
+                                    <i class="fas fa-user mr-2"></i>Hồ sơ
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>Cài đặt
+                                </a>
+                                <a href="favorites.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-heart mr-2"></i>Yêu thích
+                                </a>
+                                <div class="border-t">
+                                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loggedOutMenu">
+                                <button onclick="openLoginModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>Đăng nhập
+                                </button>
+                                <button onclick="openSignupModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100 border-t">
+                                    <i class="fas fa-user-plus mr-2"></i>Đăng ký
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Profile Card -->
+            <div class="md:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-purple-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                            <i class="fas fa-user text-6xl text-purple-600" id="avatarIcon"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2" id="userName">Loading...</h2>
+                        <p class="text-gray-600 mb-4" id="userEmail">user@example.com</p>
+                        <p class="text-sm text-gray-500" id="userBio">Chưa có mô tả</p>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="font-semibold mb-3">Thống kê</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-star mr-2"></i>Đánh giá</span>
+                                <span class="font-semibold" id="reviewsCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-heart mr-2"></i>Yêu thích</span>
+                                <span class="font-semibold" id="favoritesCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-images mr-2"></i>Album</span>
+                                <span class="font-semibold" id="albumsCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-camera mr-2"></i>Ảnh</span>
+                                <span class="font-semibold" id="imagesCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Edit Profile -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-edit mr-2"></i>Chỉnh sửa hồ sơ</h3>
+                    <form id="profileForm" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Họ tên</label>
+                            <input type="text" id="fullname" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Số điện thoại</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Giới thiệu</label>
+                            <textarea id="bio" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500"></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-save mr-2"></i>Lưu thay đổi
+                        </button>
+                    </form>
+                    <div id="profileMessage" class="mt-4"></div>
+                </div>
+
+                <!-- My Reviews -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-star mr-2"></i>Đánh giá của tôi</h3>
+                    <div id="myReviews"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+        let token = localStorage.getItem('authToken');
+        let userEmail = localStorage.getItem('userEmail');
+
+        // Check login
+        if (!token || !userEmail) {
+            alert('Vui lòng đăng nhập!');
+            window.location.href = 'login.html';
+        }
+
+        // Load user profile
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_URL}/api/user/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const user = data.user;
+                    document.getElementById('userName').textContent = user.fullname;
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('userBio').textContent = user.bio || 'Chưa có mô tả';
+                    document.getElementById('fullname').value = user.fullname;
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('bio').value = user.bio || '';
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/user/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const stats = data.stats;
+                    document.getElementById('reviewsCount').textContent = stats.reviews_count;
+                    document.getElementById('favoritesCount').textContent = stats.favorites_count;
+                    document.getElementById('albumsCount').textContent = stats.albums_count;
+                    document.getElementById('imagesCount').textContent = stats.images_count;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load my reviews
+        async function loadMyReviews() {
+            try {
+                const response = await fetch(`${API_URL}/api/reviews/user/my-reviews`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                const container = document.getElementById('myReviews');
+                if (data.success && data.reviews.length > 0) {
+                    container.innerHTML = data.reviews.map(review => `
+                        <div class="border-b pb-4 mb-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold">${review.destination_name}</h4>
+                                    <div class="flex items-center mt-1">
+                                        ${generateStars(review.rating)}
+                                        <span class="ml-2 text-sm text-gray-600">${new Date(review.created_at).toLocaleDateString('vi-VN')}</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-2">${review.comment}</p>
+                                </div>
+                                <button onclick="deleteReview(${review.id})" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-gray-500">Bạn chưa có đánh giá nào</p>';
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<i class="fas fa-star ${i <= rating ? 'text-yellow-500' : 'text-gray-300'}"></i>`;
+            }
+            return stars;
+        }
+
+        // Update profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const phone = document.getElementById('phone').value;
+            const bio = document.getElementById('bio').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ fullname, phone, bio })
+                });
+                
+                const data = await response.json();
+                const messageDiv = document.getElementById('profileMessage');
+                
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="bg-green-100 text-green-700 px-4 py-2 rounded"><i class="fas fa-check-circle mr-2"></i>Cập nhật thành công!</div>';
+                    loadProfile();
+                } else {
+                    messageDiv.innerHTML = `<div class="bg-red-100 text-red-700 px-4 py-2 rounded"><i class="fas fa-exclamation-circle mr-2"></i>${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                document.getElementById('profileMessage').innerHTML = '<div class="bg-red-100 text-red-700 px-4 py-2 rounded">Lỗi kết nối server</div>';
+            }
+        });
+
+        // Delete review
+        async function deleteReview(reviewId) {
+            if (!confirm('Bạn có chắc muốn xóa đánh giá này?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/reviews/${reviewId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    loadMyReviews();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error('Error deleting review:', error);
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userEmail');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+            loadStats();
+            loadMyReviews();
+        });
+    </script>
+    <script src="script.js"></script>
+    <script src="auth-modal.js"></script>
+</body>
+</html>
