@@ -1,0 +1,1271 @@
+"""
+Local AI Model for Image Recognition - No API Key Required
+Uses TensorFlow/Keras MobileNetV2 for image classification
++ EasyOCR for text detection in images
+Phân loại ảnh sử dụng mô hình MobileNetV2 - Không cần API key
+"""
+
+import numpy as np
+from PIL import Image
+import os
+import re
+
+print("[LOCAL_AI] Initializing local AI model...")
+
+# Try to load OCR for reading text in images
+OCR_ENABLED = False
+ocr_reader = None
+try:
+    import easyocr
+    ocr_reader = easyocr.Reader(['vi', 'en'], gpu=False, verbose=False)
+    OCR_ENABLED = True
+    print("[LOCAL_AI] ✅ EasyOCR loaded - can read text in images!")
+except ImportError:
+    print("[LOCAL_AI] ⚠️ EasyOCR not installed. Install with: pip install easyocr")
+    print("[LOCAL_AI] Will use image classification only (no text reading)")
+except Exception as e:
+    print(f"[LOCAL_AI] ⚠️ EasyOCR error: {e}")
+
+try:
+    import tensorflow as tf
+    from tensorflow.keras.applications import MobileNetV2
+    from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+    from tensorflow.keras.preprocessing import image as keras_image
+    
+    print("[LOCAL_AI] Loading MobileNetV2 model... (first time may take 1-2 minutes)")
+    model = MobileNetV2(weights='imagenet')
+    LOCAL_AI_ENABLED = True
+    print("[LOCAL_AI] ✅ Model loaded successfully!")
+    
+except ImportError as e:
+    print(f"[LOCAL_AI] ⚠️  TensorFlow not installed: {e}")
+    print("[LOCAL_AI] Run: pip install tensorflow pillow numpy")
+    LOCAL_AI_ENABLED = False
+    model = None
+
+# ============ LANDMARK MAPPING (ImageNet class → Vietnamese) ============
+# Fallback mapping for generic ImageNet classes
+LANDMARK_MAPPING = {
+    "pagoda": "Chùa Tháp",
+    "temple": "Đền Thờ",
+    "shrine": "Miếu",
+    "monastery": "Tu Viện",
+    "castle": "Lâu Đài",
+    "palace": "Cung Điện",
+    "bridge": "Cầu",
+    "fountain": "Đài Phun Nước",
+    "statue": "Tượng",
+    "monument": "Tượng Đài",
+    "museum": "Bảo Tàng",
+    "market": "Chợ",
+    "street": "Phố",
+    "lake": "Hồ Nước",
+    "mountain": "Núi",
+    "volcano": "Núi Lửa",
+    "beach": "Bãi Biển",
+    "park": "Công Viên",
+    "garden": "Vườn",
+    "forest": "Rừng",
+    "waterfall": "Thác Nước",
+    "island": "Đảo",
+    "coast": "Bờ Biển",
+    "arch": "Cổng Kiến Trúc",
+    "building": "Tòa Nhà",
+    "house": "Nhà Cổ",
+    "church": "Nhà Thờ",
+    "tower": "Tháp",
+    "skyscraper": "Tòa Nhà Cao Tầng",
+    "restaurant": "Nhà Hàng",
+    "bar": "Quán Bar",
+    "shopping_cart": "Trung Tâm Mua Sắm",
+}
+
+# ============ TEXT KEYWORDS FOR OCR MATCHING ============
+# Keywords to match text found in images to landmarks
+TEXT_TO_LANDMARK_MAPPING = {
+    # Phố Bùi Viện - MANY VARIATIONS for better OCR matching
+    "bui vien": "pho_tay_bui_vien",
+    "bùi viện": "pho_tay_bui_vien", 
+    "buivien": "pho_tay_bui_vien",
+    "bui viên": "pho_tay_bui_vien",
+    "bui vién": "pho_tay_bui_vien",
+    "bùi vien": "pho_tay_bui_vien",
+    "walking street": "pho_tay_bui_vien",
+    "pho di bo": "pho_tay_bui_vien",
+    "phố đi bộ": "pho_tay_bui_vien",
+    "pho tay": "pho_tay_bui_vien",
+    "phố tây": "pho_tay_bui_vien",
+    "backpacker": "pho_tay_bui_vien",
+    "de tham": "pho_tay_bui_vien",
+    "đề thám": "pho_tay_bui_vien",
+    "pham ngu lao": "pho_tay_bui_vien",
+    "phạm ngũ lão": "pho_tay_bui_vien",
+    
+    # Phố Nguyễn Huệ
+    "nguyen hue": "pho_di_bo_nguyen_hue",
+    "nguyễn huệ": "pho_di_bo_nguyen_hue",
+    "nguyen hué": "pho_di_bo_nguyen_hue",
+    "nguyenhue": "pho_di_bo_nguyen_hue",
+    
+    # Chợ Bến Thành
+    "ben thanh": "cho_ben_thanh",
+    "bến thành": "cho_ben_thanh",
+    
+    # Nhà thờ Đức Bà
+    "notre dame": "nha_tho_duc_ba",
+    "duc ba": "nha_tho_duc_ba",
+    "đức bà": "nha_tho_duc_ba",
+    
+    # Suối Tiên
+    "suoi tien": "suoi_tien",
+    "suối tiên": "suoi_tien",
+    
+    # Đầm Sen
+    "dam sen": "dam_sen",
+    "đầm sen": "dam_sen",
+    
+    # Landmark 81
+    "landmark 81": "landmark_81",
+    "landmark81": "landmark_81",
+    
+    # Bitexco
+    "bitexco": "bitexco",
+    "skydeck": "bitexco",
+    
+    # Dinh Độc Lập
+    "doc lap": "dinh_doc_lap",
+    "độc lập": "dinh_doc_lap",
+    "reunification": "dinh_doc_lap",
+    "independence": "dinh_doc_lap",
+    
+    # Bưu điện
+    "buu dien": "buu_dien_tp",
+    "bưu điện": "buu_dien_tp",
+    "post office": "buu_dien_tp",
+    
+    # Thảo Cầm Viên
+    "thao cam vien": "thao_cam_vien",
+    "thảo cầm viên": "thao_cam_vien",
+    "saigon zoo": "thao_cam_vien",
+    
+    # Bảo tàng Chứng tích Chiến tranh - nhiều variations
+    "war remnants": "bao_tang_chien_tranh",
+    "war remnants museum": "bao_tang_chien_tranh",
+    "chien tranh": "bao_tang_chien_tranh",
+    "chiến tranh": "bao_tang_chien_tranh",
+    "chung tich": "bao_tang_chien_tranh",
+    "chứng tích": "bao_tang_chien_tranh",
+    "bao tang chien tranh": "bao_tang_chien_tranh",
+    "bảo tàng chiến tranh": "bao_tang_chien_tranh",
+    "di tich chien tranh": "bao_tang_chien_tranh",
+    "di tích chiến tranh": "bao_tang_chien_tranh",
+    "military museum": "bao_tang_chien_tranh",
+    "vietnam war": "bao_tang_chien_tranh",
+    "vo van tan": "bao_tang_chien_tranh",
+    "võ văn tần": "bao_tang_chien_tranh",
+    "quan 3": "bao_tang_chien_tranh",
+    "quận 3": "bao_tang_chien_tranh",
+    
+    # Chợ Lớn
+    "cho lon": "chinatown_cho_lon",
+    "chợ lớn": "chinatown_cho_lon",
+    "chinatown": "chinatown_cho_lon",
+    "binh tay": "cho_binh_tay",
+    "bình tây": "cho_binh_tay",
+    
+    # AEON Mall - nhiều variations
+    "aeon": "aeon_mall_tan_phu",
+    "aeon mall": "aeon_mall_tan_phu",
+    "aeonmall": "aeon_mall_tan_phu",
+    "aeon tan phu": "aeon_mall_tan_phu",
+    "aeon tân phú": "aeon_mall_tan_phu",
+    "food terrace": "aeon_mall_tan_phu",
+    "celadon": "aeon_mall_tan_phu",
+    "tan phu celadon": "aeon_mall_tan_phu",
+    "bo bao tan thang": "aeon_mall_tan_phu",
+    "bờ bao tân thắng": "aeon_mall_tan_phu",
+    
+    # Vincom
+    "vincom": "vincom_dong_khoi",
+    
+    # Crescent Mall
+    "crescent": "crescent_mall",
+    
+    # Cầu
+    "phu my": "cau_phu_my",
+    "phú mỹ": "cau_phu_my",
+    "thu thiem": "cau_thu_thiem", 
+    "thủ thiêm": "cau_thu_thiem",
+    "anh sao": "cau_anh_sao",
+    "ánh sao": "cau_anh_sao",
+    "starlight": "cau_anh_sao",
+    
+    # Nhà hát
+    "nha hat": "nha_hat_tp",
+    "nhà hát": "nha_hat_tp",
+    "opera": "nha_hat_tp",
+    "theater": "nha_hat_tp",
+    
+    # Công viên
+    "tao dan": "cong_vien_tao_dan",
+    "tao đàn": "cong_vien_tao_dan",
+    
+    # Bến Nhà Rồng
+    "nha rong": "ben_nha_rong",
+    "nhà rồng": "ben_nha_rong",
+    
+    # Văn Thánh
+    "van thanh": "khu_du_lich_van_thanh",
+    "văn thánh": "khu_du_lich_van_thanh",
+}
+
+
+def normalize_vietnamese(text):
+    """Remove Vietnamese diacritics for better matching."""
+    vietnamese_map = {
+        'à': 'a', 'á': 'a', 'ả': 'a', 'ã': 'a', 'ạ': 'a',
+        'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ẳ': 'a', 'ẵ': 'a', 'ặ': 'a',
+        'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ẩ': 'a', 'ẫ': 'a', 'ậ': 'a',
+        'è': 'e', 'é': 'e', 'ẻ': 'e', 'ẽ': 'e', 'ẹ': 'e',
+        'ê': 'e', 'ề': 'e', 'ế': 'e', 'ể': 'e', 'ễ': 'e', 'ệ': 'e',
+        'ì': 'i', 'í': 'i', 'ỉ': 'i', 'ĩ': 'i', 'ị': 'i',
+        'ò': 'o', 'ó': 'o', 'ỏ': 'o', 'õ': 'o', 'ọ': 'o',
+        'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ổ': 'o', 'ỗ': 'o', 'ộ': 'o',
+        'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ở': 'o', 'ỡ': 'o', 'ợ': 'o',
+        'ù': 'u', 'ú': 'u', 'ủ': 'u', 'ũ': 'u', 'ụ': 'u',
+        'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
+        'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
+        'đ': 'd',
+        # Uppercase
+        'À': 'A', 'Á': 'A', 'Ả': 'A', 'Ã': 'A', 'Ạ': 'A',
+        'Ă': 'A', 'Ằ': 'A', 'Ắ': 'A', 'Ẳ': 'A', 'Ẵ': 'A', 'Ặ': 'A',
+        'Â': 'A', 'Ầ': 'A', 'Ấ': 'A', 'Ẩ': 'A', 'Ẫ': 'A', 'Ậ': 'A',
+        'È': 'E', 'É': 'E', 'Ẻ': 'E', 'Ẽ': 'E', 'Ẹ': 'E',
+        'Ê': 'E', 'Ề': 'E', 'Ế': 'E', 'Ể': 'E', 'Ễ': 'E', 'Ệ': 'E',
+        'Ì': 'I', 'Í': 'I', 'Ỉ': 'I', 'Ĩ': 'I', 'Ị': 'I',
+        'Ò': 'O', 'Ó': 'O', 'Ỏ': 'O', 'Õ': 'O', 'Ọ': 'O',
+        'Ô': 'O', 'Ồ': 'O', 'Ố': 'O', 'Ổ': 'O', 'Ỗ': 'O', 'Ộ': 'O',
+        'Ơ': 'O', 'Ờ': 'O', 'Ớ': 'O', 'Ở': 'O', 'Ỡ': 'O', 'Ợ': 'O',
+        'Ù': 'U', 'Ú': 'U', 'Ủ': 'U', 'Ũ': 'U', 'Ụ': 'U',
+        'Ư': 'U', 'Ừ': 'U', 'Ứ': 'U', 'Ử': 'U', 'Ữ': 'U', 'Ự': 'U',
+        'Ỳ': 'Y', 'Ý': 'Y', 'Ỷ': 'Y', 'Ỹ': 'Y', 'Ỵ': 'Y',
+        'Đ': 'D',
+    }
+    result = ''
+    for char in text:
+        result += vietnamese_map.get(char, char)
+    return result
+
+
+def extract_text_from_image(image_pil):
+    """
+    Extract text from image using OCR.
+    Returns list of detected text strings.
+    Enhanced with image preprocessing for better accuracy.
+    """
+    if not OCR_ENABLED or ocr_reader is None:
+        print("[LOCAL_AI] OCR is disabled or not loaded")
+        return []
+    
+    try:
+        # Convert PIL to numpy array
+        img_array = np.array(image_pil)
+        
+        print(f"[LOCAL_AI] Starting OCR on image size: {image_pil.size}")
+        
+        # Run OCR with detail=1 for more info
+        results = ocr_reader.readtext(img_array, detail=1)
+        
+        print(f"[LOCAL_AI] OCR raw results count: {len(results)}")
+        
+        # Extract text strings with lower confidence threshold (0.2 instead of 0.3)
+        texts = []
+        for result in results:
+            bbox, text, confidence = result
+            print(f"[LOCAL_AI] OCR found: '{text}' (confidence: {confidence:.2f})")
+            if confidence > 0.2:  # Lower threshold to 20%
+                texts.append(text.lower())
+                # Also add normalized version (without diacritics)
+                normalized = normalize_vietnamese(text.lower())
+                if normalized != text.lower():
+                    texts.append(normalized)
+        
+        print(f"[LOCAL_AI] OCR final texts: {texts}")
+        return texts
+    except Exception as e:
+        print(f"[LOCAL_AI] OCR error: {e}")
+        import traceback
+        traceback.print_exc()
+        return []
+
+
+def match_text_to_landmark(texts):
+    """
+    Match detected texts to HCM landmarks.
+    Returns landmark_id if match found, None otherwise.
+    Enhanced with normalized text matching.
+    """
+    if not texts:
+        return None
+    
+    # Combine all texts
+    combined_text = ' '.join(texts).lower()
+    # Also create normalized version
+    combined_normalized = normalize_vietnamese(combined_text)
+    
+    print(f"[LOCAL_AI] Matching text: '{combined_text}'")
+    print(f"[LOCAL_AI] Normalized: '{combined_normalized}'")
+    
+    # Try to match with known keywords - check both original and normalized
+    for keyword, landmark_id in TEXT_TO_LANDMARK_MAPPING.items():
+        keyword_normalized = normalize_vietnamese(keyword)
+        # Check in original text
+        if keyword in combined_text:
+            print(f"[LOCAL_AI] ✅ Text match: '{keyword}' -> {landmark_id}")
+            return landmark_id
+        # Check in normalized text
+        if keyword_normalized in combined_normalized:
+            print(f"[LOCAL_AI] ✅ Normalized match: '{keyword_normalized}' -> {landmark_id}")
+            return landmark_id
+    
+    return None
+
+
+# ============ DATABASE ĐỊA ĐIỂM DU LỊCH HỒ CHÍ MINH ============
+# Chứa tọa độ (lat, lon) và địa chỉ đầy đủ
+HCM_LANDMARKS_DATABASE = {
+    # Công viên giải trí
+    "suoi_tien": {
+        "name": "Khu Du lịch Suối Tiên",
+        "keywords": ["suoi tien", "suối tiên", "amusement", "theme park", "water park", "roller coaster", "elephant", "tusks"],
+        "lat": 10.8721,
+        "lon": 106.7571,
+        "address": "120 Xa lộ Hà Nội, Phường Tân Phú, Quận 9, TP.HCM",
+        "description": "Khu du lịch văn hóa - giải trí nổi tiếng với chủ đề lịch sử và truyền thuyết Việt Nam."
+    },
+    "dam_sen": {
+        "name": "Công viên Văn hóa Đầm Sen",
+        "keywords": ["dam sen", "đầm sen", "water park", "amusement", "lake", "lotus"],
+        "lat": 10.7676,
+        "lon": 106.6336,
+        "address": "3 Hòa Bình, Phường 3, Quận 11, TP.HCM",
+        "description": "Khu vui chơi nước nổi tiếng với nhiều trò trượt nước và khu công viên Đầm Sen liền kề."
+    },
+    
+    # Nhà thờ / Tôn giáo
+    "nha_tho_duc_ba": {
+        "name": "Nhà thờ Đức Bà Sài Gòn",
+        "keywords": ["notre dame", "cathedral", "church", "duc ba", "đức bà", "nha tho", "nhà thờ", "bell tower"],
+        "lat": 10.7798,
+        "lon": 106.6990,
+        "address": "01 Công xã Paris, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Công trình kiến trúc Pháp cổ kính nổi tiếng, biểu tượng của Sài Gòn, thu hút du khách trong và ngoài nước"
+    },
+    "chua_vinh_nghiem": {
+        "name": "Chùa Vĩnh Nghiêm",
+        "keywords": ["vinh nghiem", "vĩnh nghiêm", "pagoda", "buddhist", "temple", "chua", "chùa"],
+        "lat": 10.7910,
+        "lon": 106.6847,
+        "address": "339 Nam Kỳ Khởi Nghĩa, Quận 3, TP.HCM",
+        "description": "Ngôi chùa lớn và nổi tiếng tại Sài Gòn"
+    },
+    "chua_ngoc_hoang": {
+        "name": "Chùa Ngọc Hoàng (Chùa Phước Hải)",
+        "keywords": ["ngoc hoang", "ngọc hoàng", "jade emperor", "pagoda", "temple"],
+        "lat": 10.7889,
+        "lon": 106.6928,
+        "address": "73 Mai Thị Lựu, Đa Kao, Quận 1, TP.HCM",
+        "description": "Chùa cổ nổi tiếng với kiến trúc đẹp"
+    },
+    
+    # Chợ
+    "cho_ben_thanh": {
+        "name": "Chợ Bến Thành",
+        "keywords": ["ben thanh", "bến thành", "market", "cho", "chợ", "bazaar", "shopping"],
+        "lat": 10.7725,
+        "lon": 106.6980,
+        "address": "Đường Lê Lợi, Bến Thành, Quận 1, TP.HCM",
+        "description": "Biểu tượng lâu đời của TP.HCM, nơi du khách có thể thưởng thức ẩm thực địa phương và mua đặc sản."
+    },
+    "cho_binh_tay": {
+        "name": "Chợ Bình Tây (Chợ Lớn)",
+        "keywords": ["binh tay", "bình tây", "cho lon", "chợ lớn", "chinatown", "market"],
+        "lat": 10.7486,
+        "lon": 106.6472,
+        "address": "57A Tháp Mười, Phường 2, Quận 6, TP.HCM",
+        "description": "Chợ đầu mối lớn nhất Sài Gòn - Chợ Lớn"
+    },
+    
+    # Bảo tàng
+    "bao_tang_chien_tranh": {
+        "name": "Bảo tàng Chứng tích Chiến tranh",
+        "keywords": ["war remnants", "war remnants museum", "museum", "bao tang", "bảo tàng", 
+                     "chien tranh", "chiến tranh", "chung tich", "chứng tích", "military", 
+                     "vietnam war", "di tich", "di tích", "tank", "helicopter", "aircraft", 
+                     "vo van tan", "võ văn tần", "quan 3", "quận 3", "war museum",
+                     "military museum", "army", "soldier", "weapon", "bomb", "fighter jet"],
+        "lat": 10.7795,
+        "lon": 106.6920,
+        "address": "28 Võ Văn Tần, Phường 6, Quận 3, TP.HCM",
+        "description": "Bảo tàng lưu giữ các hiện vật và tài liệu về chiến tranh Việt Nam, nơi giáo dục lịch sử quan trọng."
+    },
+    "dinh_doc_lap": {
+        "name": "Dinh Độc Lập (Dinh Thống Nhất)",
+        "keywords": ["independence palace", "reunification", "dinh doc lap", "dinh độc lập", "palace", "government"],
+        "lat": 10.7769,
+        "lon": 106.6953,
+        "address": "135 Nam Kỳ Khởi Nghĩa, Bến Thành, Quận 1, TP.HCM",
+        "description": "Di tích lịch sử quốc gia đặc biệt"
+    },
+    "bao_tang_tp": {
+        "name": "Bảo tàng Thành phố Hồ Chí Minh",
+        "keywords": ["city museum", "bao tang thanh pho", "bảo tàng thành phố", "ho chi minh museum"],
+        "lat": 10.7765,
+        "lon": 106.6993,
+        "address": "65 Lý Tự Trọng, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Bảo tàng lịch sử thành phố"
+    },
+    
+    # Kiến trúc / Tòa nhà
+    "landmark_81": {
+        "name": "Landmark 81",
+        "keywords": ["landmark 81", "skyscraper", "tower", "tall building", "vinhomes"],
+        "lat": 10.7952,
+        "lon": 106.7219,
+        "address": "720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP.HCM",
+        "description": "Toà nhà cao nhất Việt Nam, biểu tượng hiện đại của TP.HCM, với khu mua sắm, nhà hàng, đài quan sát ngắm cảnh toàn thành phố."
+    },
+    "bitexco": {
+        "name": "Bitexco Financial Tower",
+        "keywords": ["bitexco", "financial tower", "saigon skydeck", "helipad", "tower", 
+                     "high_rise", "building", "space_shuttle", "missile", "projectile",
+                     "solar_dish", "parachute", "aircraft_carrier", "beacon", "lighthouse",
+                     "airship", "wing", "disc", "oval", "curved", "modern", "glass"],
+        "lat": 10.7718,
+        "lon": 106.7047,
+        "address": "2 Hải Triều, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Toà nhà biểu tượng với đài quan sát Skydeck, ngắm toàn cảnh Sài Gòn về đêm."
+    },
+    "nha_hat_tp": {
+        "name": "Nhà hát Thành phố",
+        "keywords": ["opera house", "theater", "nha hat", "nhà hát", "municipal theater"],
+        "lat": 10.7766,
+        "lon": 106.7030,
+        "address": "7 Công Trường Lam Sơn, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Nhà hát opera theo kiến trúc Pháp"
+    },
+    "buu_dien_tp": {
+        "name": "Bưu điện Trung tâm Sài Gòn",
+        "keywords": ["post office", "buu dien", "bưu điện", "central post", "french architecture"],
+        "lat": 10.7798,
+        "lon": 106.7000,
+        "address": "2 Công xã Paris, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Bưu điện kiến trúc Pháp cổ điển"
+    },
+    "ubnd_tp": {
+        "name": "Trụ sở UBND TP.HCM (Tòa Đô Chánh)",
+        "keywords": ["city hall", "people committee", "ubnd", "toa do chanh", "government building"],
+        "lat": 10.7763,
+        "lon": 106.7010,
+        "address": "86 Lê Thánh Tôn, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Tòa nhà hành chính kiến trúc Pháp"
+    },
+    
+    # Công viên / Thiên nhiên
+    "thao_cam_vien": {
+        "name": "Thảo Cầm Viên Sài Gòn",
+        "keywords": ["zoo", "botanical garden", "thao cam vien", "thảo cầm viên", "animal", "elephant"],
+        "lat": 10.7875,
+        "lon": 106.7056,
+        "address": "2 Nguyễn Bỉnh Khiêm, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Vườn thú và vườn bách thảo lâu đời nhất Đông Nam Á, kết hợp giữa khu bảo tồn và công viên vui chơi."
+    },
+    "cong_vien_23_9": {
+        "name": "Công viên 23 tháng 9",
+        "keywords": ["park", "23/9", "september park", "cong vien", "công viên"],
+        "lat": 10.7680,
+        "lon": 106.6905,
+        "address": "Phạm Ngũ Lão, Quận 1, TP.HCM",
+        "description": "Công viên trung tâm thành phố"
+    },
+    
+    # Phố đi bộ / Khu vực
+    "pho_di_bo_nguyen_hue": {
+        "name": "Phố đi bộ Nguyễn Huệ",
+        "keywords": ["nguyen hue", "nguyễn huệ", "walking street", "pho di bo", "phố đi bộ", "pedestrian"],
+        "lat": 10.7740,
+        "lon": 106.7030,
+        "address": "Đường Nguyễn Huệ, Bến Nghé, Quận 1, TP.HCM",
+        "description": "Phố đi bộ sầm uất nhất Sài Gòn"
+    },
+    "pho_tay_bui_vien": {
+        "name": "Phố Tây Bùi Viện",
+        "keywords": ["bui vien", "bùi viện", "backpacker", "pho tay", "phố tây", "nightlife", "bar"],
+        "lat": 10.7677,
+        "lon": 106.6933,
+        "address": "Đường Bùi Viện, Phạm Ngũ Lão, Quận 1, TP.HCM",
+        "description": "Phố đêm sôi động dành cho du khách quốc tế, với nhiều quán bar, nhà hàng và hoạt động giải trí."
+    },
+    
+    # Bến cảng / Sông
+    "ben_nha_rong": {
+        "name": "Bến Nhà Rồng (Bảo tàng Hồ Chí Minh)",
+        "keywords": ["nha rong", "nhà rồng", "ho chi minh museum", "port", "wharf", "dragon house"],
+        "lat": 10.7688,
+        "lon": 106.7072,
+        "address": "1 Nguyễn Tất Thành, Quận 4, TP.HCM",
+        "description": "Di tích lịch sử - nơi Bác Hồ ra đi tìm đường cứu nước"
+    },
+    
+    # Cầu
+    "cau_phu_my": {
+        "name": "Cầu Phú Mỹ",
+        "keywords": ["phu my bridge", "cau phu my", "cầu phú mỹ", "cable bridge", "suspension"],
+        "lat": 10.7380,
+        "lon": 106.7558,
+        "address": "Cầu Phú Mỹ, Quận 7 - Quận 2, TP.HCM",
+        "description": "Cầu dây văng lớn nhất TP.HCM, nổi tiếng với hệ thống chiếu sáng, tạo nên một khung cảnh lung linh và diễm lệ khi về đêm."
+    },
+    "cau_thu_thiem": {
+        "name": "Cầu Thủ Thiêm",
+        "keywords": ["thu thiem bridge", "cau thu thiem", "cầu thủ thiêm"],
+        "lat": 10.7842,
+        "lon": 106.7175,
+        "address": "Cầu Thủ Thiêm, Quận 1 - Quận 2, TP.HCM",
+        "description": "Cầu nối trung tâm với khu đô thị mới và được xem là một biểu tượng kiến trúc mới của thành phố."
+    },
+    
+    # Công viên
+    "cong_vien_tao_dan": {
+        "name": "Công viên Tao Đàn",
+        "keywords": ["tao dan", "tao đàn", "park", "cong vien", "công viên", "garden", "trees"],
+        "lat": 10.7761,
+        "lon": 106.6883,
+        "address": "Trương Định, Phường Bến Thành, Quận 1, TP.HCM",
+        "description": "Khu công viên lớn giữa trung tâm Sài Gòn, là nơi người dân đến tập thể dục và thư giãn."
+    },
+    
+    # Khu ChinaTown
+    "chinatown_cho_lon": {
+        "name": "Khu ChinaTown (Chợ Lớn)",
+        "keywords": ["chinatown", "cho lon", "chợ lớn", "chinese", "temple", "pagoda", "quan 5", "quận 5"],
+        "lat": 10.755,
+        "lon": 106.663,
+        "address": "Khu vực Chợ Bình Tây và các tuyến đường xung quanh, Quận 5, TP.HCM",
+        "description": "Khu vực mang đậm bản sắc người Hoa, nổi bật với chùa miếu cổ và ẩm thực đặc trưng."
+    },
+    
+    # Khu du lịch
+    "khu_du_lich_van_thanh": {
+        "name": "Khu du lịch Văn Thánh",
+        "keywords": ["van thanh", "văn thánh", "resort", "picnic", "lake", "ho boi", "hồ bơi"],
+        "lat": 10.8023,
+        "lon": 106.7187,
+        "address": "48/10 Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP.HCM",
+        "description": "Khu du lịch xanh giữa lòng thành phố, nơi lý tưởng cho dã ngoại và tiệc ngoài trời."
+    },
+    
+    # TTTM / Shopping
+    "aeon_mall_tan_phu": {
+        "name": "AEON Mall Tân Phú",
+        "keywords": ["aeon", "aeon mall", "mall", "shopping", "tan phu", "tân phú", "supermarket", "food terrace", "food court", "department store", "hypermarket", "retail", "celadon", "bo bao tan thang"],
+        "lat": 10.801,
+        "lon": 106.6257,
+        "address": "30 Bờ Bao Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú, TP.HCM",
+        "description": "Trung tâm thương mại lớn, nơi lý tưởng để ăn uống, mua sắm và giải trí cuối tuần."
+    },
+    "vincom_dong_khoi": {
+        "name": "Vincom Center Đồng Khởi",
+        "keywords": ["vincom", "dong khoi", "đồng khởi", "shopping", "mall", "luxury"],
+        "lat": 10.7768,
+        "lon": 106.7023,
+        "address": "72 Lê Thánh Tôn và 45A Lý Tự Trọng, Phường Bến Nghé, Quận 1, TP.HCM",
+        "description": "Trung tâm mua sắm cao cấp bậc nhất Sài Gòn, tập trung nhiều thương hiệu nổi tiếng."
+    },
+    "crescent_mall": {
+        "name": "Crescent Mall",
+        "keywords": ["crescent", "mall", "phu my hung", "phú mỹ hưng", "shopping", "quan 7", "quận 7"],
+        "lat": 10.7294,
+        "lon": 106.7182,
+        "address": "101 Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP.HCM",
+        "description": "Trung tâm thương mại lớn tại khu đô thị Phú Mỹ Hưng, kết hợp mua sắm, ẩm thực và giải trí."
+    },
+    
+    # Bảo tàng
+    "bao_tang_my_thuat": {
+        "name": "Bảo tàng Mỹ thuật TP.HCM",
+        "keywords": ["fine arts", "my thuat", "mỹ thuật", "art museum", "bao tang", "bảo tàng", "gallery"],
+        "lat": 10.7721,
+        "lon": 106.6975,
+        "address": "97 Phó Đức Chính, Phường Nguyễn Thái Bình, Quận 1, TP.HCM",
+        "description": "Bảo tàng lưu giữ nhiều tác phẩm nghệ thuật Việt Nam, kiến trúc mang phong cách Pháp cổ điển."
+    },
+    "bao_tang_ao_dai": {
+        "name": "Bảo tàng Áo dài",
+        "keywords": ["ao dai", "áo dài", "museum", "traditional dress", "bao tang", "bảo tàng", "fashion"],
+        "lat": 10.8005,
+        "lon": 106.8109,
+        "address": "206/19, Long Thuận, Phường Long Phước, TP Thủ Đức, TP.HCM",
+        "description": "Nơi trưng bày và tôn vinh tà áo dài Việt Nam, không gian yên bình, đậm nét truyền thống."
+    },
+    
+    # Cầu Ánh Sao
+    "cau_anh_sao": {
+        "name": "Cầu Ánh Sao",
+        "keywords": ["anh sao", "ánh sao", "starlight bridge", "phu my hung", "phú mỹ hưng", "night", "lights"],
+        "lat": 10.7303,
+        "lon": 106.7197,
+        "address": "Khu đô thị Phú Mỹ Hưng, Đường Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP.HCM",
+        "description": "Cây cầu nổi tiếng với ánh sáng lung linh ban đêm, biểu tượng của khu đô thị Phú Mỹ Hưng."
+    },
+}
+
+# Keywords phổ biến để match với ImageNet predictions
+IMAGENET_TO_HCM_MAPPING = {
+    # Amusement parks
+    "roller_coaster": ["suoi_tien", "dam_sen"],
+    "carousel": ["suoi_tien", "dam_sen"],
+    "fountain": ["dam_sen", "suoi_tien"],
+    "water_slide": ["suoi_tien", "dam_sen"],
+    "pool": ["suoi_tien"],
+    "water_tower": ["suoi_tien"],
+    "valley": ["suoi_tien"],
+    "tusker": ["suoi_tien"],
+    "dome": ["suoi_tien"],    
+    "palace": ["suoi_tien"],
+    
+    # Religious
+    "church": ["nha_tho_duc_ba"],
+    "monastery": ["chua_vinh_nghiem", "chua_ngoc_hoang"],
+    "bell_cote": ["nha_tho_duc_ba"],
+    "stupa": ["chua_vinh_nghiem"],
+    
+    # Markets
+    "grocery_store": ["cho_ben_thanh", "cho_binh_tay"],
+    "market": ["cho_ben_thanh", "cho_binh_tay"],
+    "bakery": ["cho_ben_thanh"],
+    
+    # Buildings
+    "palace": ["dinh_doc_lap"],
+    "castle": ["dinh_doc_lap"],
+    "dome": ["nha_tho_duc_ba", "buu_dien_tp"],
+    "pier": ["ben_nha_rong"],
+    
+    # Nature/Zoo
+    "african_elephant": ["thao_cam_vien", "suoi_tien"],
+    "indian_elephant": [ "thao_cam_vien","suoi_tien"],
+    "tusker": ["thao_cam_vien", "suoi_tien"],
+    "tiger": ["thao_cam_vien"],
+    "animal": ["thao_cam_vien"],
+    "zoo": ["thao_cam_vien"],
+    
+    # Architecture
+    "theater_curtain": ["nha_hat_tp"],
+    "cinema": ["nha_hat_tp"],
+    "library": ["bao_tang_tp"],
+    
+    # Bridges
+    "suspension_bridge": ["cau_phu_my", "cau_thu_thiem", "cau_anh_sao"],
+    "steel_arch_bridge": ["cau_phu_my"],
+    "viaduct": ["cau_phu_my"],
+    
+    # Parks
+    "park_bench": ["cong_vien_tao_dan", "cong_vien_23_9", "thao_cam_vien"],
+    "lawn_mower": ["cong_vien_tao_dan", "cong_vien_23_9"],
+    "picket_fence": ["cong_vien_tao_dan"],
+    "greenhouse": ["cong_vien_tao_dan"],
+    
+    # Shopping/Malls
+    "shopping_cart": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    "shopping_basket": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    
+    "bookshop": ["vincom_dong_khoi"],
+    
+    # Museums
+    "museum": ["bao_tang_my_thuat", "bao_tang_tp", "bao_tang_chien_tranh", "bao_tang_ao_dai"],
+    "paintbrush": ["bao_tang_my_thuat"],
+    "oil_filter": ["bao_tang_my_thuat"],
+    "kimono": ["bao_tang_ao_dai"],
+    "gown": ["bao_tang_ao_dai"],
+    "academic_gown": ["bao_tang_ao_dai"],
+    
+    # Night scenes / Entertainment / Nightlife - PHỐ BÙI VIỆN
+    "spotlight": ["pho_tay_bui_vien", "cau_anh_sao", "pho_nguyen_hue"],
+    "neon_sign": ["pho_tay_bui_vien", "cau_anh_sao"],
+    "candle": ["pho_tay_bui_vien", "cau_anh_sao"],
+    "bar": ["pho_tay_bui_vien"],
+    "wine_bottle": ["pho_tay_bui_vien"],
+    "beer_bottle": ["pho_tay_bui_vien"],
+    "beer_glass": ["pho_tay_bui_vien"],
+    "cocktail_shaker": ["pho_tay_bui_vien"],
+    "corkscrew": ["pho_tay_bui_vien"],
+    "pop_bottle": ["pho_tay_bui_vien"],
+    "cup": ["pho_tay_bui_vien"],
+    "coffee_mug": ["pho_tay_bui_vien"],
+    "restaurant": ["pho_tay_bui_vien"],
+    "barbershop": ["pho_tay_bui_vien"],
+    "tobacco_shop": ["pho_tay_bui_vien"],
+    "bikini": ["pho_tay_bui_vien"],  # Nightlife district
+    "miniskirt": ["pho_tay_bui_vien"],
+    "sunglass": ["pho_tay_bui_vien"],
+    "sunglasses": ["pho_tay_bui_vien"],
+    "torch": ["pho_tay_bui_vien"],
+    "stage": ["pho_tay_bui_vien"],
+    "microphone": ["pho_tay_bui_vien"],
+    "loudspeaker": ["pho_tay_bui_vien"],
+    "lampshade": ["pho_tay_bui_vien"],
+    "table_lamp": ["pho_tay_bui_vien"],
+    "candelabra": ["pho_tay_bui_vien"],
+    "electric_fan": ["pho_tay_bui_vien"],
+    "television": ["pho_tay_bui_vien"],
+    "monitor": ["pho_tay_bui_vien"],
+    
+    # Nightlife scene - đám đông, ánh sáng đêm
+    "night": ["pho_tay_bui_vien", "cau_anh_sao"],
+    "crowd": ["pho_tay_bui_vien", "cho_ben_thanh"],
+    "street_sign": ["pho_tay_bui_vien", "pho_nguyen_hue"],
+    
+    # Religious - Chinese temples
+    "altar": ["chua_ba_thien_hau", "hoi_quan_nghia_an", "chua_vinh_nghiem"],
+    "prayer_rug": ["chua_ba_thien_hau", "hoi_quan_nghia_an"],
+    "brass": ["chua_ba_thien_hau", "hoi_quan_nghia_an"],
+    
+    # Religious - Churches
+    "steeple": ["nha_tho_duc_ba", "nha_tho_huyen_si", "nha_tho_tan_dinh"],
+    "church_window": ["nha_tho_duc_ba", "nha_tho_huyen_si", "nha_tho_tan_dinh"],
+    
+    # Skyscrapers
+    "skyscraper": ["landmark_81"],
+    "megalith": ["landmark_81", "bitexco"],
+    
+    # === THÊM NHIỀU IMAGENET CLASSES ĐỂ TĂNG ĐỘ CHÍNH XÁC ===
+    
+    # Amusement park - Suối Tiên, Đầm Sen
+    "water_tower": ["suoi_tien", "dam_sen"],
+    "coral_reef": ["khu_du_lich_van_thanh"],
+    "lakeside": ["suoi_tien", "dam_sen", "khu_du_lich_van_thanh"],
+    "boathouse": ["suoi_tien", "dam_sen"],
+    "dock": ["suoi_tien", "dam_sen"],
+    "breakwater": ["suoi_tien"],
+    "seashore": ["suoi_tien"],
+    "sandbar": ["suoi_tien"],
+    "promontory": ["suoi_tien"],
+    "pool": ["suoi_tien", "dam_sen"],
+    
+    # Pagoda/Temple - Chùa
+    "triumphal_arch": ["chua_vinh_nghiem", "chua_ngoc_hoang"],
+    "totem_pole": ["chua_vinh_nghiem"],
+    "obelisk": ["chua_vinh_nghiem"],
+    "pedestal": ["chua_vinh_nghiem", "chua_ngoc_hoang"],
+    "sundial": ["chua_vinh_nghiem"],
+    "tile_roof": ["chua_vinh_nghiem", "chua_ngoc_hoang", "chua_ba_thien_hau"],
+    
+    # Cathedral/Church - Nhà thờ
+    "bell_cote": ["nha_tho_duc_ba", "nha_tho_huyen_si", "nha_tho_tan_dinh"],
+    "analog_clock": ["nha_tho_duc_ba"],  # Đồng hồ trên nhà thờ
+    "sundial": ["nha_tho_duc_ba"],
+    "window_shade": ["nha_tho_duc_ba", "nha_tho_tan_dinh"],
+    
+    # Markets - Chợ
+    "grocery_store": ["cho_ben_thanh", "cho_binh_tay"],
+    "butcher_shop": ["cho_ben_thanh", "cho_binh_tay"],
+    "confectionery": ["cho_ben_thanh"],
+    "tobacco_shop": ["cho_ben_thanh", "cho_binh_tay"],
+    "streetcar": ["cho_ben_thanh"],  # Xe điện gần chợ
+    "clotheshop": ["cho_ben_thanh", "cho_binh_tay"],
+    
+    # Palace/Government - Dinh Độc Lập
+    "flagpole": ["dinh_doc_lap"],
+    "prison": ["dinh_doc_lap"],  # Hầm ngầm
+    
+    # War Remnants Museum - Bảo tàng Chứng tích Chiến tranh
+    "tank": ["bao_tang_chien_tranh", "dinh_doc_lap"],
+    "military_uniform": ["bao_tang_chien_tranh"],
+    "rifle": ["bao_tang_chien_tranh"],
+    "projectile": ["bao_tang_chien_tranh"],
+    "missile": ["bao_tang_chien_tranh", "landmark_81", "bitexco"],
+    "warplane": ["bao_tang_chien_tranh", "bitexco"],
+    "fighter": ["bao_tang_chien_tranh"],
+    "bomber": ["bao_tang_chien_tranh"],
+    "helicopter": ["bao_tang_chien_tranh"],
+    "aircraft_carrier": ["bao_tang_chien_tranh", "bitexco"],
+    "submarine": ["bao_tang_chien_tranh"],
+    "cannon": ["bao_tang_chien_tranh"],
+    "bulletproof_vest": ["bao_tang_chien_tranh"],
+    "helmet": ["bao_tang_chien_tranh"],
+    "gas_mask": ["bao_tang_chien_tranh"],
+    "gasmask": ["bao_tang_chien_tranh", "bitexco"],
+    "hand_grenade": ["bao_tang_chien_tranh"],
+    "mortar": ["bao_tang_chien_tranh"],
+    "parachute": ["bao_tang_chien_tranh", "bitexco"],
+    "jeep": ["bao_tang_chien_tranh"],
+    "ambulance": ["bao_tang_chien_tranh"],
+    "armored_vehicle": ["bao_tang_chien_tranh"],
+    "camouflage": ["bao_tang_chien_tranh"],
+    "dog_tag": ["bao_tang_chien_tranh"],
+    "flag": ["bao_tang_chien_tranh", "dinh_doc_lap"],
+    "banner": ["bao_tang_chien_tranh"],
+    "memorial": ["bao_tang_chien_tranh"],
+    "monument": ["bao_tang_chien_tranh"],
+    "statue": ["bao_tang_chien_tranh"],
+    "plaque": ["bao_tang_chien_tranh"],
+    "exhibit": ["bao_tang_chien_tranh", "bao_tang_tp", "bao_tang_my_thuat"],
+    
+    # Aircraft/Airplane related - War Remnants Museum specific
+    "airliner": ["bao_tang_chien_tranh", "bitexco"],
+    "warplane": ["bao_tang_chien_tranh", "bitexco"],
+    "fighter": ["bao_tang_chien_tranh"],
+    "bomber": ["bao_tang_chien_tranh"],
+    "biplane": ["bao_tang_chien_tranh"],
+    "monoplane": ["bao_tang_chien_tranh"],
+    "seaplane": ["bao_tang_chien_tranh"],
+    "wing": ["bao_tang_chien_tranh", "bitexco"],
+    "propeller": ["bao_tang_chien_tranh"],
+    "airfoil": ["bao_tang_chien_tranh"],
+    "cockpit": ["bao_tang_chien_tranh"],
+    "fuselage": ["bao_tang_chien_tranh"],
+    "landing_gear": ["bao_tang_chien_tranh"],
+    
+    # Museum building/architecture
+    "museum": ["bao_tang_chien_tranh", "bao_tang_tp", "bao_tang_my_thuat", "bao_tang_ao_dai"],
+    "building": ["bao_tang_chien_tranh", "landmark_81", "bitexco", "nha_hat_tp"],
+    "facade": ["bao_tang_chien_tranh", "nha_tho_duc_ba", "buu_dien_tp"],
+    "concrete": ["bao_tang_chien_tranh", "landmark_81"],
+    "modernist": ["bao_tang_chien_tranh"],
+    
+    # Vietnam War era objects
+    "camouflage": ["bao_tang_chien_tranh"],
+    "olive_drab": ["bao_tang_chien_tranh"],
+    "khaki": ["bao_tang_chien_tranh"],
+    "military_vehicle": ["bao_tang_chien_tranh"],
+    "armored_personnel_carrier": ["bao_tang_chien_tranh"],
+    "half_track": ["bao_tang_chien_tranh"],
+    "tracked_vehicle": ["bao_tang_chien_tranh"],
+    "wheeled_vehicle": ["bao_tang_chien_tranh"],
+    
+    # Displays and exhibitions
+    "showcase": ["bao_tang_chien_tranh", "bao_tang_tp", "bao_tang_my_thuat"],
+    "display_case": ["bao_tang_chien_tranh", "bao_tang_tp"],
+    "information_board": ["bao_tang_chien_tranh"],
+    "signboard": ["bao_tang_chien_tranh"],
+    "placard": ["bao_tang_chien_tranh"],
+    "nameplate": ["bao_tang_chien_tranh"],
+    
+    # Colors commonly seen in war museum
+    "olive": ["bao_tang_chien_tranh"],
+    "beige": ["bao_tang_chien_tranh"],
+    "gray": ["bao_tang_chien_tranh", "landmark_81", "bitexco"],
+    "grey": ["bao_tang_chien_tranh", "landmark_81"],
+    "brown": ["bao_tang_chien_tranh", "cho_ben_thanh"],
+    
+    # Post Office - Bưu điện
+    "mailbox": ["buu_dien_tp"],
+    "pay_phone": ["buu_dien_tp"],
+    "slot": ["buu_dien_tp"],
+    
+    # Zoo - Thảo Cầm Viên
+    "lion": ["thao_cam_vien"],
+    "tiger": ["thao_cam_vien"],
+    "great_dane": ["thao_cam_vien"],
+    "chimpanzee": ["thao_cam_vien"],
+    "orangutan": ["thao_cam_vien"],
+    "gorilla": ["thao_cam_vien"],
+    "gibbon": ["thao_cam_vien"],
+    "siamang": ["thao_cam_vien"],
+    "guenon": ["thao_cam_vien"],
+    "langur": ["thao_cam_vien"],
+    "macaque": ["thao_cam_vien"],
+    "baboon": ["thao_cam_vien"],
+    "flamingo": ["thao_cam_vien"],
+    "peacock": ["thao_cam_vien"],
+    "hippopotamus": ["thao_cam_vien"],
+    "zebra": ["thao_cam_vien"],
+    "bison": ["thao_cam_vien"],
+    "gazelle": ["thao_cam_vien"],
+    "impala": ["thao_cam_vien"],
+    "Arabian_camel": ["thao_cam_vien"],
+    "llama": ["thao_cam_vien"],
+    "warthog": ["thao_cam_vien"],
+    "wild_boar": ["thao_cam_vien"],
+    "ox": ["thao_cam_vien"],
+    "water_buffalo": ["thao_cam_vien"],
+    "ram": ["thao_cam_vien"],
+    "bighorn": ["thao_cam_vien"],
+    "ibex": ["thao_cam_vien"],
+    
+    # Skyscrapers - Landmark 81, Bitexco
+    "space_shuttle": ["landmark_81", "bitexco"],  # Hình dáng cao, thuôn
+    "missile": ["landmark_81", "bitexco"],
+    "projectile": ["landmark_81", "bitexco"],
+    "obelisk": ["landmark_81", "bitexco"],
+    "beacon": ["bitexco"],  # Đài quan sát
+    
+    # Bitexco đặc trưng - helipad, hình dáng độc đáo
+    "solar_dish": ["bitexco"],  # Helipad tròn nhô ra
+    "parachute": ["bitexco"],  # Helipad
+    "disk_brake": ["bitexco"],  # Helipad tròn
+    "aircraft_carrier": ["bao_tang_chien_tranh", "bitexco"],  # Có helipad
+    "airship": ["bitexco"],  # Hình dáng khí động học
+    "wing": ["bitexco"],  # Cánh helipad
+    "airliner": ["bitexco"],  # Liên quan hàng không
+    "warplane": ["bao_tang_chien_tranh", "bitexco"], 
+    "space_bar": ["bitexco"],  # Thanh ngang (helipad)
+    "umbrella": ["bitexco"],  # Hình dáng che
+    "nail": ["landmark_81", "bitexco"],  # Hình dáng nhọn
+    "syringe": ["landmark_81", "bitexco"],  # Hình dáng thuôn cao
+    "torch": ["landmark_81", "bitexco"],  # Tòa nhà cao như đuốc
+    "lighter": ["bitexco"],  # Hình dáng
+    "candle": ["landmark_81"],  # Hình dáng cao
+    "lipstick": ["landmark_81", "bitexco"],  # Hình trụ cao
+    "lotion": ["landmark_81", "bitexco"],  # Hình chai cao
+    "water_bottle": ["landmark_81"],  # Hình dáng
+    "pop_bottle": ["landmark_81"],
+    "pill_bottle": ["landmark_81", "bitexco"],
+    "perfume": ["bitexco"],  # Hình chai độc đáo
+    "saltshaker": ["landmark_81"],  # Hình trụ cao
+    "barrel": ["landmark_81"],  # Hình trụ
+    "gasmask": ["bitexco"],  # Hình dáng đặc biệt
+    "analog_clock": ["bitexco"],  # Mặt tròn (helipad)
+    "wall_clock": ["bitexco"],  # Mặt tròn 
+    "digital_clock": ["landmark_81", "bitexco"],
+    "hourglass": ["bitexco"],  # Hình dáng thắt eo
+    "sundial": ["bitexco"],  # Mặt tròn nhô ra
+    "barometer": ["bitexco"],  # Mặt tròn
+    "odometer": ["bitexco"],  # Mặt số
+    "speedometer": ["bitexco"],  # Mặt số tròn
+    "guillotine": ["bitexco"],  # Phần nhô ra
+    "hatchet": ["bitexco"],  # Phần cắt ngang
+    "cleaver": ["bitexco"],  # Hình dáng
+    
+    # Walking streets - Phố đi bộ
+    "street_sign": ["pho_nguyen_hue", "pho_bui_vien"],
+    "traffic_light": ["pho_nguyen_hue"],
+    "cab": ["pho_nguyen_hue", "pho_bui_vien"],
+    "minivan": ["pho_nguyen_hue"],
+    "trolleybus": ["pho_nguyen_hue"],
+    
+    # Night/Entertainment - Bùi Viện
+    "beer_bottle": ["pho_bui_vien"],
+    "wine_bottle": ["pho_bui_vien"],
+    "cocktail_shaker": ["pho_bui_vien"],
+    "restaurant": ["pho_bui_vien"],
+    "barbershop": ["pho_bui_vien"],
+    
+    # Rivers/Ports - Bến Nhà Rồng
+    "liner": ["ben_nha_rong"],
+    "container_ship": ["ben_nha_rong"],
+    "fireboat": ["ben_nha_rong"],
+    "lifeboat": ["ben_nha_rong"],
+    "speedboat": ["ben_nha_rong"],
+    "yawl": ["ben_nha_rong"],
+    "canoe": ["ben_nha_rong"],
+    "paddle": ["ben_nha_rong"],
+    
+    # General architecture
+    "bannister": ["nha_hat_tp", "bao_tang_tp", "buu_dien_tp"],
+    "patio": ["dinh_doc_lap", "bao_tang_tp"],
+    "sliding_door": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    "revolving_door": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall", "landmark_81"],
+    "elevator": ["landmark_81", "bitexco"],
+    "escalator": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    "shopping mall": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    
+    # AEON Mall specific predictions
+    "Comic Book": ["crescent_mall", "aeon_mall_tan_phu"],
+    "switch": ["aeon_mall_tan_phu", "vincom_dong_khoi"],
+    "dishwasher": ["aeon_mall_tan_phu"],
+    "crane": ["aeon_mall_tan_phu", "landmark_81"],
+    "restaurant": ["aeon_mall_tan_phu", "vincom_dong_khoi", "crescent_mall"],
+    "grocery_store": ["aeon_mall_tan_phu", "cho_ben_thanh"],
+    "bakery": ["aeon_mall_tan_phu", "vincom_dong_khoi"],
+    "confectionery": ["aeon_mall_tan_phu", "vincom_dong_khoi"]
+}
+
+def preprocess_image_for_model(image_pil):
+    """Preprocess PIL Image for MobileNetV2 model."""
+    try:
+        # Resize to 224x224
+        img_resized = image_pil.resize((224, 224))
+        
+        # Convert to RGB if needed
+        if img_resized.mode != 'RGB':
+            img_resized = img_resized.convert('RGB')
+        
+        # Convert to array
+        img_array = keras_image.img_to_array(img_resized)
+        
+        # Add batch dimension
+        img_array = np.expand_dims(img_array, axis=0)
+        
+        # Preprocess for MobileNetV2
+        img_array = preprocess_input(img_array)
+        
+        return img_array
+    except Exception as e:
+        print(f"[LOCAL_AI] Preprocessing error: {e}")
+        return None
+
+def predict_image_class(image_pil):
+    """Predict image class using MobileNetV2."""
+    if not LOCAL_AI_ENABLED or model is None:
+        return []
+    
+    try:
+        img_array = preprocess_image_for_model(image_pil)
+        if img_array is None:
+            return []
+        
+        # Make prediction
+        predictions = model.predict(img_array, verbose=0)
+        
+        # Decode predictions (top 5)
+        decoded = decode_predictions(predictions, top=5)[0]
+        return decoded
+    except Exception as e:
+        print(f"[LOCAL_AI] Prediction error: {e}")
+        return []
+
+def get_landmark_description(prediction_class):
+    """Map ImageNet class to Vietnamese landmark name."""
+    class_lower = prediction_class.lower()
+    
+    # Check if any landmark mapping key is in the class name
+    for key, value in LANDMARK_MAPPING.items():
+        if key in class_lower:
+            return value
+    
+    # Default: return formatted class name
+    return class_lower.replace('_', ' ').title()
+
+def match_hcm_landmark(predictions):
+    """
+    Match ImageNet predictions với database địa điểm HCM.
+    Sử dụng thuật toán voting từ nhiều predictions để tăng độ chính xác.
+    Trả về thông tin đầy đủ: tên, tọa độ, địa chỉ.
+    """
+    if not predictions:
+        return None
+    
+    # Dùng voting system: tính điểm cho mỗi địa điểm từ TẤT CẢ predictions
+    landmark_scores = {}
+    
+    for pred in predictions:
+        class_id, class_name, confidence = pred
+        class_lower = class_name.lower().replace(' ', '_')
+        conf_value = float(confidence)
+        
+        print(f"[LOCAL_AI] Checking: {class_name} ({conf_value*100:.1f}%)")
+        
+        # 1. Direct mapping từ ImageNet class (weight: 100%)
+        if class_lower in IMAGENET_TO_HCM_MAPPING:
+            landmark_ids = IMAGENET_TO_HCM_MAPPING[class_lower]
+            for lid in landmark_ids:
+                if lid in HCM_LANDMARKS_DATABASE:
+                    if lid not in landmark_scores:
+                        landmark_scores[lid] = 0
+                    landmark_scores[lid] += conf_value * 100
+                    print(f"[LOCAL_AI]   → Direct match: {lid} (+{conf_value*100:.1f})")
+        
+        # 2. Partial match với class name (weight: 70%)
+        for imagenet_key, landmark_ids in IMAGENET_TO_HCM_MAPPING.items():
+            if imagenet_key in class_lower or class_lower in imagenet_key:
+                for lid in landmark_ids:
+                    if lid in HCM_LANDMARKS_DATABASE:
+                        if lid not in landmark_scores:
+                            landmark_scores[lid] = 0
+                        landmark_scores[lid] += conf_value * 70
+                        print(f"[LOCAL_AI]   → Partial match: {lid} (+{conf_value*70:.1f})")
+        
+        # 3. Keyword matching trong database (weight: 50%)
+        for landmark_id, landmark_info in HCM_LANDMARKS_DATABASE.items():
+            for keyword in landmark_info.get('keywords', []):
+                keyword_normalized = keyword.lower().replace(' ', '_')
+                if keyword_normalized in class_lower or class_lower in keyword_normalized:
+                    if landmark_id not in landmark_scores:
+                        landmark_scores[landmark_id] = 0
+                    landmark_scores[landmark_id] += conf_value * 50
+                    print(f"[LOCAL_AI]   → Keyword match ({keyword}): {landmark_id} (+{conf_value*50:.1f})")
+                    break  # Chỉ tính 1 lần cho mỗi địa điểm
+    
+    # Tìm địa điểm có điểm cao nhất
+    if not landmark_scores:
+        return None
+    
+    best_landmark_id = max(landmark_scores, key=landmark_scores.get)
+    best_score = landmark_scores[best_landmark_id]
+    
+    print(f"[LOCAL_AI] Scores: {landmark_scores}")
+    print(f"[LOCAL_AI] Best match: {best_landmark_id} with score {best_score:.1f}")
+    
+    # Chỉ trả về nếu score đủ cao (threshold: 10)
+    if best_score < 10:
+        return None
+    
+    best_match = HCM_LANDMARKS_DATABASE[best_landmark_id].copy()
+    best_match['confidence_score'] = best_score
+    best_match['match_type'] = 'voting_system'
+    best_match['all_scores'] = landmark_scores
+    
+    return best_match
+
+def recognize_landmark_local(image_pil):
+    """
+    Recognize landmark from image using local TensorFlow model + OCR.
+    1. Đầu tiên thử OCR để đọc text trong ảnh (ví dụ: biển hiệu)
+    2. Nếu không có text, dùng CNN để phân loại ảnh
+    Trả về thông tin đầy đủ: tên địa điểm, tọa độ, địa chỉ.
+    """
+    if not LOCAL_AI_ENABLED:
+        return {
+            "landmark": "Không rõ địa danh",
+            "description": "Mô hình không có sẵn",
+            "confidence": "low",
+            "lat": None,
+            "lon": None,
+            "address": None
+        }
+    
+    try:
+        # ========== BƯỚC 1: THỬ OCR TRƯỚC ==========
+        # Đọc text trong ảnh (ví dụ: biển hiệu "PHỐ ĐI BỘ BÙI VIỆN")
+        print("[LOCAL_AI] Step 1: Trying OCR to read text in image...")
+        detected_texts = extract_text_from_image(image_pil)
+        
+        if detected_texts:
+            landmark_id = match_text_to_landmark(detected_texts)
+            
+            if landmark_id and landmark_id in HCM_LANDMARKS_DATABASE:
+                landmark_info = HCM_LANDMARKS_DATABASE[landmark_id]
+                print(f"[LOCAL_AI] ✅ OCR Match: Found '{landmark_info['name']}' from text!")
+                
+                return {
+                    "landmark": landmark_info['name'],
+                    "description": f"Nhận dạng từ text trong ảnh: {', '.join(detected_texts[:3])}",
+                    "confidence": "high",
+                    "confidence_score": "95.0%",  # OCR match có độ tin cậy cao
+                    "lat": landmark_info.get('lat'),
+                    "lon": landmark_info.get('lon'),
+                    "address": landmark_info.get('address'),
+                    "match_type": "ocr_text_match"
+                }
+        
+        # ========== BƯỚC 2: DÙNG CNN PHÂN LOẠI ẢNH ==========
+        print("[LOCAL_AI] Step 2: Using CNN to classify image...")
+        predictions = predict_image_class(image_pil)
+        print(f"[LOCAL_AI] Raw predictions: {predictions[:3] if predictions else 'None'}")
+        
+        if predictions:
+            # Thử match với database địa điểm HCM trước
+            hcm_match = match_hcm_landmark(predictions)
+            
+            if hcm_match:
+                confidence_score = hcm_match.get('confidence_score', 0)
+                
+                if confidence_score > 30:
+                    conf_level = "high"
+                elif confidence_score > 15:
+                    conf_level = "medium"
+                else:
+                    conf_level = "low"
+                
+                print(f"[LOCAL_AI] ✅ CNN HCM Match: {hcm_match['name']} (score: {confidence_score:.1f})")
+                
+                return {
+                    "landmark": hcm_match['name'],
+                    "description": hcm_match.get('description', ''),
+                    "confidence": conf_level,
+                    "confidence_score": f"{confidence_score:.1f}%",
+                    "lat": hcm_match.get('lat'),
+                    "lon": hcm_match.get('lon'),
+                    "address": hcm_match.get('address'),
+                    "match_type": hcm_match.get('match_type', 'cnn_classification')
+                }
+            
+            # Fallback: dùng ImageNet prediction nếu không match HCM
+            class_id, class_name, confidence = predictions[0]
+            confidence_pct = float(confidence) * 100
+            
+            print(f"[LOCAL_AI] Fallback to ImageNet: {class_name} ({confidence_pct:.1f}%)")
+            
+            landmark = get_landmark_description(class_name)
+            
+            if confidence_pct > 50:
+                conf_level = "high"
+            elif confidence_pct > 20:
+                conf_level = "medium"
+            else:
+                conf_level = "low"
+            
+            # Get alternative predictions
+            description = ""
+            if len(predictions) > 1:
+                other_classes = [get_landmark_description(p[1]) for p in predictions[1:3]]
+                description = f"Có thể là: {', '.join(other_classes)}"
+            
+            return {
+                "landmark": landmark,
+                "description": description,
+                "confidence": conf_level,
+                "confidence_score": f"{confidence_pct:.1f}%",
+                "lat": None,
+                "lon": None,
+                "address": None,
+                "match_type": "imagenet_generic"
+            }
+        
+        return {
+            "landmark": "Không rõ địa danh",
+            "description": "Không nhận dạng được từ ảnh",
+            "confidence": "low",
+            "lat": None,
+            "lon": None,
+            "address": None
+        }
+    except Exception as e:
+        print(f"[LOCAL_AI] Recognition error: {e}")
+        return {
+            "landmark": "Không rõ địa danh",
+            "description": f"Lỗi: {str(e)[:50]}",
+            "confidence": "low",
+            "lat": None,
+            "lon": None,
+            "address": None
+        }
+
+def get_landmark_from_image(image_pil):
+    """Get landmark name from image (compatibility function)."""
+    result = recognize_landmark_local(image_pil)
+    if isinstance(result, dict):
+        return result.get("landmark", "Không rõ địa danh")
+    return result
+
+def get_landmark_with_confidence(image_pil):
+    """Get landmark with confidence score, coordinates and address."""
+    # Dùng chung logic với recognize_landmark_local
+    return recognize_landmark_local(image_pil)
+
+def detect_location(image_file, image_pil):
+    """Detect location from image (compatibility function)."""
+    return get_landmark_from_image(image_pil)
+
+def analyze_image(image_file_or_pil, analysis_type="landmark"):
+    """Analyze image (compatibility function)."""
+    if isinstance(image_file_or_pil, Image.Image):
+        pil_img = image_file_or_pil
+    else:
+        try:
+            pil_img = Image.open(image_file_or_pil)
+        except:
+            pil_img = image_file_or_pil
+    
+    if analysis_type == "landmark":
+        return recognize_landmark_local(pil_img)
+    elif analysis_type == "full":
+        return get_landmark_with_confidence(pil_img)
+    else:
+        return get_landmark_with_confidence(pil_img)
+
+# Global flag for compatibility
+OPENAI_ENABLED = LOCAL_AI_ENABLED
+
+print(f"[LOCAL_AI] ✅ Initialization complete. Model enabled: {LOCAL_AI_ENABLED}")

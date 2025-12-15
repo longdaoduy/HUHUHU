@@ -1,0 +1,918 @@
+[
+  {
+    "name": "Landmark 81",
+    "location": "720A Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh",
+    "tags": [
+      "cao tầng",
+      "mua sắm",
+      "ngắm cảnh",
+      "sang trọng",
+      "nhà hàng",
+      "view đẹp",
+      "check-in",
+      "sống ảo",
+      "biểu tượng thành phố"
+    ],
+    "introduction": "Toà nhà cao nhất Việt Nam, biểu tượng hiện đại của TP.HCM, với khu mua sắm, nhà hàng, đài quan sát ngắm cảnh toàn thành phố.",
+    "lat": 10.794,
+    "lon": 106.7218,
+    "price (VNĐ)": 300000,
+    "rating": 4.8,
+    "review": "View từ đài quan sát Skydeck tuyệt đỉnh, đặc biệt là lúc hoàng hôn hoặc đêm. Khu vực trung tâm thương mại Vincom rất sang trọng, nhiều thương hiệu cao cấp. Phù hợp cho những ai muốn trải nghiệm sự hiện đại và check-in sang chảnh.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://statics.vinpearl.com/to%C3%A0n%20c%E1%BA%A3nh%20%20Vinpearl%20Luxury%20Landmark%2081_1659844934.jpg"
+    ]
+  },
+  {
+    "name": "Nhà thờ Đức Bà",
+    "location": "Công xã Paris, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "kiến trúc",
+      "tôn giáo",
+      "lịch sử",
+      "chụp ảnh",
+      "cổ điển",
+      "văn hóa",
+      "biểu tượng",
+      "check-in"
+    ],
+    "introduction": "Công trình kiến trúc Pháp cổ kính nổi tiếng, biểu tượng của Sài Gòn, thu hút du khách trong và ngoài nước.",
+    "lat": 10.7798,
+    "lon": 106.699,
+    "price (VNĐ)": 0,
+    "rating": 4.7,
+    "review": "Một công trình kiến trúc tuyệt đẹp mang đậm dấu ấn Pháp. Tuyệt vời để chụp ảnh cưới hoặc ảnh check-in cổ điển. Lưu ý hiện đang được trùng tu nên một số góc chụp sẽ bị che chắn.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://saigonhotel.com.vn/wp-content/uploads/2019/11/f5d8fc3e-nha-tho-duc-ba-thumbnail-min-1.webp"
+    ]
+  },
+  {
+    "name": "Bưu điện Trung tâm Sài Gòn",
+    "location": "2 Công xã Paris, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "lịch sử",
+      "kiến trúc",
+      "chụp ảnh",
+      "biểu tượng",
+      "cổ điển",
+      "du lịch",
+      "check-in",
+      "giáo dục"
+    ],
+    "introduction": "Công trình mang đậm dấu ấn kiến trúc Pháp, là điểm đến lịch sử và văn hóa đặc sắc giữa trung tâm thành phố.",
+    "lat": 10.7796,
+    "lon": 106.6983,
+    "price (VNĐ)": 0,
+    "rating": 4.7,
+    "review": "Kiến trúc bên trong và bên ngoài đều rất ấn tượng, mang tính lịch sử. Vẫn hoạt động như một bưu điện thông thường, có thể mua quà lưu niệm và gửi thư. Nên ghé thăm khi kết hợp với Nhà thờ Đức Bà vì nằm gần nhau.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://www.vietnamairlines.com/~/media/SEO-images/2025%20SEO/Traffic%20TA/MN/saigon%20central%20post/saigon-central-post_thumb.jpg"
+    ]
+  },
+  {
+    "name": "Phố đi bộ Nguyễn Huệ",
+    "location": "Đường Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "giải trí",
+      "ăn uống",
+      "chụp ảnh",
+      "mua sắm",
+      "đêm",
+      "check-in",
+      "nhộn nhịp",
+      "âm nhạc",
+      "dạo phố"
+    ],
+    "introduction": "Tuyến phố sôi động, tập trung đông người mỗi tối, nơi diễn ra nhiều hoạt động biểu diễn và lễ hội.",
+    "lat": 10.773,
+    "lon": 106.7046,
+    "price (VNĐ)": 0,
+    "rating": 4.6,
+    "review": "Rất nhộn nhịp vào cuối tuần và buổi tối. Xung quanh có nhiều quán cà phê, trà sữa, và tòa nhà chung cư 42 Nguyễn Huệ với nhiều shop độc đáo. Là nơi lý tưởng để dạo mát, ngắm cảnh và cảm nhận nhịp sống Sài Gòn.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://statics.vinpearl.com/pho-di-bo-Nguyen-Hue-o-dau-hinh-anh1_1624692569.jpg"
+    ]
+  },
+  {
+    "name": "Chợ Bến Thành",
+    "location": "Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "ẩm thực",
+      "mua sắm",
+      "đặc sản",
+      "văn hóa",
+      "truyền thống",
+      "quà lưu niệm",
+      "du khách",
+      "check-in",
+      "biểu tượng",
+      "chợ cổ",
+      "địa phương",
+      "nhộn nhịp"
+    ],
+    "introduction": "Biểu tượng lâu đời của TP.HCM, nơi du khách có thể thưởng thức ẩm thực địa phương và mua đặc sản.",
+    "lat": 10.7726,
+    "lon": 106.6983,
+    "price (VNĐ)": 0,
+    "rating": 4.5,
+    "review": "Nơi có thể tìm thấy mọi thứ từ quần áo, vải vóc đến đồ lưu niệm và đặc sản địa phương. Khu ẩm thực đa dạng, giá cả hơi cao hơn bên ngoài nhưng rất đáng thử. Nên trả giá khi mua sắm.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://saoviettravel.com.vn/blog/wp-content/uploads/2012/12/6.jpg"
+    ]
+  },
+  {
+    "name": "Bảo tàng Chứng tích Chiến tranh",
+    "location": "28 Võ Văn Tần, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh.",
+    "tags": [
+      "lịch sử",
+      "giáo dục",
+      "bảo tàng",
+      "chiến tranh",
+      "văn hóa",
+      "hiện vật",
+      "du khách",
+      "trải nghiệm",
+      "tìm hiểu",
+      "di tích"
+    ],
+    "introduction": "Bảo tàng lưu giữ nhiều hình ảnh, tư liệu và hiện vật về chiến tranh Việt Nam, mang giá trị giáo dục sâu sắc.",
+    "lat": 10.7791,
+    "lon": 106.6925,
+    "price (VNĐ)": 40000,
+    "rating": 4.7,
+    "review": "Trải nghiệm sâu sắc và xúc động. Các tư liệu và hiện vật được trưng bày rất chân thực và có giá trị lịch sử cao. Một điểm đến quan trọng để tìm hiểu về lịch sử Việt Nam, đặc biệt dành cho du khách quốc tế.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1200,h_630/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/rhs9bb4z1ztznp7tsevc/V%C3%A9%20B%E1%BA%A3o%20T%C3%A0ng%20Ch%E1%BB%A9ng%20T%C3%ADch%20Chi%E1%BA%BFn%20Tranh%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh.jpg"
+    ]
+  },
+  {
+    "name": "Công viên Tao Đàn",
+    "location": "Trương Định, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "công viên",
+      "thư giãn",
+      "cây xanh",
+      "dã ngoại",
+      "đi bộ",
+      "yên tĩnh",
+      "thiên nhiên",
+      "tập thể dục",
+      "picnic",
+      "hoa",
+      "cảnh quan"
+    ],
+    "introduction": "Khu công viên lớn giữa trung tâm Sài Gòn, là nơi người dân đến tập thể dục và thư giãn.",
+    "lat": 10.7761,
+    "lon": 106.6883,
+    "price (VNĐ)": 0,
+    "rating": 4.5,
+    "review": "Không gian xanh mát, yên tĩnh hiếm có giữa lòng thành phố ồn ào. Rất thích hợp để đi dạo, tập thể dục buổi sáng sớm hoặc chiều mát. Có khu vui chơi nhỏ cho trẻ em.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://congvientaodan.com/wp-content/uploads/2024/03/Tao-Dan-Park-Ho-Chi-Minh-City.jpg"
+    ]
+  },
+  {
+    "name": "Thảo Cầm Viên Sài Gòn",
+    "location": "2 Nguyễn Bỉnh Khiêm, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "động vật",
+      "thiên nhiên",
+      "vui chơi",
+      "gia đình",
+      "trẻ em",
+      "chụp ảnh",
+      "học tập",
+      "cây xanh",
+      "lịch sử",
+      "bảo tồn",
+      "sở thú"
+    ],
+    "introduction": "Một trong những sở thú lâu đời nhất Đông Nam Á, kết hợp giữa khu bảo tồn và công viên vui chơi.",
+    "lat": 10.788,
+    "lon": 106.7056,
+    "price (VNĐ)": 60000,
+    "rating": 4.4,
+    "review": "Tuyệt vời cho gia đình có trẻ nhỏ. Khuôn viên rộng lớn, nhiều cây xanh, vừa có thể xem thú, vừa có khu vui chơi. Nên đi vào buổi sáng sớm hoặc chiều mát để tránh nóng.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://cdn.tgdd.vn/Files/2022/02/21/1416530/tham-quan-thao-cam-vien-sai-gon-cuc-ly-tuong-vao-cuoi-tuan-202202211013120090.jpg"
+    ]
+  },
+  {
+    "name": "Bitexco Tower",
+    "location": "2 Hải Triều, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "cao tầng",
+      "ngắm cảnh",
+      "thành phố",
+      "hiện đại",
+      "sang trọng",
+      "skydeck",
+      "nhà hàng",
+      "skyline",
+      "biểu tượng",
+      "view đẹp",
+      "đêm",
+      "check-in"
+    ],
+    "introduction": "Toà nhà biểu tượng với đài quan sát Skydeck, ngắm toàn cảnh Sài Gòn về đêm.",
+    "lat": 10.7716,
+    "lon": 106.7043,
+    "price (VNĐ)": 200000,
+    "rating": 4.6,
+    "review": "View 360 độ từ Skydeck rất đáng tiền, nhìn thấy rõ các khu vực trung tâm. Thiết kế tòa nhà độc đáo hình búp sen. Có thể chọn uống cà phê hoặc ăn tối tại các nhà hàng cao tầng thay vì mua vé lên đài quan sát.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitexco_Financial_Tower_20022012_cropped.JPG"
+    ]
+  },
+  {
+    "name": "Bến Nhà Rồng",
+    "location": "1 Nguyễn Tất Thành, Phường 12, Quận 4, TP. Hồ Chí Minh.",
+    "tags": [
+      "lịch sử",
+      "bảo tàng",
+      "di tích",
+      "sông Sài Gòn",
+      "văn hóa",
+      "Hồ Chí Minh",
+      "giáo dục",
+      "tham quan",
+      "biểu tượng"
+    ],
+    "introduction": "Nơi Bác Hồ ra đi tìm đường cứu nước, hiện là bảo tàng mang ý nghĩa lịch sử to lớn.",
+    "lat": 10.7676,
+    "lon": 106.708,
+    "price (VNĐ)": 40000,
+    "rating": 4.6,
+    "review": "Địa điểm lịch sử quan trọng, trưng bày nhiều hình ảnh và hiện vật về cuộc đời Bác Hồ. Kiến trúc cổ kính, nằm ngay cạnh sông Sài Gòn. Phù hợp cho những ai muốn tìm hiểu về lịch sử hiện đại của Việt Nam.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://hnm.1cdn.vn/2019/07/06/hanoimoi.com.vn-uploads-images-anhthu-2019-07-06-_ben_nharong-01-.jpg"
+    ]
+  },
+  {
+    "name": "Khu phố Tây Bùi Viện",
+    "location": "Đường Bùi Viện, Phường Phạm Ngũ Lão, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "giải trí",
+      "bar",
+      "nightlife",
+      "âm nhạc",
+      "du khách",
+      "ăn uống",
+      "check-in",
+      "sôi động",
+      "phố đêm",
+      "party",
+      "người nước ngoài",
+      "vui chơi"
+    ],
+    "introduction": "Phố đêm sôi động dành cho du khách quốc tế, với nhiều quán bar, nhà hàng và hoạt động giải trí.",
+    "lat": 10.767,
+    "lon": 106.692,
+    "price (VNĐ)": 0,
+    "rating": 4.4,
+    "review": "Cực kỳ sôi động và ồn ào vào buổi tối, thích hợp cho những người thích tiệc tùng và trải nghiệm nightlife. Đồ ăn, thức uống phong phú, giá cả phải chăng. Nên cẩn thận với tư trang cá nhân.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://cdn.vntrip.vn/cam-nang/wp-content/uploads/2017/09/co-gi-hot-o-pho-di-bo-bui-vien-e1505380369394.jpg"
+    ]
+  },
+  {
+    "name": "Khu ChinaTown (Chợ Lớn)",
+    "location": "Khu vực Chợ Bình Tây và các tuyến đường xung quanh như Hải Thượng Lãn Ông, Châu Văn Liêm, Quận 5, TP. Hồ Chí Minh.",
+    "tags": [
+      "văn hóa",
+      "ẩm thực",
+      "người Hoa",
+      "chùa",
+      "lịch sử",
+      "mua sắm",
+      "truyền thống",
+      "check-in",
+      "di tích",
+      "tôn giáo",
+      "đặc sản",
+      "tâm linh"
+    ],
+    "introduction": "Khu vực mang đậm bản sắc người Hoa, nổi bật với chùa miếu cổ và ẩm thực đặc trưng.",
+    "lat": 10.755,
+    "lon": 106.663,
+    "price (VNĐ)": 0,
+    "rating": 4.5,
+    "review": "Nơi tuyệt vời để khám phá văn hóa, kiến trúc và ẩm thực người Hoa. Rất nhiều chùa miếu cổ kính để tham quan và check-in. Đừng quên thử các món ăn đặc trưng như hủ tiếu, dimsum, và các loại chè.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://image.vietgoing.com/destination/large/vietgoing_kuv2106048052.webp"
+    ]
+  },
+  {
+    "name": "Khu du lịch Văn Thánh",
+    "location": "48/10 Điện Biên Phủ, Phường 22, Quận Bình Thạnh, TP. Hồ Chí Minh",
+    "tags": [
+      "ăn uống",
+      "hồ bơi",
+      "thư giãn",
+      "gia đình",
+      "dã ngoại",
+      "thiên nhiên",
+      "check-in",
+      "không gian xanh",
+      "picnic",
+      "tổ chức sự kiện"
+    ],
+    "introduction": "Khu du lịch xanh giữa lòng thành phố, nơi lý tưởng cho dã ngoại và tiệc ngoài trời.",
+    "lat": 10.8023,
+    "lon": 106.7187,
+    "price (VNĐ)": 100000,
+    "rating": 4.3,
+    "review": "Không gian rộng rãi, thoáng mát, thích hợp cho buổi dã ngoại cuối tuần. Có khu hồ bơi lớn và khu nhà hàng ẩm thực Việt Nam, thường được chọn để tổ chức tiệc, họp mặt. Giá vé hợp lý.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://www.homepaylater.vn/static/2aee948010c4ddd45a3514326d4e9dc7/4b4e8/khu_nha_choi_de_du_khach_cau_ca_trong_khu_du_lich_van_thanh_5b053ce81a.webp"
+    ]
+  },
+  {
+    "name": "Công viên nước Đầm Sen",
+    "location": "3 Hòa Bình, Phường 3, Quận 11, TP. Hồ Chí Minh",
+    "tags": [
+      "vui chơi",
+      "nước",
+      "trẻ em",
+      "giải trí",
+      "gia đình",
+      "trượt nước",
+      "công viên",
+      "lễ hội",
+      "mùa hè",
+      "năng động"
+    ],
+    "introduction": "Khu vui chơi nước nổi tiếng với nhiều trò trượt nước và khu công viên Đầm Sen liền kề.",
+    "lat": 10.771,
+    "lon": 106.638,
+    "price (VNĐ)": 140000,
+    "rating": 4.5,
+    "review": "Nhiều trò chơi dưới nước hấp dẫn, phù hợp cho cả người lớn và trẻ em. Là lựa chọn giải nhiệt lý tưởng vào mùa hè. Luôn đông đúc, nên đi sớm để tránh phải xếp hàng lâu.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://goland24h.com/wp-content/uploads/2023/11/dam-sen-co-gi-choi.jpg"
+    ]
+  },
+  {
+    "name": "Công viên Suối Tiên",
+    "location": "120 Xa lộ Hà Nội, Phường Tân Phú, TP Thủ Đức, TP. Hồ Chí Minh",
+    "tags": [
+      "vui chơi",
+      "giải trí",
+      "văn hóa",
+      "tâm linh",
+      "lễ hội",
+      "gia đình",
+      "trẻ em",
+      "check-in",
+      "khu du lịch",
+      "truyền thống"
+    ],
+    "introduction": "Khu du lịch văn hóa - giải trí nổi tiếng với chủ đề lịch sử và truyền thuyết Việt Nam.",
+    "lat": 10.8695,
+    "lon": 106.8028,
+    "price (VNĐ)": 180000,
+    "rating": 4.4,
+    "review": "Công viên rộng lớn với nhiều trò chơi đa dạng và các công trình mang ý nghĩa tâm linh, truyền thuyết. Đặc biệt hấp dẫn vào các dịp lễ hội lớn. Hơi xa trung tâm nhưng đáng để đi cùng gia đình.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://mia.vn/media/uploads/blog-du-lich/cong-vien-van-hoa-suoi-tien-4-1692620553.jpg"
+    ]
+  },
+  {
+    "name": "AEON Mall Tân Phú",
+    "location": "30 Bờ Bao Tân Thắng, Phường Sơn Kỳ, Quận Tân Phú, TP. Hồ Chí Minh.",
+    "tags": [
+      "mua sắm",
+      "ẩm thực",
+      "xem phim",
+      "giải trí",
+      "gia đình",
+      "siêu thị",
+      "thương hiệu",
+      "hiện đại",
+      "vui chơi",
+      "check-in"
+    ],
+    "introduction": "Trung tâm thương mại lớn, nơi lý tưởng để ăn uống, mua sắm và giải trí cuối tuần.",
+    "lat": 10.801,
+    "lon": 106.6257,
+    "price (VNĐ)": 0,
+    "rating": 4.7,
+    "review": "Đa dạng về ẩm thực và mua sắm, đặc biệt có siêu thị lớn của Nhật Bản. Không gian rộng rãi, sạch đẹp, phù hợp cho mọi lứa tuổi. Là điểm đến quen thuộc của người dân khu vực ngoại thành.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://aeonmall-vietnam.com/wp-content/uploads/2017/04/AM-Tan-Phu-Celadon-1.jpg"
+    ]
+  },
+  {
+    "name": "Vincom Center Đồng Khởi",
+    "location": "72 Lê Thánh Tôn và 45A Lý Tự Trọng, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "mua sắm",
+      "thương hiệu",
+      "sang trọng",
+      "ăn uống",
+      "thời trang",
+      "hiện đại",
+      "cao cấp",
+      "trung tâm thương mại",
+      "check-in"
+    ],
+    "introduction": "Trung tâm mua sắm cao cấp bậc nhất Sài Gòn, tập trung nhiều thương hiệu nổi tiếng.",
+    "lat": 10.7768,
+    "lon": 106.7023,
+    "price (VNĐ)": 0,
+    "rating": 4.6,
+    "review": "Tập trung các thương hiệu quốc tế và cao cấp. Vị trí đắc địa, ngay trung tâm Quận 1. Thích hợp cho việc shopping, ăn uống và trải nghiệm không gian sang trọng.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://vinhomecentralpark.com/wp-content/uploads/2025/03/Vincom-Dong-Khoi-Q1.jpg"
+    ]
+  },
+  {
+    "name": "Bảo tàng Mỹ thuật TP.HCM",
+    "location": "97 Phó Đức Chính, Phường Nguyễn Thái Bình, Quận 1, TP. Hồ Chí Minh.",
+    "tags": [
+      "nghệ thuật",
+      "kiến trúc",
+      "chụp ảnh",
+      "cổ điển",
+      "văn hóa",
+      "tranh",
+      "triển lãm",
+      "lịch sử",
+      "sáng tạo",
+      "check-in"
+    ],
+    "introduction": "Bảo tàng lưu giữ nhiều tác phẩm nghệ thuật Việt Nam, kiến trúc mang phong cách Pháp cổ điển.",
+    "lat": 10.7721,
+    "lon": 106.6975,
+    "price (VNĐ)": 30000,
+    "rating": 4.6,
+    "review": "Kiến trúc cổ kính đẹp mắt, là nơi 'sống ảo' lý tưởng cho giới trẻ. Trưng bày nhiều tác phẩm nghệ thuật có giá trị. Một không gian yên tĩnh, thư thái để chiêm ngưỡng nghệ thuật.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://lh7-us.googleusercontent.com/-vlIMB_NiDf3Yi3hnDkC899xviQjU9Lpji6cjGbo4a0BZtbhuaAMJnuwIFEXSuqSaiega8GeSJx_O8oDLxNnQyMYveMpm7XgqIsUhMudO3F8i09y7HYvNxKo5EsXKQPF9rH4fQCAlhZ9NMNDbE0au3Q"
+    ]
+  },
+  {
+    "name": "Cầu Ánh Sao",
+    "location": "Khu đô thị Phú Mỹ Hưng, Đường Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP. Hồ Chí Minh",
+    "tags": [
+      "ngắm cảnh",
+      "chụp ảnh",
+      "đêm",
+      "lãng mạn",
+      "đi bộ",
+      "ánh sáng",
+      "hồ Bán Nguyệt",
+      "check-in",
+      "tình yêu",
+      "view đẹp"
+    ],
+    "introduction": "Cây cầu nổi tiếng với ánh sáng lung linh ban đêm, biểu tượng của khu đô thị Phú Mỹ Hưng.",
+    "lat": 10.7303,
+    "lon": 106.7197,
+    "price (VNĐ)": 0,
+    "rating": 4.7,
+    "review": "Rất lãng mạn vào buổi tối với hiệu ứng ánh sáng như sao trời. Thích hợp để đi dạo cùng người yêu hoặc gia đình. Xung quanh có Hồ Bán Nguyệt và Crescent Mall, tạo thành một khu vực vui chơi giải trí hoàn chỉnh.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/55/28/30/img-20191205-210634-685.jpg?w=900&h=500&s=1"
+    ]
+  },
+  {
+    "name": "Crescent Mall",
+    "location": "101 Tôn Dật Tiên, Phường Tân Phú, Quận 7, TP. Hồ Chí Minh.",
+    "tags": [
+      "mua sắm",
+      "ăn uống",
+      "hiện đại",
+      "gia đình",
+      "xem phim",
+      "thương hiệu",
+      "giải trí",
+      "check-in",
+      "trung tâm",
+      "sang trọng"
+    ],
+    "introduction": "Trung tâm thương mại lớn tại khu đô thị Phú Mỹ Hưng, kết hợp mua sắm, ẩm thực và giải trí.",
+    "lat": 10.7294,
+    "lon": 106.7182,
+    "price (VNĐ)": 0,
+    "rating": 4.6,
+    "review": "Trung tâm thương mại lớn, hiện đại, có nhiều khu vực chụp ảnh đẹp. Đặc biệt là khu vực ngoài trời hướng ra Hồ Bán Nguyệt và Cầu Ánh Sao. Rất tiện nghi và nhiều lựa chọn ẩm thực.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://acnoshotel.com/grand/wp-content/uploads/2024/08/Acnos-crescent-mail-01.jpg"
+    ]
+  },
+  {
+    "name": "Bảo tàng Áo dài",
+    "location": "206/19, Long Thuận, Phường Long Phước, Quận 9 (nay là TP Thủ Đức), TP. Hồ Chí Minh",
+    "tags": [
+      "văn hóa",
+      "truyền thống",
+      "nghệ thuật",
+      "lịch sử",
+      "áo dài",
+      "Việt Nam",
+      "bảo tàng",
+      "trang phục",
+      "chụp ảnh",
+      "check-in",
+      "di sản",
+      "giáo dục",
+      "yên tĩnh",
+      "sông nước",
+      "kiến trúc",
+      "du lịch",
+      "nữ tính",
+      "nghệ nhân",
+      "làng quê",
+      "không gian xanh",
+      "hoài cổ"
+    ],
+    "introduction": "Nơi trưng bày và tôn vinh tà áo dài Việt Nam, không gian yên bình, đậm nét truyền thống.",
+    "lat": 10.8005,
+    "lon": 106.8109,
+    "price (VNĐ)": 100000,
+    "rating": 4.8,
+    "review": "Kiến trúc độc đáo, không gian xanh mát và yên tĩnh, rất khác biệt so với trung tâm thành phố. Bộ sưu tập áo dài ấn tượng, giúp hiểu thêm về lịch sử và văn hóa. Lý tưởng để chụp ảnh với áo dài.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://baotangaodai.com.vn/image/catalog/web/tin_tuc/img2.jpg"
+    ]
+  },
+  {
+    "name": "Quán Ăn Ngon 138",
+    "location": "138 Nam Kỳ Khởi Nghĩa, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "ẩm thực",
+      "món Việt",
+      "nhà hàng",
+      "truyền thống",
+      "đặc sản",
+      "gia đình",
+      "phở",
+      "bún",
+      "nem",
+      "cơm",
+      "đông khách",
+      "không gian đẹp"
+    ],
+    "introduction": "Nhà hàng nổi tiếng với món ăn Việt Nam đa dạng, không gian mở thoáng mát giữa lòng thành phố.",
+    "lat": 10.7742,
+    "lon": 106.6965,
+    "price (VNĐ)": 150000,
+    "rating": 4.5,
+    "review": "Thực đơn rất phong phú với các món ăn từ khắp ba miền. Không gian đẹp, thoáng mát. Giá cả hơi cao nhưng chất lượng tốt, phù hợp cho du khách muốn thử nhiều món trong một lần.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://quananngon138.com/wp-content/uploads/2025/10/CANH.png"
+    ]
+  },
+  {
+    "name": "Phở Hòa Pasteur",
+    "location": "260C Pasteur, Phường 8, Quận 3, TP. Hồ Chí Minh",
+    "tags": [
+      "phở",
+      "ẩm thực",
+      "sáng",
+      "truyền thống",
+      "nổi tiếng",
+      "bò",
+      "gà",
+      "nước dùng",
+      "đông khách",
+      "gia đình",
+      "quán ăn",
+      "lâu đời"
+    ],
+    "introduction": "Quán phở lâu đời và nổi tiếng nhất Sài Gòn, nước dùng trong vắt, thơm ngọt từ xương.",
+    "lat": 10.7815,
+    "lon": 106.6935,
+    "price (VNĐ)": 70000,
+    "rating": 4.7,
+    "review": "Phở ở đây rất ngon với nước dùng thanh ngọt, thịt bò mềm. Luôn đông khách, đặc biệt vào buổi sáng và trưa. Phục vụ nhanh, giá cả hợp lý. Đây là quán phở 'must-try' khi đến Sài Gòn.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://static.wixstatic.com/media/746053_2c4df6eba37745b994fc10e0fdbb8d05~mv2.png"
+    ]
+  },
+  {
+    "name": "Bánh Mì Huỳnh Hoa",
+    "location": "26 Lê Thị Riêng, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "bánh mì",
+      "ăn vặt",
+      "đường phố",
+      "nổi tiếng",
+      "thịt",
+      "pate",
+      "xúc xích",
+      "giá rẻ",
+      "đông khách",
+      "nhanh",
+      "takeaway",
+      "truyền thống"
+    ],
+    "introduction": "Tiệm bánh mì nổi tiếng với nhân đầy ắp thịt và pate, luôn đông khách xếp hàng.",
+    "lat": 10.7695,
+    "lon": 106.6965,
+    "price (VNĐ)": 45000,
+    "rating": 4.6,
+    "review": "Bánh mì ở đây 'siêu to khổng lồ', nhân đầy ắp thịt nhiều loại, pate béo ngậy. Luôn phải xếp hàng khá lâu nhưng rất đáng để thử. Giá tuy cao hơn bánh mì thường nhưng xứng đáng.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://banhmihuynhhoa.vn/wp-content/uploads/2024/10/dscf0711-min-1-300x300.jpg"
+    ]
+  },
+  {
+    "name": "Bún Thịt Nướng Cô Năm",
+    "location": "69 Đinh Tiên Hoàng, Phường Đa Kao, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "bún",
+      "thịt nướng",
+      "ẩm thực",
+      "truyền thống",
+      "chả giò",
+      "nước mắm",
+      "rau sống",
+      "nổi tiếng",
+      "giá rẻ",
+      "đông khách",
+      "quán ăn"
+    ],
+    "introduction": "Quán bún thịt nướng lâu đời, nổi tiếng với thịt nướng thơm lừng và nước mắm đậm đà.",
+    "lat": 10.7878,
+    "lon": 106.7025,
+    "price (VNĐ)": 50000,
+    "rating": 4.6,
+    "review": "Thịt nướng thơm, mềm, ướp vừa ăn. Nước mắm pha chua ngọt vừa miệng. Không gian nhỏ hẹp nhưng luôn đông khách. Giá cả phải chăng, phục vụ nhanh.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://static.riviu.co/640/image/2020/10/09/7eaf3bb8f5f1a2ff1225fa923d231c0d_output.jpeg"
+    ]
+  },
+  {
+    "name": "Cơm Tấm Mộc",
+    "location": "213/12 Nguyễn Trãi, Phường Nguyễn Cư Trinh, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "cơm tấm",
+      "sườn nướng",
+      "ẩm thực",
+      "truyền thống",
+      "bì",
+      "chả",
+      "trứng",
+      "nước mắm",
+      "giá rẻ",
+      "đông khách",
+      "địa phương",
+      "quán ăn"
+    ],
+    "introduction": "Quán cơm tấm nổi tiếng với sườn nướng thơm ngon, giá cả phải chăng.",
+    "lat": 10.7638,
+    "lon": 106.6885,
+    "price (VNĐ)": 45000,
+    "rating": 4.5,
+    "review": "Cơm tấm ngon với sườn nướng mềm, thơm. Phần ăn nhiều, giá rẻ. Luôn đông khách vào giờ ăn trưa và tối. Đây là địa chỉ 'ruột' của người Sài Gòn.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://down-vn.img.susercontent.com/vn-11134259-7r98o-lwfs2bsqomhn94@resize_ss640x400"
+    ]
+  },
+  {
+    "name": "Hủ Tiếu Nam Vang Mỹ Tho",
+    "location": "54 Mạc Thị Bưởi, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "hủ tiếu",
+      "Nam Vang",
+      "ẩm thực",
+      "tôm",
+      "thịt",
+      "gan",
+      "nước dùng",
+      "ngọt",
+      "truyền thống",
+      "sáng",
+      "nổi tiếng",
+      "lâu đời"
+    ],
+    "introduction": "Quán hủ tiếu Nam Vang lâu đời, nước dùng ngọt thanh từ xương heo và tôm khô.",
+    "lat": 10.7745,
+    "lon": 106.7012,
+    "price (VNĐ)": 50000,
+    "rating": 4.7,
+    "review": "Hủ tiếu ở đây có nước dùng rất ngọt thanh, topping đa dạng. Quán mở từ rất sớm, lý tưởng cho bữa sáng. Không gian nhỏ nhưng sạch sẽ, giá cả phải chăng.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://down-vn.img.susercontent.com/vn-11134513-7r98o-lstq0npuj7vd05@resize_ss640x400"
+    ]
+  },
+  {
+    "name": "Nhà Hàng Cục Gạch Quán",
+    "location": "10 Dang Tat, Phường Tân Định, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "nhà hàng",
+      "Việt Nam",
+      "sang trọng",
+      "không gian đẹp",
+      "kiến trúc",
+      "truyền thống",
+      "gia đình",
+      "đặc sản",
+      "cao cấp",
+      "lãng mạn",
+      "check-in"
+    ],
+    "introduction": "Nhà hàng mang phong cách Việt Nam truyền thống, không gian kiến trúc độc đáo.",
+    "lat": 10.7912,
+    "lon": 106.6948,
+    "price (VNĐ)": 300000,
+    "rating": 4.8,
+    "review": "Không gian cực kỳ đẹp với kiến trúc cổ kính, nhiều góc chụp ảnh. Thực đơn đa dạng món Việt, chất lượng cao. Giá cao nhưng xứng đáng cho trải nghiệm ẩm thực và không gian.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "http://cucgachquan.com/images/stories/10.jpg"
+    ]
+  },
+  {
+    
+    "name": "Lẩu Phan",
+    "location": "239A Nguyễn Trãi, Phường Nguyễn Cư Trinh, Quận 1, TP. Hồ Chí Minh",
+    "tags": [
+      "lẩu",
+      "hải sản",
+      "thịt",
+      "nấm",
+      "rau",
+      "nhóm",
+      "gia đình",
+      "đông khách",
+      "nước lẩu",
+      "đậm đà",
+      "tự chọn"
+    ],
+    "introduction": "Quán lẩu nổi tiếng với nước lẩu đậm đà, topping tươi ngon, giá cả hợp lý.",
+    "lat": 10.7635,
+    "lon": 106.6882,
+    "price (VNĐ)": 200000,
+    "rating": 4.6,
+    "review": "Nước lẩu ngon, topping tươi và đa dạng. Phù hợp cho nhóm bạn hoặc gia đình. Giá cả vừa phải, không gian sạch sẽ. Nên đặt bàn trước vào cuối tuần.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://cdn.lauphan.com:9998/api/file/img?PathFile=/Menu/37/menu1754622828574.jpg"
+    ]
+  },
+  {
+    "name": "Quán Ốc Oanh",
+    "location": "206 Võ Văn Tần, Phường 5, Quận 3, TP. Hồ Chí Minh",
+    "tags": [
+      "ốc",
+      "hải sản",
+      "nhậu",
+      "bia",
+      "chiên",
+      "hấp",
+      "xào",
+      "cay",
+      "đông khách",
+      "đêm",
+      "bạn bè",
+      "vỉa hè"
+    ],
+    "introduction": "Quán ốc đường phố nổi tiếng, đa dạng món ốc chế biến theo nhiều kiểu.",
+    "lat": 10.7818,
+    "lon": 106.6925,
+    "price (VNĐ)": 150000,
+    "rating": 4.5,
+    "review": "Ốc tươi, chế biến đa dạng và ngon. Thích hợp cho nhóm bạn đi nhậu. Không gian vỉa hè nhộn nhịp, luôn đông khách vào buổi tối. Giá cả hợp lý.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://down-vn.img.susercontent.com/vn-11134259-7r98o-lwfv8l8x5d5l78@resize_ss640x400"
+    ]
+  },
+  {
+    "name": "The Coffee House",
+    "location": "Nhiều chi nhánh trên khắp TP. Hồ Chí Minh",
+    "tags": [
+      "cà phê",
+      "trà sữa",
+      "thức uống",
+      "không gian",
+      "wifi",
+      "làm việc",
+      "học tập",
+      "giới trẻ",
+      "hiện đại",
+      "check-in"
+    ],
+    "introduction": "Chuỗi cà phê phổ biến với không gian trẻ trung, thức uống đa dạng và giá cả phải chăng.",
+    "lat": 10.7729,
+    "lon": 106.7009,
+    "price (VNĐ)": 45000,
+    "rating": 4.6,
+    "review": "Không gian đẹp, nhiều chỗ ngồi, wifi tốt. Thức uống ngon với giá hợp lý. Rất phù hợp cho học tập, làm việc hoặc gặp gỡ bạn bè. Có nhiều chi nhánh tiện lợi.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://file.hstatic.net/1000075078/file/1_8e87994d07a649839adc36f0cbc7f7e0_grande.jpg"
+    ]
+  },
+  {
+    "name": "Highlands Coffee",
+    "location": "Nhiều chi nhánh trên khắp TP. Hồ Chí Minh",
+    "tags": [
+      "cà phê",
+      "thức uống",
+      "bánh ngọt",
+      "không gian",
+      "wifi",
+      "làm việc",
+      "phổ biến",
+      "giá rẻ",
+      "nhanh",
+      "tiện lợi"
+    ],
+    "introduction": "Chuỗi cà phê Việt Nam lớn nhất, phổ biến khắp thành phố với menu đa dạng.",
+    "lat": 10.7731,
+    "lon": 106.6987,
+    "price (VNĐ)": 50000,
+    "rating": 4.5,
+    "review": "Cà phê ngon, ổn định về chất lượng. Không gian thoải mái, phục vụ nhanh. Có rất nhiều chi nhánh nên dễ tìm. Giá cả hợp lý, thích hợp cho mọi đối tượng.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://www.highlandscoffee.com.vn/vnt_upload/home/web_banner_2000x2000.jpg"
+    ]
+  },
+  {
+    "name": "Nhà Hàng Nướng Saigon Garden",
+    "location": "Nhiều chi nhánh: 176 Pasteur Q1, 99 Nguyễn Huệ Q1...",
+    "tags": [
+      "nướng",
+      "buffet",
+      "BBQ",
+      "hải sản",
+      "thịt",
+      "lẩu",
+      "tự chọn",
+      "nhóm",
+      "gia đình",
+      "cao cấp",
+      "sang trọng"
+    ],
+    "introduction": "Nhà hàng buffet nướng và lẩu cao cấp, thực đơn đa dạng với hải sản tươi sống.",
+    "lat": 10.7788,
+    "lon": 106.6952,
+    "price (VNĐ)": 450000,
+    "rating": 4.7,
+    "review": "Buffet đa dạng với nhiều loại thịt, hải sản tươi ngon. Không gian sang trọng, phục vụ chu đáo. Giá cao nhưng xứng đáng cho chất lượng. Phù hợp cho tiệc nhóm hoặc gia đình.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://down-vn.img.susercontent.com/vn-11134259-7r98o-lwwon2vjoc0r39"
+    ]
+  },
+  {
+    "name": "Vạn Hạnh Mall",
+    "location": "11 Sư Vạn Hạnh, Phường 12, Quận 10, TP. Hồ Chí Minh",
+    "tags": [
+      "mua sắm",
+      "trung tâm thương mại",
+      "ăn uống",
+      "xem phim",
+      "giải trí",
+      "gia đình",
+      "thương hiệu",
+      "hiện đại",
+      "siêu thị",
+      "thời trang",
+      "check-in",
+      "vui chơi"
+    ],
+    "introduction": "Trung tâm thương mại hiện đại tại Quận 10, kết hợp mua sắm, ẩm thực và giải trí đa dạng.",
+    "lat": 10.7719,
+    "lon": 106.6644,
+    "price (VNĐ)": 0,
+    "rating": 4.5,
+    "review": "Trung tâm thương mại rộng rãi với nhiều thương hiệu nổi tiếng. Khu ẩm thực đa dạng, rạp chiếu phim hiện đại. Vị trí thuận tiện gần ngã tư Vạn Hạnh, dễ dàng di chuyển. Thích hợp cho mua sắm và giải trí cuối tuần.",
+    "province": "TP. Hồ Chí Minh",
+    "images": [
+      "https://vanhanhmall.com/wp-content/uploads/2018/04/02-VHM.jpg"
+    ]
+  }
+]

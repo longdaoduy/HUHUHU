@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - VietNam UrbanQuest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .centaur-font {
+            font-family: 'Playfair Display', 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="hero-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-bold centaur-font">VietNam UrbanQuest</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <select class="language-selector bg-transparent border-none text-white">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <a href="about-us.html" class="hover:text-blue-200" data-i18n="about">About us</a>
+                    <a href="information.html" class="hover:text-blue-200" data-i18n="information">Information</a>
+                    <a href="#" class="hover:text-blue-200" data-i18n="contact">Contact us</a>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+                <div class="flex items-center space-x-2">
+                    <img src="logo.png" width="40" height="40" alt="Logo" class="rounded-full">
+                    <span class="font-semibold centaur-font">VietNam UrbanQuest</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="index.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">
+                        <i class="fas fa-home text-xl"></i>
+                    </a>
+                    <a href="recommendation.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="recommendation">Recommendation</a>
+                    <a href="scan.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="scan">Scan</a>
+                    <a href="album.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="album">Album</a>
+                    <a href="social.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="social_page_title">Social</a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 hover:text-blue-200 cursor-pointer py-2" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="userDisplayName" class="hidden text-sm"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 group-hover:block hover:block z-50">
+                            <div id="loggedInMenu" class="hidden">
+                                <div class="px-4 py-2 border-b">
+                                    <p class="text-sm font-semibold" id="navUserName">Hello!</p>
+                                    <p id="navUserEmail" class="text-xs text-gray-600"></p>
+                                </div>
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100 bg-gray-50">
+                                    <i class="fas fa-user mr-2"></i><span data-i18n="profile">Profile</span>
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i><span data-i18n="settings">Settings</span>
+                                </a>
+                                <a href="favorites.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-heart mr-2"></i><span data-i18n="favorites">Favorites</span>
+                                </a>
+                                <div class="border-t">
+                                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i><span data-i18n="logout">Logout</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loggedOutMenu">
+                                <button onclick="openLoginModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="login">Login</span>
+                                </button>
+                                <button onclick="openSignupModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100 border-t">
+                                    <i class="fas fa-user-plus mr-2"></i><span data-i18n="signup">Sign Up</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- Profile Card -->
+            <div class="md:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="text-center">
+                        <div class="relative w-32 h-32 mx-auto mb-4">
+                            <div class="w-32 h-32 bg-purple-100 rounded-full flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
+                                <i class="fas fa-user text-6xl text-purple-600" id="avatarIcon"></i>
+                                <img id="avatarImage" class="w-full h-full object-cover hidden" alt="Avatar">
+                            </div>
+                            <button onclick="document.getElementById('avatarInput').click()" class="absolute bottom-0 right-0 bg-purple-600 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-purple-700 shadow-lg transition-all">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                            <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="handleAvatarChange(event)">
+                        </div>
+                        <h2 class="text-2xl font-bold mb-2" id="userName">Loading...</h2>
+                        <p class="text-gray-600 mb-4" id="userEmail">user@example.com</p>
+                        <p class="text-sm text-gray-500" id="userBio">No description available</p>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="font-semibold mb-3" data-i18n="statistics">Statistics</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-star mr-2"></i><span data-i18n="reviews">Reviews</span></span>
+                                <span class="font-semibold" id="reviewsCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-heart mr-2"></i><span data-i18n="favorites">Favorites</span></span>
+                                <span class="font-semibold" id="favoritesCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-images mr-2"></i><span data-i18n="my_albums">Albums</span></span>
+                                <span class="font-semibold" id="albumsCount">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600"><i class="fas fa-camera mr-2"></i><span data-i18n="images">Images</span></span>
+                                <span class="font-semibold" id="imagesCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Edit Profile -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-edit mr-2"></i><span data-i18n="edit_profile">Edit Profile</span></h3>
+                    <form id="profileForm" class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2" data-i18n="fullname">Full Name</label>
+                            <input type="text" id="fullname" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2" data-i18n="phone">Phone Number</label>
+                            <input type="tel" id="phone" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2" data-i18n="bio">Bio</label>
+                            <textarea id="bio" rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-purple-500"></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                            <i class="fas fa-save mr-2"></i><span data-i18n="save_changes">Save Changes</span>
+                        </button>
+                    </form>
+                    <div id="profileMessage" class="mt-4"></div>
+                </div>
+
+                <!-- My Reviews -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-star mr-2"></i><span data-i18n="my_reviews">My Reviews</span></h3>
+                    <div id="myReviews"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://192.168.1.6:8000';
+        let token = localStorage.getItem('authToken');
+        let userEmail = localStorage.getItem('userEmail');
+        let userName = localStorage.getItem('userName') || localStorage.getItem('fullname') || 'User';
+
+        // Check login
+        if (!token || !userEmail) {
+            alert('Please login!');
+            window.location.href = 'login.html';
+        }
+
+        // Load avatar to localStorage
+        function loadAvatarFromStorage() {
+            const savedAvatar = localStorage.getItem('userAvatar');
+            const avatarImage = document.getElementById('avatarImage');
+            const avatarIcon = document.getElementById('avatarIcon');
+            
+            if (savedAvatar && avatarImage && avatarIcon) {
+                avatarImage.src = savedAvatar;
+                avatarImage.classList.remove('hidden');
+                avatarIcon.classList.add('hidden');
+            }
+        }
+
+        //Process avatar changes
+        async function handleAvatarChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check if the file is an image
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file!');
+                return;
+            }
+            
+            // Check file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Size too large! Maximum is 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const base64Image = e.target.result;
+                
+                // Hiển thị preview
+                const avatarImage = document.getElementById('avatarImage');
+                const avatarIcon = document.getElementById('avatarIcon');
+                
+                if (avatarImage && avatarIcon) {
+                    avatarImage.src = base64Image;
+                    avatarImage.classList.remove('hidden');
+                    avatarIcon.classList.add('hidden');
+                }
+                
+                // Luu vào localStorage
+                localStorage.setItem('userAvatar', base64Image);
+                
+                // Upload lên server (nếu có API)
+                try {
+                    const response = await fetch(`${API_URL}/api/user/avatar`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ avatar: base64Image })
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        console.log('Avatar uploaded successfully');
+                    }
+                } catch (error) {
+                    console.log('Avatar saved locally (server update failed):', error);
+                }
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Hiện thị thông tin user từ localStorage ngay lập tức
+        function displayUserInfoFromLocalStorage() {
+            // Navigation menu
+            const navUserNameEl = document.getElementById('navUserName');
+            const navUserEmailEl = document.getElementById('navUserEmail');
+            const userDisplayNameEl = document.getElementById('userDisplayName');
+            
+            if (navUserNameEl) navUserNameEl.textContent = userName;
+            if (navUserEmailEl) navUserEmailEl.textContent = userEmail;
+            if (userDisplayNameEl) userDisplayNameEl.textContent = userName;
+            
+            // Profile card
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userEmail').textContent = userEmail;
+            
+            // Show logged in menu
+            const loggedInMenu = document.getElementById('loggedInMenu');
+            const loggedOutMenu = document.getElementById('loggedOutMenu');
+            if (loggedInMenu) loggedInMenu.classList.remove('hidden');
+            if (loggedOutMenu) loggedOutMenu.classList.add('hidden');
+            
+            // Load avatar
+            loadAvatarFromStorage();
+        }
+
+        // Load user profile
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_URL}/api/user/profile`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const user = data.user;
+                    // Update localStorage with the latest info
+                    localStorage.setItem('userName', user.fullname);
+                    localStorage.setItem('fullname', user.fullname);
+                    
+                    // Update UI
+                    userName = user.fullname;
+                    document.getElementById('userName').textContent = user.fullname;
+                    document.getElementById('userEmail').textContent = user.email;
+                    document.getElementById('userBio').textContent = user.bio || 'No description';
+                    document.getElementById('fullname').value = user.fullname;
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('bio').value = user.bio || '';
+                    
+                    // Update nav
+                    const navUserNameEl = document.getElementById('navUserName');
+                    const userDisplayNameEl = document.getElementById('userDisplayName');
+                    if (navUserNameEl) navUserNameEl.textContent = user.fullname;
+                    if (userDisplayNameEl) userDisplayNameEl.textContent = user.fullname;
+                    
+                    // Load avatar if available from server
+                    if (user.avatar) {
+                        localStorage.setItem('userAvatar', user.avatar);
+                        loadAvatarFromStorage();
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // If API fails, still show info from localStorage
+                displayUserInfoFromLocalStorage();
+            }
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/user/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    const stats = data.stats;
+                    document.getElementById('reviewsCount').textContent = stats.reviews_count;
+                    document.getElementById('favoritesCount').textContent = stats.favorites_count;
+                    document.getElementById('albumsCount').textContent = stats.albums_count;
+                    document.getElementById('imagesCount').textContent = stats.images_count;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Load my reviews
+        async function loadMyReviews() {
+            try {
+                const response = await fetch(`${API_URL}/api/reviews/user/my-reviews`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                const container = document.getElementById('myReviews');
+                if (data.success && data.reviews.length > 0) {
+                    container.innerHTML = data.reviews.map(review => `
+                        <div class="border-b pb-4 mb-4">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-semibold">${review.destination_name}</h4>
+                                    <div class="flex items-center mt-1">
+                                        ${generateStars(review.rating)}
+                                        <span class="ml-2 text-sm text-gray-600">${new Date(review.created_at).toLocaleDateString('vi-VN')}</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-2">${review.comment}</p>
+                                </div>
+                                <button onclick="deleteReview(${review.id})" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<p class="text-gray-500">You don\'t have any reviews yet</p>';
+                }
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+            }
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<i class="fas fa-star ${i <= rating ? 'text-yellow-500' : 'text-gray-300'}"></i>`;
+            }
+            return stars;
+        }
+
+        // Update profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const phone = document.getElementById('phone').value;
+            const bio = document.getElementById('bio').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ fullname, phone, bio })
+                });
+                
+                const data = await response.json();
+                const messageDiv = document.getElementById('profileMessage');
+                
+                if (data.success) {
+                    messageDiv.innerHTML = '<div class="bg-green-100 text-green-700 px-4 py-2 rounded"><i class="fas fa-check-circle mr-2"></i>Updated successfully!</div>';
+                    loadProfile();
+                } else {
+                    messageDiv.innerHTML = `<div class="bg-red-100 text-red-700 px-4 py-2 rounded"><i class="fas fa-exclamation-circle mr-2"></i>${data.message}</div>`;
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                document.getElementById('profileMessage').innerHTML = '<div class="bg-red-100 text-red-700 px-4 py-2 rounded">Server connection error</div>';
+            }
+        });
+
+        // Delete review
+        async function deleteReview(reviewId) {
+            if (!confirm('Are you sure you want to delete this review?')) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/reviews/${reviewId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    loadMyReviews();
+                    loadStats();
+                }
+            } catch (error) {
+                console.error('Error deleting review:', error);
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userEmail');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Load on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            //Show user info from localStorage immediately
+            displayUserInfoFromLocalStorage();
+            
+            // Then load detailed info from API
+            loadProfile();
+            loadStats();
+            loadMyReviews();
+        });
+        
+        // Auto-refresh stats when page becomes visible (user returns to tab)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('Page visible again - refreshing stats...');
+                loadStats();
+            }
+        });
+        
+        // Also refresh when window regains focus
+        window.addEventListener('focus', function() {
+            console.log('Window focused - refreshing stats...');
+            loadStats();
+        });
+    </script>
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+    <script src="auth-modal.js"></script>
+    <script src="avatar-manager.js"></script>
+</body>
+<script src="chatbot-widget.js"></script>
+</html>

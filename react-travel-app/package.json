@@ -1,0 +1,8 @@
+{
+  "name": "vietnam-urbanquest",
+  "version": "1.0.0",
+  "description": "Vietnam travel web application",
+  "scripts": {
+    "start": "python -m http.server 3000"
+  }
+}

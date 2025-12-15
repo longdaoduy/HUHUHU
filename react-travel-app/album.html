@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VietNam UrbanQuest - Photo Albums</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e0;
+            transition: all 0.3s ease;
+            min-height: 200px;
+        }
+        .upload-area:hover {
+            border-color: #4299e1;
+            background-color: #f7fafc;
+        }
+        .upload-area.dragover {
+            border-color: #4299e1;
+            background-color: #ebf8ff;
+        }
+        .image-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .album-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .album-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        .centaur-font {
+            font-family: 'Playfair Display', 'Times New Roman', Georgia, serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="hero-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-bold centaur-font">VietNam UrbanQuest</h1>
+                </div>
+                <div class="flex space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <select class="language-selector bg-transparent border-none text-white">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <a href="about-us.html" class="hover:text-blue-200" data-i18n="about">About us</a>
+                    <a href="information.html" class="hover:text-blue-200" data-i18n="information">Information</a>
+                    <a href="#contact" class="hover:text-blue-200 transition" data-i18n="contact">Contact us</a>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center py-2">
+                <div class="flex items-center space-x-2">
+                    <img src="logo.png" width="40" height="40" alt="Logo" class="rounded-full">
+                    <span class="font-semibold centaur-font">VietNam UrbanQuest</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <a href="index.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all">
+                        <i class="fas fa-home text-xl"></i>
+                    </a>
+                    <a href="recommendation.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="recommendation">Recommendation</a>
+                    <a href="scan.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="scan">Scan</a>
+                    <a href="album.html" class="text-blue-200 py-2 border-b-2 border-white" data-i18n="album">Album</a>
+                    <a href="social.html" class="hover:text-blue-200 py-2 border-b-2 border-transparent hover:border-white transition-all" data-i18n="social_page_title">Social</a>
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 hover:text-blue-200 cursor-pointer py-2" onclick="toggleUserMenu()">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span id="userDisplayName" class="hidden text-sm"></span>
+                        </button>
+                        <div id="userDropdown" class="hidden absolute right-0 mt-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 group-hover:block hover:block z-50">
+                            <div id="loggedInMenu" class="hidden">
+                                <div class="px-4 py-2 border-b">
+                                    <p id="navUserName" class="text-sm font-semibold">Hello!</p>
+                                    <p id="navUserEmail" class="text-xs text-gray-600"></p>
+                                </div>
+                                <a href="profile.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="settings.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-cog mr-2"></i>Settings
+                                </a>
+                                <a href="favorites.html" class="block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-heart mr-2"></i>Favorites
+                                </a>
+                                <div class="border-t">
+                                    <button onclick="handleLogout()" class="w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="loggedOutMenu">
+                                <button onclick="openLoginModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                                </button>
+                                <button onclick="openSignupModal()" class="w-full text-left block px-4 py-2 hover:bg-gray-100 border-t">
+                                    <i class="fas fa-user-plus mr-2"></i>Sign Up
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="hero-bg text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h1 class="text-4xl font-bold mb-4" data-i18n="photo_albums">Photo Albums</h1>
+            <p class="text-xl" data-i18n="organize_manage_memories">Organize and manage your travel memories</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Create Album Section -->
+        <div class="bg-white rounded-lg card-shadow p-8 mb-8">
+            <h2 class="text-3xl font-bold text-center mb-8">Create New Album</h2>
+            
+            <div class="max-w-2xl mx-auto">
+                <div class="mb-6">
+                    <label for="album-name" class="block text-lg font-semibold text-gray-700 mb-2">Album Name</label>
+                    <input type="text" 
+                           id="album-name"
+                           placeholder="Enter album name (e.g., 'Vietnam Adventure 2025')..." 
+                           class="w-full px-6 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
+                </div>
+
+                <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-6" id="album-upload-area">
+                    <div id="upload-prompt">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Drag and drop files here</h3>
+                        <p class="text-gray-500 mb-4">Limit 10MB per file - Supports JPG, PNG, GIF, WebP</p>
+                        <button onclick="triggerAlbumUpload()" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-folder-open mr-2"></i>Browse files
+                        </button>
+                    </div>
+                    
+                    <div id="images-preview" class="hidden">
+                        <div id="selected-images" class="grid grid-cols-4 gap-4 mb-4">
+                            <!-- Selected images will appear here -->
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <span id="image-count">0</span> image(s) selected
+                        </p>
+                        <button onclick="triggerAlbumUpload()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors mr-2">
+                            <i class="fas fa-plus mr-2"></i>Add More
+                        </button>
+                        <button onclick="clearSelectedImages()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-trash mr-2"></i>Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress section -->
+                <div id="upload-progress" class="hidden mb-6">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-blue-700">
+                                <i class="fas fa-magic mr-2"></i>AI is recognizing images...
+                            </span>
+                            <span class="text-sm text-blue-600" id="progress-text">0%</span>
+                        </div>
+                        <div class="w-full bg-blue-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p class="text-xs text-blue-600 mt-2" id="progress-detail">Processing...</p>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="createAlbum()" class="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+                        <i class="fas fa-plus mr-2"></i>Create Album with AI Recognition
+                    </button>
+                    <button onclick="resetForm()" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        <i class="fas fa-redo mr-2"></i>Reset
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-3 text-center">
+                    <i class="fas fa-info-circle mr-1"></i>AI will automatically recognize landmarks in each image and categorize them by group
+                </p>
+            </div>
+
+            <input type="file" id="album-file-input" accept="image/*" multiple style="display: none;" onchange="handleAlbumFileSelect(event)">
+        </div>
+
+        <!-- Albums List Section -->
+        <div class="bg-white rounded-lg card-shadow p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold" data-i18n="my_albums">My Albums</h2>
+                <button onclick="refreshAlbums()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-sync mr-2"></i><span data-i18n="refresh">Refresh</span>
+                </button>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="albums-loading" class="text-center py-12">
+                <i class="fas fa-spinner fa-spin text-4xl text-blue-500 mb-4"></i>
+                <p class="text-gray-600">Loading albums...</p>
+            </div>
+
+            <!-- Albums Grid -->
+            <div id="albums-grid" class="hidden grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Albums will be populated here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-albums" class="hidden text-center py-12">
+                <i class="fas fa-images text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No albums yet</h3>
+                <p class="text-gray-500 mb-6">Create your first album to start organizing your travel photos.</p>
+                <button onclick="document.getElementById('album-name').focus()" 
+                        class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Create First Album
+                </button>
+            </div>
+
+            <!-- Statistics -->
+            <div id="album-stats" class="hidden mt-8 grid grid-cols-3 gap-4 bg-gray-50 rounded-lg p-6">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="total-albums">0</div>
+                    <div class="text-sm text-gray-600">Total Albums</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-600" id="total-images">0</div>
+                    <div class="text-sm text-gray-600">Total Images</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600" id="total-landmarks">0</div>
+                    <div class="text-sm text-gray-600">Unique Landmarks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Images Modal -->
+    <div id="add-images-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">Add Images to Album</h2>
+                    <button onclick="closeAddImagesModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-4">
+                    <p class="text-gray-600">Album: <span id="add-images-album-name" class="font-semibold"></span></p>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="upload-area border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-6" id="add-images-upload-area">
+                    <div id="add-images-prompt">
+                        <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Drag and drop files here</h3>
+                        <p class="text-gray-500 mb-4">Limit 10MB per file - Supports JPG, PNG, GIF, WebP</p>
+                        <button onclick="triggerAddImagesUpload()" class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-folder-open mr-2"></i>Browse files
+                        </button>
+                    </div>
+                    
+                    <div id="add-images-preview" class="hidden">
+                        <div id="add-images-selected" class="grid grid-cols-4 gap-4 mb-4">
+                            <!-- Selected images will appear here -->
+                        </div>
+                        <p class="text-gray-600 mb-4">
+                            <span id="add-images-count">0</span> image(s) selected
+                        </p>
+                        <button onclick="triggerAddImagesUpload()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors mr-2">
+                            <i class="fas fa-plus mr-2"></i>Add More
+                        </button>
+                        <button onclick="clearAddImages()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-trash mr-2"></i>Clear All
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div id="add-images-progress" class="hidden mb-6">
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-blue-700">
+                                <i class="fas fa-magic mr-2"></i>AI is recognizing images...
+                            </span>
+                            <span class="text-sm text-blue-600" id="add-images-progress-text">0%</span>
+                        </div>
+                        <div class="w-full bg-blue-200 rounded-full h-2.5">
+                            <div id="add-images-progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p class="text-xs text-blue-600 mt-2" id="add-images-progress-detail">Processing...</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex space-x-4">
+                    <button onclick="uploadImagesToAlbum()" class="flex-1 bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+                        <i class="fas fa-upload mr-2"></i>Upload Images
+                    </button>
+                    <button onclick="closeAddImagesModal()" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Album Detail Modal -->
+    <div id="album-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modal-album-name" class="text-2xl font-bold"></h2>
+                    <button onclick="closeAlbumModal()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- View Mode Toggle -->
+                <div class="flex space-x-2 mb-4">
+                    <button id="view-all-btn" onclick="setViewMode('all')" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        <i class="fas fa-th mr-2"></i>All Images
+                    </button>
+                    <button id="view-landmark-btn" onclick="setViewMode('landmark')" 
+                            class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors text-sm">
+                        <i class="fas fa-layer-group mr-2"></i>Group by Landmark
+                    </button>
+                </div>
+
+                <div id="modal-album-content" class="mb-4">
+                    <!-- Album images will be populated here -->
+                </div>
+                <div class="flex justify-between items-center border-t pt-4">
+                    <span id="modal-image-count" class="text-gray-600"></span>
+                    <div class="space-x-2">
+                        <button onclick="downloadCurrentAlbum()" 
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Download ZIP
+                        </button>
+                        <button onclick="deleteCurrentAlbum()" 
+                                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-trash mr-2"></i>Delete Album
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="hero-bg text-white py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p>&copy; 2025 Vietnam UrbanQuest. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- <script src="script.js"></script> -->
+    <script>
+        // Check if opened via file:// protocol
+        if (window.location.protocol === 'file:') {
+            alert('ERROR: Cannot run the app when opened directly as a file!\n\n' +
+                  'Currently opened: file:///...\n' +
+                  'Required: http://localhost:3000/album.html\n\n' +
+                  'Instructions:\n' +
+                  '1. Run: START_ALL.bat\n' +
+                  '2. Or: python -m http.server 3000\n' +
+                  '3. Open your browser at: http://localhost:3000/album.html');
+            
+            // Show warning banner
+            document.body.innerHTML = `
+                <div style="padding: 50px; text-align: center; font-family: Arial;">
+                    <h1 style="color: red;">Warning</h1>
+                    <h2>Cannot run the application when opened directly as a file!</h2>
+                    <p style="font-size: 18px; margin: 30px 0;">
+                        <strong>Currently opened:</strong> <code style="background: #ffebee; padding: 5px 10px; color: red;">file:///...</code><br><br>
+                        <strong>Required:</strong> <code style="background: #e8f5e9; padding: 5px 10px; color: green;">http://localhost:3000/album.html</code>
+                    </p>
+                    <h3>Hu?ng d?n:</h3>
+                    <ol style="text-align: left; max-width: 500px; margin: 20px auto; font-size: 16px;">
+                        <li>Run the file <strong>START_ALL.bat</strong></li>
+                        <li>Or open a terminal and run: <code>python -m http.server 3000</code></li>
+                        <li>Open your browser at: <a href="http://localhost:3000/album.html">http://localhost:3000/album.html</a></li>
+                    </ol>
+                    <button onclick="window.location.href='http://localhost:3000/album.html'" 
+                            style="padding: 15px 30px; font-size: 18px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Open Correct URL
+                    </button>
+                </div>
+            `;
+            throw new Error('Cannot run from file:// protocol');
+        }
+
+        let selectedImages = [];
+        let currentAlbums = [];
+        let currentAlbumName = '';
+        let currentAlbumImages = [];
+        let currentViewMode = 'all';
+        let addImagesToAlbumName = '';
+        let addImagesSelected = [];
+
+        // File upload handling
+        function triggerAlbumUpload() {
+            document.getElementById('album-file-input').click();
+        }
+
+        function handleAlbumFileSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                files.forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert(`File ${file.name} is not an image.`);
+                        return;
+                    }
+                    addImageToSelection(file);
+                });
+            }
+        }
+
+        function addImageToSelection(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    file: file,
+                    dataUrl: e.target.result,
+                    name: file.name,
+                    size: file.size
+                };
+                
+                selectedImages.push(imageData);
+                updateImagePreview();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateImagePreview() {
+            const previewContainer = document.getElementById('selected-images');
+            const countSpan = document.getElementById('image-count');
+            
+            if (selectedImages.length > 0) {
+                document.getElementById('upload-prompt').classList.add('hidden');
+                document.getElementById('images-preview').classList.remove('hidden');
+                
+                previewContainer.innerHTML = selectedImages.map((img, index) => `
+                    <div class="relative group">
+                        <img src="${img.dataUrl}" alt="${img.name}" 
+                             class="image-thumbnail rounded-lg shadow-md">
+                        <button onclick="removeImage(${index})" 
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            �
+                        </button>
+                        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg truncate">
+                            ${img.name}
+                        </div>
+                    </div>
+                `).join('');
+                
+                countSpan.textContent = selectedImages.length;
+            } else {
+                document.getElementById('upload-prompt').classList.remove('hidden');
+                document.getElementById('images-preview').classList.add('hidden');
+            }
+        }
+
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            updateImagePreview();
+        }
+
+        function clearSelectedImages() {
+            selectedImages = [];
+            updateImagePreview();
+            document.getElementById('album-file-input').value = '';
+        }
+
+        function resetForm() {
+            document.getElementById('album-name').value = '';
+            clearSelectedImages();
+            document.getElementById('upload-progress').classList.add('hidden');
+        }
+
+        function updateProgress(current, total, message) {
+            const percentage = Math.round((current / total) * 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = percentage + '%';
+            document.getElementById('progress-detail').textContent = message;
+        }
+
+        async function createAlbum() {
+            const albumName = document.getElementById('album-name').value.trim();
+            
+            if (!albumName) {
+                alert('Please enter an album name');
+                return;
+            }
+            
+            if (selectedImages.length === 0) {
+                alert('Please select at least one image to upload.');
+                return;
+            }
+
+            try {
+                // Show progress
+                document.getElementById('upload-progress').classList.remove('hidden');
+                updateProgress(0, selectedImages.length + 1, 'Creating album...');
+
+                // Create album first
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    alert('Please log in to create an album.');
+                    return;
+                }
+                
+                const createResponse = await fetch('http://192.168.1.6:8000/api/albums', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name: albumName })
+                });
+
+                const createData = await createResponse.json();
+                if (!createData.success) {
+                    throw new Error(createData.message || 'Cannot create album');
+                }
+
+                updateProgress(1, selectedImages.length + 1, 'Album created. Uploading and recognizing images...');
+
+                // Upload images one by one with progress
+                let successCount = 0;
+                for (let i = 0; i < selectedImages.length; i++) {
+                    const imageData = selectedImages[i];
+                    updateProgress(i + 1, selectedImages.length + 1, 
+                        `Uploading image ${i + 1}/${selectedImages.length}: ${imageData.name}`);
+
+                    const formData = new FormData();
+                    formData.append('files', imageData.file);  // Changed from 'file' to 'files'
+
+                    try {
+                        const encodedAlbumName = encodeURIComponent(albumName);
+                        const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            successCount += result.added_count || 1;
+                        } else {
+                            console.error(`Upload failed for ${imageData.name}:`, result.message);
+                        }
+                    } catch (err) {
+                        console.error(`Failed to upload ${imageData.name}:`, err);
+                    }
+                }
+
+                updateProgress(selectedImages.length + 1, selectedImages.length + 1, 'Completed!');
+
+                alert(`Album "${albumName}" has been successfully created!\n${successCount}/${selectedImages.length} images have been uploaded and recognized.`);
+                
+                // Reset form and refresh albums
+                resetForm();
+                await refreshAlbums();
+                
+            } catch (error) {
+                console.error('Failed to create album:', error);
+                alert('Error creating album: ' + error.message);
+                document.getElementById('upload-progress').classList.add('hidden');
+            }
+        }
+
+        async function refreshAlbums() {
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    document.getElementById('albums-loading').classList.add('hidden');
+                    document.getElementById('empty-albums').classList.remove('hidden');
+                    return;
+                }
+                
+                document.getElementById('albums-loading').classList.remove('hidden');
+                document.getElementById('albums-grid').classList.add('hidden');
+                document.getElementById('empty-albums').classList.add('hidden');
+                document.getElementById('album-stats').classList.add('hidden');
+
+                const response = await fetch('http://192.168.1.6:8000/api/albums', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    currentAlbums = data.albums;
+                    displayAlbums(data.albums);
+                    
+                    // Get and display statistics
+                    const statsResponse = await fetch('http://192.168.1.6:8000/api/albums/stats', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const statsData = await statsResponse.json();
+                    if (statsData.success) {
+                        displayStats(statsData.stats);
+                    }
+                } else {
+                    throw new Error('Failed to load albums');
+                }
+            } catch (error) {
+                console.error('Failed to load albums:', error);
+                alert('Failed to load albums: ' + error.message);
+            } finally {
+                document.getElementById('albums-loading').classList.add('hidden');
+            }
+        }
+
+        function displayAlbums(albums) {
+            const albumsGrid = document.getElementById('albums-grid');
+            const emptyState = document.getElementById('empty-albums');
+            
+            if (!albums || Object.keys(albums).length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            albumsGrid.classList.remove('hidden');
+            albumsGrid.innerHTML = Object.entries(albums).map(([albumName, albumInfo]) => {
+                // Escape album name for safe HTML attribute and JavaScript usage
+                const escapedName = albumName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                const displayName = albumName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                
+                return `
+                <div class="album-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="h-48 bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white relative">
+                        <i class="fas fa-images text-6xl opacity-70"></i>
+                        <div class="absolute top-4 right-4 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm">
+                            ${albumInfo.count} photos
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 truncate" title="${displayName}">${displayName}</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            Created: ${albumInfo.created_at ? new Date(albumInfo.created_at).toLocaleDateString() : 'Unknown'}
+                        </p>
+                        <div class="flex flex-col space-y-2">
+                            <button onclick="viewAlbum('${escapedName}')" 
+                                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                <i class="fas fa-eye mr-2"></i>View
+                            </button>
+                            <div class="flex space-x-2">
+                                <button onclick="addImagesToAlbum('${escapedName}')" 
+                                        class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors text-xs">
+                                    <i class="fas fa-plus mr-1"></i>Add
+                                </button>
+                                <button onclick="downloadAlbum('${escapedName}')" 
+                                        class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors text-xs">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button onclick="deleteAlbum('${escapedName}')" 
+                                        class="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors text-xs">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function displayStats(stats) {
+            document.getElementById('total-albums').textContent = stats.total_albums;
+            document.getElementById('total-images').textContent = stats.total_images;
+            
+            // Count unique landmarks
+            const allLandmarks = new Set();
+            Object.values(stats.albums_detail || {}).forEach(album => {
+                album.landmarks?.forEach(landmark => {
+                    if (landmark && landmark !== 'N/A' && landmark !== 'Unknown') {
+                        allLandmarks.add(landmark);
+                    }
+                });
+            });
+            
+            document.getElementById('total-landmarks').textContent = allLandmarks.size;
+            document.getElementById('album-stats').classList.remove('hidden');
+        }
+
+        async function viewAlbum(albumName) {
+            try {
+                const token = localStorage.getItem('authToken');
+                const encodedAlbumName = encodeURIComponent(albumName);
+                const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentAlbumName = albumName;
+                    currentAlbumImages = data.images;
+                    document.getElementById('modal-album-name').textContent = albumName;
+                    document.getElementById('modal-image-count').textContent = `${data.images.length} image(s)`;
+                    
+                    // Reset to 'all' view mode
+                    currentViewMode = 'all';
+                    setViewMode('all');
+                    
+                    document.getElementById('album-modal').classList.remove('hidden');
+                } else {
+                    throw new Error('Unable to load album images');
+                }
+            } catch (error) {
+                alert('Error viewing album: ' + error.message);
+            }
+        }
+
+        function setViewMode(mode) {
+            currentViewMode = mode;
+            
+            // Update button styles
+            const allBtn = document.getElementById('view-all-btn');
+            const landmarkBtn = document.getElementById('view-landmark-btn');
+            
+            if (mode === 'all') {
+                allBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm';
+                landmarkBtn.className = 'bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors text-sm';
+                renderAllImages();
+            } else {
+                allBtn.className = 'bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors text-sm';
+                landmarkBtn.className = 'bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm';
+                renderByLandmark();
+            }
+        }
+
+        function renderAllImages() {
+            const modalContent = document.getElementById('modal-album-content');
+            const token = localStorage.getItem('authToken');
+            modalContent.innerHTML = `
+                <div class="grid grid-cols-4 gap-4">
+                    ${currentAlbumImages.map((image, index) => {
+                        const escapedFilename = image.filename.replace(/'/g, "\\''").replace(/"/g, '&quot;');
+                        const encodedAlbumName = encodeURIComponent(currentAlbumName);
+                        const encodedFilename = encodeURIComponent(image.filename);
+                        const imageUrl = `http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images/${encodedFilename}/view?token=${token}`;
+                        return `
+                        <div class="relative group">
+                            <div class="w-full h-32 bg-gray-200 rounded-lg overflow-hidden cursor-pointer" onclick="viewImageFullsize('${escapedFilename}', '${currentAlbumName.replace(/'/g, "\\'")}')">
+                                <img src="${imageUrl}" alt="${image.filename}" class="w-full h-full object-cover">
+                            </div>
+                            <button onclick="event.stopPropagation(); deleteImageFromAlbum('${escapedFilename}', '${currentAlbumName.replace(/'/g, "\\'")}')" 
+                                    class="absolute top-2 left-2 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 z-10"
+                                    title="Delete image">
+                                <i class="fas fa-trash text-xs"></i>
+                            </button>
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white p-2 rounded-b-lg pointer-events-none">
+                                <div class="text-xs truncate font-semibold">${image.filename}</div>
+                                <div class="text-xs text-yellow-300 flex items-center mt-1">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>
+                                    ${image.landmark || 'Unknown landmark'}
+                                </div>
+                            </div>
+                            ${image.confidence ? `
+                                <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full pointer-events-none">
+                                    ${getConfidenceBadge(image.confidence)}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `}).join('')}
+                </div>
+            `;
+        }
+
+        function renderByLandmark() {
+            const modalContent = document.getElementById('modal-album-content');
+            
+            // Group images by landmark
+            const grouped = {};
+            currentAlbumImages.forEach(image => {
+                const landmark = image.landmark || 'Unknown landmark';
+                if (!grouped[landmark]) {
+                    grouped[landmark] = [];
+                }
+                grouped[landmark].push(image);
+            });
+
+            // Render grouped view
+            modalContent.innerHTML = Object.entries(grouped).map(([landmark, images]) => `
+                <div class="mb-6 border-b pb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-landmark text-purple-600 mr-2"></i>
+                            ${landmark}
+                        </h3>
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            ${images.length} image(s)
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-4 gap-4">
+                        ${images.map(image => {
+                            const escapedFilename = image.filename.replace(/'/g, "\\''").replace(/"/g, '&quot;');
+                            const token = localStorage.getItem('authToken');
+                            const encodedAlbumName = encodeURIComponent(currentAlbumName);
+                            const encodedFilename = encodeURIComponent(image.filename);
+                            const imageUrl = `http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images/${encodedFilename}/view?token=${token}`;
+                            return `
+                            <div class="relative group">
+                                <div class="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden cursor-pointer" onclick="viewImageFullsize('${escapedFilename}', '${currentAlbumName.replace(/'/g, "\\'")}')">
+                                    <img src="${imageUrl}" alt="${image.filename}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <i class="fas fa-image text-gray-400 text-3xl" style="display:none;"></i>
+                                </div>
+                                <button onclick="event.stopPropagation(); deleteImageFromAlbum('${escapedFilename}', '${currentAlbumName.replace(/'/g, "\\'")}')" 
+                                        class="absolute top-2 left-2 bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 z-10"
+                                        title="Delete image">
+                                    <i class="fas fa-trash text-xs"></i>
+                                </button>
+                                <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-2 rounded-b-lg pointer-events-none">
+                                    <div class="truncate">${image.filename}</div>
+                                </div>
+                                ${image.confidence ? `
+                                    <div class="absolute top-2 right-2 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-full pointer-events-none">
+                                        ${getConfidenceBadge(image.confidence)}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `}).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getConfidenceBadge(confidence) {
+            if (confidence === 'high') {
+                return '<i class="fas fa-check-circle text-green-400"></i>';
+            } else if (confidence === 'medium') {
+                return '<i class="fas fa-exclamation-circle text-yellow-400"></i>';
+            } else {
+                return '<i class="fas fa-question-circle text-red-400"></i>';
+            }
+        }
+
+        function viewImageFullsize(filename, albumName) {
+            // This could open a lightbox or navigate to a detailed view
+            alert(`Viewing image: ${filename} from album: ${albumName}`);
+        }
+
+        async function deleteImageFromAlbum(filename, albumName) {
+            if (!confirm(`Are you sure you want to delete "${filename}" from album "${albumName}"?`)) {
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    alert('Please log in to delete images.');
+                    return;
+                }
+
+                const encodedAlbumName = encodeURIComponent(albumName);
+                const encodedFilename = encodeURIComponent(filename);
+                
+                const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images/${encodedFilename}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`✅ Image "${filename}" has been deleted from album "${albumName}"`);
+                    // Refresh the current album view
+                    await viewAlbum(albumName);
+                    // Also refresh the albums list to update counts
+                    await refreshAlbums();
+                } else {
+                    throw new Error(data.message || 'Delete failed');
+                }
+            } catch (error) {
+                console.error('Delete image error:', error);
+                alert('❌ Failed to delete image: ' + error.message);
+            }
+        }
+
+        function closeAlbumModal() {
+            document.getElementById('album-modal').classList.add('hidden');
+            currentAlbumName = '';
+        }
+
+        async function downloadAlbum(albumName) {
+            try {
+                const token = localStorage.getItem('authToken');
+                const encodedAlbumName = encodeURIComponent(albumName);
+                const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/download`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${albumName}.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    throw new Error('Download failed');
+                }
+            } catch (error) {
+                alert('Failed to download album: ' + error.message);
+            }
+        }
+
+        function downloadCurrentAlbum() {
+            if (currentAlbumName) {
+                downloadAlbum(currentAlbumName);
+            }
+        }
+
+        async function deleteAlbum(albumName) {
+            if (confirm(`Are you sure you want to delete the album "${albumName}"? This action cannot be undone.`)) {
+                try {
+                    const token = localStorage.getItem('authToken');
+                    // Encode album name properly for URL
+                    const encodedAlbumName = encodeURIComponent(albumName);
+                    const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`HTTP ${response.status}: ${errorText}`);
+                    }
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        alert(`✅ Album "${albumName}" deleted successfully`);
+                        await refreshAlbums();
+                        if (currentAlbumName === albumName) {
+                            closeAlbumModal();
+                        }
+                    } else {
+                        throw new Error(data.message || 'Delete failed');
+                    }
+                } catch (error) {
+                    console.error('Delete album error:', error);
+                    alert('❌ Failed to delete album: ' + error.message);
+                }
+            }
+        }
+
+        function deleteCurrentAlbum() {
+            if (currentAlbumName) {
+                deleteAlbum(currentAlbumName);
+            }
+        }
+
+        // Add Images to Existing Album Functions
+        function addImagesToAlbum(albumName) {
+            addImagesToAlbumName = albumName;
+            addImagesSelected = [];
+            document.getElementById('add-images-album-name').textContent = albumName;
+            document.getElementById('add-images-modal').classList.remove('hidden');
+            document.getElementById('add-images-prompt').classList.remove('hidden');
+            document.getElementById('add-images-preview').classList.add('hidden');
+            document.getElementById('add-images-progress').classList.add('hidden');
+        }
+
+        function closeAddImagesModal() {
+            document.getElementById('add-images-modal').classList.add('hidden');
+            addImagesToAlbumName = '';
+            addImagesSelected = [];
+        }
+
+        function triggerAddImagesUpload() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.multiple = true;
+            input.onchange = handleAddImagesSelect;
+            input.click();
+        }
+
+        function handleAddImagesSelect(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 0) {
+                files.forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                        return;
+                    }
+                    if (!file.type.startsWith('image/')) {
+                        alert(`File ${file.name} is not an image.`);
+                        return;
+                    }
+                    addImageToAddList(file);
+                });
+            }
+        }
+
+        function addImageToAddList(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageData = {
+                    file: file,
+                    dataUrl: e.target.result,
+                    name: file.name,
+                    size: file.size
+                };
+                addImagesSelected.push(imageData);
+                updateAddImagesPreview();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateAddImagesPreview() {
+            const previewContainer = document.getElementById('add-images-selected');
+            const countSpan = document.getElementById('add-images-count');
+            
+            if (addImagesSelected.length > 0) {
+                document.getElementById('add-images-prompt').classList.add('hidden');
+                document.getElementById('add-images-preview').classList.remove('hidden');
+                
+                previewContainer.innerHTML = addImagesSelected.map((img, index) => `
+                    <div class="relative group">
+                        <img src="${img.dataUrl}" alt="${img.name}" 
+                             class="image-thumbnail rounded-lg shadow-md">
+                        <button onclick="removeAddImage(${index})" 
+                                class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            ×
+                        </button>
+                        <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 rounded-b-lg truncate">
+                            ${img.name}
+                        </div>
+                    </div>
+                `).join('');
+                
+                countSpan.textContent = addImagesSelected.length;
+            } else {
+                document.getElementById('add-images-prompt').classList.remove('hidden');
+                document.getElementById('add-images-preview').classList.add('hidden');
+            }
+        }
+
+        function removeAddImage(index) {
+            addImagesSelected.splice(index, 1);
+            updateAddImagesPreview();
+        }
+
+        function clearAddImages() {
+            addImagesSelected = [];
+            updateAddImagesPreview();
+        }
+
+        function updateAddImagesProgress(current, total, message) {
+            const percentage = Math.round((current / total) * 100);
+            document.getElementById('add-images-progress-bar').style.width = percentage + '%';
+            document.getElementById('add-images-progress-text').textContent = percentage + '%';
+            document.getElementById('add-images-progress-detail').textContent = message;
+        }
+
+        async function uploadImagesToAlbum() {
+            if (addImagesSelected.length === 0) {
+                alert('Please select at least one image to upload.');
+                return;
+            }
+
+            try {
+                const token = localStorage.getItem('authToken');
+                if (!token) {
+                    alert('Please log in to add images.');
+                    return;
+                }
+
+                document.getElementById('add-images-progress').classList.remove('hidden');
+                updateAddImagesProgress(0, addImagesSelected.length, 'Uploading images...');
+
+                let successCount = 0;
+                for (let i = 0; i < addImagesSelected.length; i++) {
+                    const imageData = addImagesSelected[i];
+                    updateAddImagesProgress(i, addImagesSelected.length, 
+                        `Uploading image ${i + 1}/${addImagesSelected.length}: ${imageData.name}`);
+
+                    const formData = new FormData();
+                    formData.append('files', imageData.file);
+
+                    try {
+                        const encodedAlbumName = encodeURIComponent(addImagesToAlbumName);
+                        const response = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: formData
+                        });
+
+                        const result = await response.json();
+                        if (result.success) {
+                            successCount += result.added_count || 1;
+                        } else {
+                            console.error(`Upload failed for ${imageData.name}:`, result.message);
+                        }
+                    } catch (err) {
+                        console.error(`Failed to upload ${imageData.name}:`, err);
+                    }
+                }
+
+                updateAddImagesProgress(addImagesSelected.length, addImagesSelected.length, 'Completed!');
+
+                setTimeout(() => {
+                    alert(`✅ Added ${successCount}/${addImagesSelected.length} images to album "${addImagesToAlbumName}"!`);
+                    closeAddImagesModal();
+                    refreshAlbums();
+                }, 500);
+
+            } catch (error) {
+                console.error('Failed to add images:', error);
+                alert('Error adding images: ' + error.message);
+                document.getElementById('add-images-progress').classList.add('hidden');
+            }
+        }
+
+        // Drag and drop functionality for main upload area
+        const uploadArea = document.getElementById('album-upload-area');
+
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    addImageToSelection(file);
+                }
+            });
+        });
+
+        // Drag and drop functionality for add images modal
+        document.addEventListener('DOMContentLoaded', function() {
+            const addImagesArea = document.getElementById('add-images-upload-area');
+            
+            if (addImagesArea) {
+                addImagesArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    addImagesArea.classList.add('dragover');
+                });
+
+                addImagesArea.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    addImagesArea.classList.remove('dragover');
+                });
+
+                addImagesArea.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    addImagesArea.classList.remove('dragover');
+                    
+                    const files = Array.from(e.dataTransfer.files);
+                    files.forEach(file => {
+                        if (file.type.startsWith('image/')) {
+                            addImageToAddList(file);
+                        }
+                    });
+                });
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check for pending album image from scan page
+            const pendingImage = sessionStorage.getItem('pendingAlbumImage');
+            if (pendingImage) {
+                try {
+                    const imageData = JSON.parse(pendingImage);
+                    sessionStorage.removeItem('pendingAlbumImage');
+                    
+                    // Check if user is logged in
+                    const token = localStorage.getItem('authToken');
+                    if (!token) {
+                        alert('Please log in to save scanned images to album.');
+                        await refreshAlbums();
+                        return;
+                    }
+                    
+                    // Create album name with timestamp (avoid special characters)
+                    const now = new Date();
+                    const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()} ${now.getHours()}h${now.getMinutes()}`;
+                    const albumName = `Scanned - ${imageData.landmark || 'Unknown'} - ${dateStr}`;
+                    
+                    // Show progress
+                    document.getElementById('upload-progress').classList.remove('hidden');
+                    updateProgress(0, 2, 'Creating album for scanned image...');
+                    
+                    // Create album
+                    const createResponse = await fetch('http://192.168.1.6:8000/api/albums', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ name: albumName })
+                    });
+                    
+                    const createData = await createResponse.json();
+                    if (!createData.success) {
+                        throw new Error(createData.message || 'Cannot create album');
+                    }
+                    
+                    updateProgress(1, 2, 'Uploading and recognizing scanned image...');
+                    
+                    // Convert base64 to blob and create file
+                    console.log('[SCAN TO ALBUM] Converting base64 image...');
+                    const response = await fetch(imageData.image);
+                    const blob = await response.blob();
+                    const file = new File([blob], imageData.filename, { type: 'image/jpeg' });
+                    console.log('[SCAN TO ALBUM] File created:', file.name, file.size, 'bytes');
+                    
+                    // Upload image to album
+                    const formData = new FormData();
+                    formData.append('files', file);
+                    
+                    const encodedAlbumName = encodeURIComponent(albumName);
+                    console.log('[SCAN TO ALBUM] Uploading to album:', albumName);
+                    console.log('[SCAN TO ALBUM] Encoded album name:', encodedAlbumName);
+                    
+                    const uploadResponse = await fetch(`http://192.168.1.6:8000/api/albums/${encodedAlbumName}/images`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: formData
+                    });
+                    
+                    console.log('[SCAN TO ALBUM] Upload response status:', uploadResponse.status);
+                    
+                    if (!uploadResponse.ok) {
+                        const errorText = await uploadResponse.text();
+                        console.error('[SCAN TO ALBUM] Upload failed:', errorText);
+                        throw new Error(`HTTP ${uploadResponse.status}: ${errorText}`);
+                    }
+                    
+                    const uploadData = await uploadResponse.json();
+                    console.log('[SCAN TO ALBUM] Upload response:', uploadData);
+                    
+                    if (!uploadData.success) {
+                        throw new Error(uploadData.message || 'Cannot upload image');
+                    }
+                    
+                    updateProgress(2, 2, 'Completed!');
+                    
+                    setTimeout(() => {
+                        document.getElementById('upload-progress').classList.add('hidden');
+                        alert(`✅ Album "${albumName}" has been successfully created with your scanned image!\n\nLandmark: ${imageData.landmark || 'Unknown'}`);
+                        refreshAlbums();
+                    }, 500);
+                    
+                } catch (error) {
+                    console.error('Failed to create album from scanned image:', error);
+                    document.getElementById('upload-progress').classList.add('hidden');
+                    alert('Error creating album from scanned image: ' + error.message);
+                    await refreshAlbums();
+                }
+            } else {
+                // Load albums on page load
+                await refreshAlbums();
+            }
+        });
+    </script>
+    <script src="translations.js"></script>
+    <script src="auth-modal.js"></script>
+    <script src="avatar-manager.js"></script>
+</body>
+<script src="chatbot-widget.js"></script>
+</html>

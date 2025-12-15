@@ -1,0 +1,146 @@
+{
+    "users": [
+        {
+            "name": "Admin",
+            "username": "admin",
+            "password": "123"
+        },
+        {
+            "name": "dat",
+            "username": "dat",
+            "password": "6ZzNMi5G_ArFhqB"
+        },
+        {
+            "id": 4,
+            "fullname": "Test User",
+            "email": "test@example.com",
+            "phone": "0123456789",
+            "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+            "created_at": "2025-11-16T22:30:20.536861",
+            "username": "test"
+        },
+        {
+            "id": 5,
+            "fullname": "Test User",
+            "email": "test2@test.com",
+            "phone": "",
+            "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+            "created_at": "2025-11-16T22:31:08.521341",
+            "username": "test2"
+        },
+        {
+            "id": 5,
+            "fullname": "Đào Duy Long",
+            "email": "daoduylong2006@gmail.com",
+            "phone": "0366192056",
+            "password": "f5eaf16c8ba5cfa0c97a11e73f2ae375eb8c97653794d9911cffbed1124371e1",
+            "created_at": "2025-11-16T23:36:37.861433",
+            "username": "daoduylong2006",
+            "settings": {
+                "email_notifications": true,
+                "language": "en",
+                "theme": "dark"
+            },
+            "bio": "hahaha\n",
+            "updated_at": "2025-11-16T23:46:08.813964"
+        },
+        {
+            "id": 6,
+            "fullname": "datđeptrai",
+            "email": "nvtdat2435@clc.fitus.edu.vn",
+            "phone": "091323829",
+            "password": "f3f6941984763a265cfdddcec1b69e568c5eab68c258f6fc90269899666085b2",
+            "created_at": "2025-11-20T13:24:58.889623",
+            "username": "nvtdat2435"
+        },
+        {
+            "id": 7,
+            "fullname": "dat",
+            "email": "datdeptrai30052006@gmail.com",
+            "phone": "08132909220",
+            "password": "bf31846d9feb33345f7b2ee8945faa306a3471a13e559db6f1a41884798108ed",
+            "created_at": "2025-11-20T13:31:59.695451",
+            "username": "datdeptrai30052006",
+            "bio": "",
+            "updated_at": "2025-11-30T20:43:40.565977"
+        },
+        {
+            "name": "tungtungsahur",
+            "username": "dannynguyen291006",
+            "email": "dannynguyen291006@gmail.com",
+            "password": "a2f4a854686c1c5155d6798f4560acd510200d1d84f4426c7330e6245887044c",
+            "created_at": "2025-11-22T15:39:39.527381",
+            "last_login": "2025-12-14T06:41:08.846133",
+            "status": "active",
+            "settings": {
+                "email_notifications": true,
+                "language": "vi",
+                "theme": "light"
+            },
+            "bio": "",
+            "updated_at": "2025-11-29T15:32:54.258778"
+        },
+        {
+            "name": "skibididopdop",
+            "username": "dannynguyen",
+            "email": "dannynguyen@gmail.com",
+            "password": "dee8e68c4a0269e3c9b643f72fa78e7c356668991e15a43d6e99aa72a95d631f",
+            "created_at": "2025-11-28T12:02:03.537925",
+            "last_login": null,
+            "status": "active"
+        },
+        {
+            "name": "Test User",
+            "username": "test999",
+            "email": "test999@test.com",
+            "password": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
+            "created_at": "2025-11-28T12:06:03.014537",
+            "last_login": null,
+            "status": "active"
+        },
+        {
+            "name": "dghfjhfx",
+            "username": "fhdsf",
+            "email": "fhdsf@gmail.com",
+            "password": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+            "created_at": "2025-11-29T16:26:45.023912",
+            "last_login": "2025-11-29T16:26:58.293814",
+            "status": "active"
+        },
+        {
+            "name": "dgfhgf",
+            "username": "dsfdg",
+            "email": "dsfdg@gmail.com",
+            "password": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+            "created_at": "2025-11-30T20:24:27.016456",
+            "last_login": "2025-11-30T20:25:04.726384",
+            "status": "active"
+        },
+        {
+            "name": "dante",
+            "username": "danteskibidi",
+            "email": "danteskibidi@gmail.com",
+            "password": "8c87169830e267b14bb9a05c4c0468190f228aa390f2fd3883637cd3ec071fe2",
+            "created_at": "2025-11-30T20:38:06.641470",
+            "last_login": "2025-12-13T21:05:17.161780",
+            "status": "active",
+            "bio": "hello",
+            "updated_at": "2025-12-08T18:11:34.675670",
+            "fullname": "skibidi",
+            "settings": {
+                "email_notifications": true,
+                "language": "vi",
+                "theme": "dark"
+            }
+        },
+        {
+            "name": "dfgh",
+            "username": "dhg",
+            "email": "dhg@gmail.com",
+            "password": "f5eaf16c8ba5cfa0c97a11e73f2ae375eb8c97653794d9911cffbed1124371e1",
+            "created_at": "2025-12-13T20:01:30.759223",
+            "last_login": "2025-12-13T20:02:01.127046",
+            "status": "active"
+        }
+    ]
+}

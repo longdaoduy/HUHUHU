@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Chatbot - Smart Travel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container {
+            width: 98%;
+            max-width: 1600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2), 0 0 0 1px rgba(102, 126, 234, 0.1);
+            overflow: hidden;
+            display: flex;
+            height: 95vh;
+            min-height: 800px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .suggestions-title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .suggestions-list {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .clear-history-btn {
+            background: rgba(255, 68, 68, 0.9);
+            border: none;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .clear-history-btn:hover {
+            background: rgba(255, 68, 68, 1);
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #f5f5f5;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 25px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.08);
+            flex-shrink: 0;
+        }
+
+        .chat-header h1 {
+            font-size: 26px;
+            font-family: 'Playfair Display', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .chat-header p {
+            font-size: 14px;
+            color: #999;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 600px;
+            max-height: calc(95vh - 200px);
+            background: linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%);
+        }
+        
+        .messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .messages::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 4px;
+        }
+        
+        .messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.5);
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 0;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .bot-message .message-content {
+            background: white;
+            color: #333;
+            border: none;
+            border-bottom-left-radius: 0;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+
+        .recommendations {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 10px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .recommendation-item {
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .recommendation-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .recommendation-item h4 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .recommendation-item p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .input-area {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 20px 25px;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            box-shadow: 0 -2px 8px rgba(102, 126, 234, 0.05);
+        }
+
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e8ff;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 200px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), inset 0 0 0 1px rgba(102, 126, 234, 0.1);
+        }
+        
+        input[type="text"]::placeholder {
+            color: #bbb;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #e0e8ff;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .mode-btn:hover {
+            border-color: #667eea;
+            background: #f5f7ff;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .loading {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .loading span {
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+
+        .loading span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                opacity: 0.3;
+            }
+            40% {
+                opacity: 1;
+            }
+        }
+
+        .error-message {
+            background: #fff5f5;
+            color: #e63946;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 4px solid #e63946;
+            box-shadow: 0 2px 6px rgba(230, 57, 70, 0.1);
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            color: #22c55e;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 4px solid #22c55e;
+            box-shadow: 0 2px 6px rgba(34, 197, 94, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+            }
+
+            .suggestions-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-bottom: 0;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="suggestions-list" id="suggestionsList">
+                <div class="loading">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <h1>VietNam UrbanQuest</h1>
+                <p>Ask me about travel destinations in Vietnam that you'd like to explore</p>
+            </div>
+
+            <div class="messages" id="messages"></div>
+
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 10px;">
+                        <div class="mode-toggle" style="margin: 0; width: auto;">
+                            <button class="mode-btn active" id="aiModeBtn" onclick="setMode(true)">🤖 AI Mode</button>
+                            <button class="mode-btn" id="quickModeBtn" onclick="setMode(false)">⚡ Quick Mode</button>
+                        </div>
+                        <button class="clear-history-btn" onclick="clearHistory()" style="margin: 0; padding: 8px 12px; font-size: 12px;">Clear</button>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="messageInput" 
+                        placeholder="Enter your preferences... (e.g., Ben Thanh Market, beach, cuisine)" 
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="send-btn" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://192.168.1.6:8000/api';
+        let useAIMode = true;
+
+        // Load suggestions
+        async function loadSuggestions() {
+            try {
+                const response = await fetch(`${API_URL}/chatbot/suggestions`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const suggestionsList = document.getElementById('suggestionsList');
+                    suggestionsList.innerHTML = '';
+                    
+                    data.suggestions.slice(0, 8).forEach(tag => {
+                        const btn = document.createElement('button');
+                        btn.className = 'suggestion-btn';
+                        btn.textContent = '🏷️ ' + tag;
+                        btn.onclick = () => {
+                            document.getElementById('messageInput').value = tag;
+                            sendMessage();
+                        };
+                        suggestionsList.appendChild(btn);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading suggestions:', error);
+            }
+        }
+
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show loading
+            addMessage('Processing...', 'loading');
+            
+            try {
+                const response = await fetch(`${API_URL}/chatbot/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        use_ai: useAIMode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading message
+                const messagesDiv = document.getElementById('messages');
+                const loadingMsg = messagesDiv.querySelector('.bot-message:last-child');
+                if (loadingMsg && loadingMsg.textContent.includes('Processing...')) {
+                    loadingMsg.remove();
+                }
+                
+                if (data.status === 'success') {
+                    // Add bot response
+                    addMessage(data.message, 'bot');
+                    
+                    // Add recommendations if available
+                    if (data.recommendations && data.recommendations.length > 0) {
+                        addRecommendations(data.recommendations);
+                    }
+                } else {
+                    addMessage('❌ ' + data.message, 'error');
+                }
+            } catch (error) {
+                const messagesDiv = document.getElementById('messages');
+                const loadingMsg = messagesDiv.querySelector('.bot-message:last-child');
+                if (loadingMsg) {
+                    loadingMsg.remove();
+                }
+                addMessage('❌ Connection error: ' + error.message, 'error');
+            }
+        }
+
+        function addMessage(text, type) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type === 'user' ? 'user-message' : 'bot-message'}`;
+            
+            const contentDiv = document.createElement('div');
+            
+            if (type === 'loading') {
+                contentDiv.innerHTML = '<div class="loading"><span></span><span></span><span></span></div>';
+                contentDiv.className = 'message-content';
+            } else if (type === 'error') {
+                contentDiv.className = 'message-content error-message';
+                contentDiv.textContent = text;
+            } else {
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = text;
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addRecommendations(recommendations) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot-message';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            let html = '<div class="recommendations"><strong>📍 Recommended Destinations:</strong><br>';
+            recommendations.forEach(dest => {
+                html += `
+                    <div class="recommendation-item">
+                        <h4>🏨 ${dest.name}</h4>
+                        <p><strong>Location:</strong> ${dest.location}</p>
+                        <p><strong>Description:</strong> ${dest.introduction}</p>
+                        <p><strong>Price:</strong> ${dest.price} VND | <strong>Rating:</strong> ⭐ ${dest.rating}/5</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            contentDiv.innerHTML = html;
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function clearHistory() {
+            if (confirm('Are you sure you want to clear the chat history?')) {
+                fetch(`${API_URL}/chatbot/history`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            document.getElementById('messages').innerHTML = '';
+                            addMessage('✅ Chat history has been cleared', 'success');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+
+        function setMode(isAI) {
+            useAIMode = isAI;
+            document.getElementById('aiModeBtn').classList.toggle('active', isAI);
+            document.getElementById('quickModeBtn').classList.toggle('active', !isAI);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Load suggestions on page load
+        window.addEventListener('load', () => {
+            loadSuggestions();
+            addMessage('👋 Hello! I am Travel Bot - your smart travel assistant. Let me know what you are looking for (e.g., shopping, dining, sports, etc.)', 'bot');
+        });
+    </script>
+    <script src="translations.js"></script>
+</body>
+</html>

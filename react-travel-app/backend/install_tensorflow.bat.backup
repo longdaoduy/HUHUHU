@@ -1,0 +1,21 @@
+@echo off
+echo Installing TensorFlow and dependencies for Local AI Model Recognition...
+echo.
+echo This may take 5-10 minutes depending on your internet speed...
+echo.
+
+pip install tensorflow pillow numpy
+
+echo.
+echo ========================================
+echo Installation complete!
+echo ========================================
+echo.
+echo Now you can:
+echo 1. Run backend: python main.py
+echo 2. Upload images to scan for landmark recognition
+echo 3. Create albums with auto-detected landmarks
+echo.
+echo NO MORE API KEY NEEDED - Everything runs locally!
+echo.
+pause
